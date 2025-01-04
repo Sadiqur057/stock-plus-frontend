@@ -1,114 +1,90 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 import {
-  AudioWaveform,
   BookOpen,
   Bot,
-  Command,
   Frame,
   GalleryVerticalEnd,
-  Map,
   PieChart,
   Settings2,
   SquareTerminal,
-} from "lucide-react"
+} from "lucide-react";
 
-import {NavMain} from "./NavMain";
+import { NavMain } from "./NavMain";
 import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
+  SidebarMenuButton,
   SidebarRail,
-} from "@/components/ui/sidebar"
-import { TeamSwitcher } from "./TeamSwitcher";
+} from "@/components/ui/sidebar";
 import { NavProjects } from "./NavProject";
 import { NavUser } from "./NavUser";
 
-// This is sample data.
 const data = {
   user: {
     name: "shadcn",
     email: "m@example.com",
     avatar: "/avatars/shadcn.jpg",
   },
-  teams: [
-    {
-      name: "Acme Inc",
-      logo: GalleryVerticalEnd,
-      plan: "Enterprise",
-    },
-    {
-      name: "Acme Corp.",
-      logo: AudioWaveform,
-      plan: "Startup",
-    },
-    {
-      name: "Evil Corp.",
-      logo: Command,
-      plan: "Free",
-    },
-  ],
   navMain: [
     {
-      title: "Playground",
+      title: "Products",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
+          title: "All Products",
+          url: "#",
+        },
+        {
+          title: "Add Products",
+          url: "#",
+        },
+        {
+          title: "Customize Product",
+          url: "#",
+        },
+        {
           title: "History",
-          url: "#",
-        },
-        {
-          title: "Starred",
-          url: "#",
-        },
-        {
-          title: "Settings",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "Employees",
       url: "#",
       icon: Bot,
       items: [
         {
-          title: "Genesis",
+          title: "All Employees",
           url: "#",
         },
         {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
+          title: "Add Employees",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Invoices",
       url: "#",
+      isActive: false,
       icon: BookOpen,
       items: [
         {
-          title: "Introduction",
+          title: "View Invoices",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Create Invoice",
           url: "#",
         },
         {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
+          title: "History",
           url: "#",
         },
       ],
@@ -123,15 +99,7 @@ const data = {
           url: "#",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
           title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
           url: "#",
         },
       ],
@@ -147,20 +115,25 @@ const data = {
       name: "Sales & Marketing",
       url: "#",
       icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
+    }
   ],
-}
+};
 
-export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function DashboardSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
-      <SidebarHeader>
-        <TeamSwitcher teams={data.teams} />
+      <SidebarHeader className="py-2 mt-5">
+        <SidebarMenuButton className="h-12">
+          <div>
+            <GalleryVerticalEnd className="size-5" />
+          </div>
+          <div className="grid flex-1 text-left leading-tight">
+            <span className="truncate text-lg font-semibold">Acme Inc</span>
+            <span className="truncate text-xs">Enterprise</span>
+          </div>
+        </SidebarMenuButton>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
@@ -171,5 +144,5 @@ export function DashboardSidebar({ ...props }: React.ComponentProps<typeof Sideb
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }

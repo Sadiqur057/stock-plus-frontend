@@ -15,26 +15,50 @@ interface BreadCrumbItem {
   link: string;
 }
 interface BreadCrumbProps {
-  breadcrumbList?: BreadCrumbItem[];
+  breadcrumbList: BreadCrumbItem[];
 }
 
 const BreadCrumb: React.FC<BreadCrumbProps> = ({ breadcrumbList }) => {
   return (
     <>
-      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
+      <header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear bg-gray-50 mb-6 mt-3 rounded-md">
         <div className="flex items-center gap-2 px-4">
           <SidebarTrigger className="-ml-1" />
           <Separator orientation="vertical" className="mr-2 h-4" />
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem className="hidden md:block">
-                <BreadcrumbLink href="/">Home</BreadcrumbLink>
+                <BreadcrumbLink className="hover:text-blue-800" href="/">
+                  Home
+                </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
+              <BreadcrumbItem className="hidden md:block">
+                <BreadcrumbLink
+                  className="hover:text-blue-800"
+                  href="/dashboard"
+                >
+                  Dashboard
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator className="hidden md:block" />
+              {breadcrumbList?.slice(0, length - 1)?.map((item) => (
+                <React.Fragment key={item?.link}>
+                  <BreadcrumbItem key={item?.link}>
+                    <BreadcrumbLink
+                      className="hover:text-blue-800"
+                      href={item?.link}
+                    >
+                      {item?.name}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                  <BreadcrumbSeparator />
+                </React.Fragment>
+              ))}
               <BreadcrumbItem>
-                {breadcrumbList?.map((item) => (
-                  <BreadcrumbPage key={item?.link}>{item?.name}</BreadcrumbPage>
-                ))}
+                <BreadcrumbPage className="text-blue-800">
+                  {breadcrumbList[breadcrumbList?.length - 1]?.name}
+                </BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
