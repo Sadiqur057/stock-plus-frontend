@@ -42,7 +42,7 @@ const BreadCrumb: React.FC<BreadCrumbProps> = ({ breadcrumbList }) => {
                 </BreadcrumbLink>
               </BreadcrumbItem>
               <BreadcrumbSeparator className="hidden md:block" />
-              {breadcrumbList?.slice(0, length - 1)?.map((item) => (
+              {breadcrumbList?.slice(0, breadcrumbList.length - 1)?.map((item) => (
                 <React.Fragment key={item?.link}>
                   <BreadcrumbItem key={item?.link}>
                     <BreadcrumbLink

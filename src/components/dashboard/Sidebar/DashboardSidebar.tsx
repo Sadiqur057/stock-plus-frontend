@@ -38,11 +38,11 @@ const data = {
       items: [
         {
           title: "All Products",
-          url: "#",
+          url: "/dashboard/products",
         },
         {
           title: "Add Products",
-          url: "#",
+          url: "/dashboard/products/add-product",
         },
         {
           title: "Customize Product",
