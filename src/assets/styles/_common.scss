@@ -1,0 +1,71 @@
+.buttonGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+.subtitle {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: #6b7280;
+}
+.floatingCard {
+  position: absolute;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1rem;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 10px 20px -10px rgba(0, 0, 0, 0.1);
+}
+.cardTop {
+  top: -20px;
+  right: 20px;
+  animation: float 6s ease-in-out infinite;
+}
+.cardBottom {
+  bottom: -20px;
+  left: 20px;
+  animation: float 6s ease-in-out infinite reverse;
+}
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.subheading {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #4f46e5;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.heading {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+}
+.header {
+  text-align: center;
+  max-width: 48rem;
+  margin: 0 auto 4rem;
+}
