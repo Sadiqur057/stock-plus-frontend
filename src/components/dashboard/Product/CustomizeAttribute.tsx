@@ -44,7 +44,7 @@ import { CirclePlus } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { Textarea } from "@/components/ui/textarea";
 const isLoading = false;
-const CustomizeProduct = () => {
+const CustomizeAttribute = () => {
   const breadcrumbList = [
     {
       name: "Products",
@@ -52,7 +52,7 @@ const CustomizeProduct = () => {
     },
     {
       name: "Customize Product",
-      link: "/dashboard/products/customize-product",
+      link: "/dashboard/products/customize-attribute",
     },
   ];
 
@@ -101,22 +101,20 @@ const CustomizeProduct = () => {
               title="Add Attribute"
             >
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
-                  <div className="space-y-1">
-                    <Label htmlFor="productName">Product Attribute Name</Label>
-                    <Input
-                      id="name"
-                      value={formData?.name}
-                      name="name"
-                      placeholder="Enter Product Attribute Name"
-                      onChange={handleInputChange}
-                      required
-                    />
-                  </div>
-                  <div className="gap-1.5 flex flex-col">
-                    <Label htmlFor="productName">Description</Label>
-                    <Textarea rows={3} placeholder="Type your message here." />
-                  </div>
+                <div className="space-y-1">
+                  <Label htmlFor="productName">Product Attribute Name</Label>
+                  <Input
+                    id="name"
+                    value={formData?.name}
+                    name="name"
+                    placeholder="Enter Product Attribute Name"
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                <div className="gap-1.5 flex flex-col">
+                  <Label htmlFor="productName">Description</Label>
+                  <Textarea rows={3} placeholder="Type your message here." />
                 </div>
               </form>
             </Modal>
@@ -210,4 +208,4 @@ const CustomizeProduct = () => {
   );
 };
 
-export default CustomizeProduct;
+export default CustomizeAttribute;

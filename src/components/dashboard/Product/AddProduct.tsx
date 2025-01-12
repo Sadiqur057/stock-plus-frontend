@@ -1,5 +1,5 @@
 "use client";
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,11 @@ type FormData = {
 };
 type ProductData = FormData & {
   attributes?: Attribute[];
+};
+
+type ApiResponse = {
+  success: boolean;
+  message: string;
 };
 
 const AddProduct = () => {
@@ -87,7 +92,11 @@ const AddProduct = () => {
     }));
   };
 
-  const { mutate } = useMutation({
+  const { mutate } = useMutation<
+    AxiosResponse<ApiResponse>,
+    Error,
+    ProductData
+  >({
     mutationFn: async (data) => {
       return await axios.post(`${process.env.API_URL}/add-product`, data);
     },
