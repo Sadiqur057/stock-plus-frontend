@@ -45,8 +45,8 @@ const data = {
           url: "/dashboard/products/add-product",
         },
         {
-          title: "Customize Product",
-          url: "#",
+          title: "Customize Attribute",
+          url: "/dashboard/products/customize-attribute",
         },
         {
           title: "History",
@@ -115,7 +115,7 @@ const data = {
       name: "Sales & Marketing",
       url: "#",
       icon: PieChart,
-    }
+    },
   ],
 };
 
@@ -123,11 +123,11 @@ export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar collapsible="icon" {...props} className="customized-sidebar !min-w-20">
       <SidebarHeader className="py-2 mt-5">
-        <SidebarMenuButton className="h-12">
+        <SidebarMenuButton className="h-12 !min-w-10 mx-auto mb-4 py-4">
           <div>
-            <GalleryVerticalEnd className="size-5" />
+            <GalleryVerticalEnd className="size-7" />
           </div>
           <div className="grid flex-1 text-left leading-tight">
             <span className="truncate text-lg font-semibold">Acme Inc</span>

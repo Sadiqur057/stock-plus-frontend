@@ -107,7 +107,11 @@
     }
   }
 }
-
+.customized-sidebar{
+  .bg-sidebar{
+    min-width: 80px;
+  }
+}
 
 // Navbar styles
 .navbar {

@@ -13,9 +13,11 @@ export default function DashboardLayout({ children }: LayoutProps) {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <SidebarProvider>
-          <DashboardSidebar />
-          <div className="md:px-6 w-full container mb-6">{children}</div>
+        <SidebarProvider className="md:flex">
+          <div className="md:min-w-20">
+            <DashboardSidebar />
+          </div>
+          <div className="md:px-10 w-full md:flex-1 container  mb-6 ">{children}</div>
         </SidebarProvider>
       </QueryClientProvider>
     </>

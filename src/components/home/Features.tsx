@@ -6,7 +6,6 @@ import {
   FileText,
   ShieldCheck,
 } from "lucide-react";
-import styles from "./Features.module.scss";
 
 const features = [
   {
