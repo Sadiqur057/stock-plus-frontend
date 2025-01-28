@@ -1,9 +1,6 @@
 @import "variable";
 @import "common";
 @import "mixins";
-* {
-  font-family: "Poppins", sans-serif;
-}
 .container {
   max-width: 1600px;
   width: 87% !important;
@@ -107,8 +104,8 @@
     }
   }
 }
-.customized-sidebar{
-  .bg-sidebar{
+.customized-sidebar {
+  .bg-sidebar {
     min-width: 80px;
   }
 }
@@ -256,8 +253,6 @@
     @apply text-lg py-2;
   }
 }
-
-
 
 .enhanced-features-bg {
   @apply relative overflow-hidden bg-gradient-to-b from-white to-gray-50;
