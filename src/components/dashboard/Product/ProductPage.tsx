@@ -44,7 +44,7 @@ const ProductPage = () => {
   const { data: products, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const result = await axios.get(`${process.env.API_URL}/products`);
+      const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
       return result?.data;
     },
   });
@@ -75,7 +75,6 @@ const ProductPage = () => {
               <CloudDownload />
               <span>Import</span>
             </Button>
-
             <Link href="/dashboard/products/add-product">
               <Button className="py-3">
                 <CirclePlus />

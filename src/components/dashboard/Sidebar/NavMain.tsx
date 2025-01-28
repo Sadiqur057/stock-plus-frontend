@@ -16,7 +16,6 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
@@ -41,7 +40,6 @@ export function NavMain({
         {items.map((item) => (
           <Collapsible
             key={item.title}
-            asChild
             defaultOpen={item.isActive}
             className="group/collapsible"
           >
@@ -54,13 +52,7 @@ export function NavMain({
                   tooltip={item.title}
                   className="py-4 font-medium hover:text-blue-700"
                 >
-                  {item.icon && (
-                    <>
-                      <SidebarTrigger>
-                        <item.icon className="!w-6 !h-6" />
-                      </SidebarTrigger>
-                    </>
-                  )}
+                  {item.icon && <item.icon className="!w-6 !h-6 mr-2" />}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>

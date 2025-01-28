@@ -98,7 +98,7 @@ const AddProduct = () => {
     ProductData
   >({
     mutationFn: async (data) => {
-      return await axios.post(`${process.env.API_URL}/add-product`, data);
+      return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/add-product`, data);
     },
     onSuccess: (result) => {
       if (result?.data?.success) {
