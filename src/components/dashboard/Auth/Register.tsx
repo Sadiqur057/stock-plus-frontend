@@ -1,10 +1,14 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import axios from "axios";
+import { setCookie } from "cookies-next";
 import Link from "next/link";
 import { ChangeEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function RegisterForm() {
+  const [loading, setLoading] = useState<boolean>(false);
   type FormData = {
     name: string;
     email: string;
@@ -23,16 +27,37 @@ export default function RegisterForm() {
     }));
   };
 
-  const handleSubmit = () => {
-    console.log(formData);
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/register`,
+        formData
+      );
+      if (!result?.data?.success) {
+        return toast.error(result?.data?.message);
+      }
+      toast.success(result?.data?.message);
+      setCookie("stock_plus", result?.data?.token);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      toast.error("Something Went wrong. Please try again later");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div className="flex min-h-[calc(100vh-80px)] items-center justify-center bg-gray-50 p-4">
       <div className="w-full max-w-[500px] rounded-lg bg-white px-10 py-12 shadow-lg">
         <div className="mb-6 text-center">
-          <h2 className="mb-1 text-2xl font-bold">Create an Account</h2>
-          <p className="text-gray-600">Get an account and manage your business</p>
+          <h2 className="mb-2 text-2xl font-bold">Create an Account</h2>
+          <p className="text-gray-600">
+            Get an account and manage your business
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
@@ -96,9 +121,10 @@ export default function RegisterForm() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium text-white hover:bg-black/90 "
           >
-            Login
+            {loading ? "loading..." : "Login"}
           </button>
 
           <div className="relative">
