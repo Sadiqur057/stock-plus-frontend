@@ -1,8 +1,11 @@
 "use client";
+import { setCookie } from "cookies-next";
 
 import { Input } from "@/components/ui/input";
+import axios from "axios";
 import Link from "next/link";
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
+import toast from "react-hot-toast";
 
 export default function LoginForm() {
   type FormData = {
@@ -21,7 +24,24 @@ export default function LoginForm() {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    try {
+      const result = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/login`,
+        formData
+      );
+      console.log("api result", result?.data?.success);
+      if (!result?.data?.success) {
+        return toast.error(result?.data?.message);
+      }
+      toast.success(result?.data?.message);
+      setCookie("stock_plus", result?.data?.token);
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
+      toast.error("Something Went wrong. Please try again later");
+    }
     console.log(formData);
   };
 
