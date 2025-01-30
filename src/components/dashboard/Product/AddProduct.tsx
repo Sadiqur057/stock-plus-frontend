@@ -1,5 +1,5 @@
 "use client";
-import axios, { AxiosResponse } from "axios";
+import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ import {
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
+import api from "@/interceptors/api";
+import { useRouter } from "next/navigation";
 
 type Attribute = {
   key: string;
@@ -39,6 +41,7 @@ type ApiResponse = {
 };
 
 const AddProduct = () => {
+  const router = useRouter();
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [formData, setFormData] = useState({
     productName: "",
@@ -98,11 +101,15 @@ const AddProduct = () => {
     ProductData
   >({
     mutationFn: async (data) => {
-      return await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/add-product`, data);
+      return await api.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
+        data
+      );
     },
     onSuccess: (result) => {
       if (result?.data?.success) {
         toast.success(result?.data?.message);
+        router.push("/dashboard/products")
       } else {
         toast.error(
           result?.data?.message ||
@@ -115,7 +122,6 @@ const AddProduct = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Replace "new" keys with their corresponding `newKey` values
     const processedAttributes = attributes.map((attr) =>
       attr.key === "new" ? { key: attr.newKey || "", value: attr.value } : attr
     );
