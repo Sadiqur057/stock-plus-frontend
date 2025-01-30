@@ -27,7 +27,7 @@ export function Modal({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent
-        className={`${
+        className={`w-[90%] ${
           size === "sm" ? "max-w-[475px]" : "max-w-[800px]"
         }`}
       >
