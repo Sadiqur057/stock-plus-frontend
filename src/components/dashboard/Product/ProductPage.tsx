@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import api from "@/interceptors/api";
 import { Button } from "@/components/ui/button";
 import ProductAction from "./ProductAction";
-import React from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -33,9 +33,11 @@ import style from "./Product.module.scss";
 import { useQuery } from "@tanstack/react-query";
 import { CirclePlus, CloudDownload } from "lucide-react";
 import Loader from "@/components/ui/Loader";
-import Link from "next/link";
+import { Modal } from "@/components/shared/Modal/Modal";
+import AddNewProduct from "./AddNewProduct";
 
 const ProductPage = () => {
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const breadcrumbList = [
     {
       name: "Products",
@@ -43,7 +45,11 @@ const ProductPage = () => {
     },
   ];
 
-  const { data: products, isLoading } = useQuery({
+  const {
+    data: products,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
       const result = await api.get(
@@ -79,12 +85,22 @@ const ProductPage = () => {
               <CloudDownload />
               <span>Import</span>
             </Button>
-            <Link href="/dashboard/products/add-product">
-              <Button className="py-3">
-                <CirclePlus />
-                <span>Add Product</span>
-              </Button>
-            </Link>
+
+            <Button className="py-3" onClick={() => setIsOpen(true)}>
+              <CirclePlus />
+              <span>Add Product</span>
+            </Button>
+            <Modal
+              isOpen={isOpen}
+              size="lg"
+              onClose={() => setIsOpen(false)}
+              title="Add New Product"
+            >
+              <AddNewProduct
+                refetch={refetch}
+                closeModal={() => setIsOpen(false)}
+              />
+            </Modal>
           </div>
         </div>
 
@@ -165,7 +181,10 @@ const ProductPage = () => {
                         ))}
                       </TableCell>
                       <TableCell>
-                        <ProductAction />
+                        <ProductAction
+                          refetch={refetch}
+                          productId={product?._id}
+                        />
                       </TableCell>
                     </TableRow>
                   ))}
