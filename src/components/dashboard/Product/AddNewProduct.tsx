@@ -1,4 +1,3 @@
-"use client";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
@@ -12,11 +11,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
+
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from "@tanstack/react-query";
 import api from "@/interceptors/api";
-import { useRouter } from "next/navigation";
+import { ProductShape } from "@/types/product.type";
 
 type Attribute = {
   key: string;
@@ -40,8 +43,14 @@ type ApiResponse = {
   message: string;
 };
 
-const AddProduct = () => {
-  const router = useRouter();
+type Props = {
+  closeModal?: React.Dispatch<React.SetStateAction<boolean>>;
+  refetch?: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<ProductShape[], Error>>;
+};
+
+const AddNewProduct = ({ refetch, closeModal }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [formData, setFormData] = useState({
     productName: "",
@@ -109,7 +118,21 @@ const AddProduct = () => {
     onSuccess: (result) => {
       if (result?.data?.success) {
         toast.success(result?.data?.message);
-        router.push("/dashboard/products")
+        if (refetch) {
+          refetch();
+        }
+        if (closeModal) {
+          closeModal(false);
+        }
+        setFormData({
+          productName: "",
+          company: "",
+          quantity: "",
+          purchasePrice: "",
+          salePrice: "",
+          remarks: "",
+        });
+        setAttributes([]);
       } else {
         toast.error(
           result?.data?.message ||
@@ -133,21 +156,8 @@ const AddProduct = () => {
     mutate(data);
   };
 
-  const breadcrumbList = [
-    {
-      name: "Products",
-      link: "/dashboard/products",
-    },
-    {
-      name: "Add Product",
-      link: "/dashboard/products/add-product",
-    },
-  ];
-
   return (
     <>
-      <BreadCrumb breadcrumbList={breadcrumbList} />
-      <h1 className="text-2xl font-bold mb-6">Add New Product</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div className="space-y-1">
@@ -289,4 +299,4 @@ const AddProduct = () => {
   );
 };
 
-export default AddProduct;
+export default AddNewProduct;

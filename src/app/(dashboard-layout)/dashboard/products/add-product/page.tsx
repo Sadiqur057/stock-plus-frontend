@@ -1,5 +1,5 @@
-import AddProduct from "@/components/dashboard/Product/AddProduct";
+import AddProductPage from "@/components/dashboard/Product/AddProductPage";
 
-export default function AddProductPage() {
-  return <AddProduct />;
+export default function AddProduct() {
+  return <AddProductPage />;
 }
