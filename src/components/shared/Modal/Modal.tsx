@@ -13,6 +13,7 @@ interface ModalProps {
   title: string;
   description?: string;
   children: ReactNode;
+  size?: string;
 }
 
 export function Modal({
@@ -21,15 +22,20 @@ export function Modal({
   title,
   description,
   children,
+  size = "sm",
 }: ModalProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent
+        className={`${
+          size === "sm" ? "max-w-[475px]" : "max-w-[800px]"
+        }`}
+      >
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="mt-4">{children}</div>
+        <div className="mt-4 max-h-[70vh] overflow-auto">{children}</div>
       </DialogContent>
     </Dialog>
   );
