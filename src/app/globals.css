@@ -14,7 +14,10 @@ body {
 #nprogress .peg {
   box-shadow: 0 0 10px #0070f3, 0 0 5px #0070f3 !important;
 }
-
+.react-select__placeholder,
+.react-select__single-value {
+  padding: 8px;
+}
 @layer utilities {
   .text-balance {
     text-wrap: balance;
