@@ -1,6 +1,8 @@
 "use client";
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
+import api from "@/interceptors/api";
 import { Button } from "@/components/ui/button";
+import ProductAction from "./ProductAction";
 import React from "react";
 import {
   Table,
@@ -29,10 +31,10 @@ type ProductType = {
 
 import style from "./Product.module.scss";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { CirclePlus, CloudDownload } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import Link from "next/link";
+
 const ProductPage = () => {
   const breadcrumbList = [
     {
@@ -44,7 +46,9 @@ const ProductPage = () => {
   const { data: products, isLoading } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
-      const result = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/products`);
+      const result = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/products`
+      );
       return result?.data;
     },
   });
@@ -138,6 +142,7 @@ const ProductPage = () => {
                     <TableHead>Quantity</TableHead>
                     <TableHead>Price</TableHead>
                     <TableHead>Attributes</TableHead>
+                    <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -158,6 +163,9 @@ const ProductPage = () => {
                             {index < product.attributes.length - 1 ? ", " : ""}
                           </span>
                         ))}
+                      </TableCell>
+                      <TableCell>
+                        <ProductAction />
                       </TableCell>
                     </TableRow>
                   ))}
