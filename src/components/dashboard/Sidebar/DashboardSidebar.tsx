@@ -74,11 +74,11 @@ const data = {
       items: [
         {
           title: "View Invoices",
-          url: "#",
+          url: "/dashboard/invoices",
         },
         {
           title: "Create Invoice",
-          url: "#",
+          url: "/dashboard/create-invoice",
         },
         {
           title: "History",
