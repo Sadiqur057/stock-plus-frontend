@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/images/logo.png"
+import logo from "@/assets/images/logo.png";
 import Image from "next/image";
+import poppins from "@/fonts/font";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -13,7 +14,7 @@ const navItems = [
 export function Navbar() {
   return (
     <header className="navbar mb-20">
-      <div className="navbar__container container">
+      <div className={`navbar__container container ${poppins.className}`}>
         <Link href="/" className="navbar__logo">
           <Image src={logo} height={100} width={140} alt="StockPlus" />
         </Link>
@@ -32,9 +33,11 @@ export function Navbar() {
                 </Link>
               </li>
             ))}
-          <li className="navbar__actions">
-            <Button className="navbar__get-started-button">Get Started</Button>
-          </li>
+            <li className="navbar__actions">
+              <Button className="navbar__get-started-button">
+                Get Started
+              </Button>
+            </li>
           </ul>
         </nav>
       </div>

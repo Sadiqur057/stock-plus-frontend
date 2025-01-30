@@ -22,13 +22,10 @@ import {
 } from "@/components/ui/sidebar";
 import { NavProjects } from "./NavProject";
 import { NavUser } from "./NavUser";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/interceptors/api";
 
 const data = {
-  user: {
-    name: "shadcn",
-    email: "m@example.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
   navMain: [
     {
       title: "Products",
@@ -122,16 +119,33 @@ const data = {
 export function DashboardSidebar({
   ...props
 }: React.ComponentProps<typeof Sidebar>) {
+  const { data: user } = useQuery({
+    queryKey: ["user"],
+    queryFn: async () => {
+      const user = await api.get("/user");
+      console.log(user?.data?.data);
+      return user?.data?.data;
+    },
+  });
+
   return (
-    <Sidebar collapsible="icon" {...props} className="customized-sidebar !min-w-20">
+    <Sidebar
+      collapsible="icon"
+      {...props}
+      className="customized-sidebar !min-w-20"
+    >
       <SidebarHeader className="py-2 mt-5">
         <SidebarMenuButton className="h-12 !min-w-10 mx-auto mb-4 py-4">
           <div>
             <GalleryVerticalEnd className="size-7" />
           </div>
           <div className="grid flex-1 text-left leading-tight">
-            <span className="truncate text-lg font-semibold">Acme Inc</span>
-            <span className="truncate text-xs">Enterprise</span>
+            <span className="truncate text-lg font-semibold">
+              {user?.company_name || "No Company"}
+            </span>
+            <span className="truncate text-xs">
+              {user?.company_type || "NA"}
+            </span>
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
@@ -140,7 +154,7 @@ export function DashboardSidebar({
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>

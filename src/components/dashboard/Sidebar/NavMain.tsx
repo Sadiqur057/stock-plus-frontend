@@ -16,6 +16,7 @@ import {
   SidebarMenuSub,
   SidebarMenuSubButton,
   SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
@@ -33,6 +34,7 @@ export function NavMain({
     }[];
   }[];
 }) {
+  const { toggleSidebar } = useSidebar();
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Manage Shop</SidebarGroupLabel>
@@ -46,13 +48,18 @@ export function NavMain({
             <SidebarMenuItem>
               <CollapsibleTrigger
                 asChild
-                className="overflow-hidden min-w-10 mx-auto my-2"
+                className="overflow-hidden min-w-10 mx-auto my-1"
               >
                 <SidebarMenuButton
                   tooltip={item.title}
-                  className="py-4 font-medium hover:text-blue-700"
+                  className="font-medium hover:text-blue-700"
                 >
-                  {item.icon && <item.icon className="!w-6 !h-6 mr-2" />}
+                  {item.icon && (
+                    <item.icon
+                      onClick={toggleSidebar}
+                      className="md:!w-6 md:!h-6"
+                    />
+                  )}
                   <span>{item.title}</span>
                   <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                 </SidebarMenuButton>
@@ -63,7 +70,7 @@ export function NavMain({
                     <SidebarMenuSubItem key={subItem.title}>
                       <SidebarMenuSubButton
                         asChild
-                        className="py-[18px] hover:text-blue-700 hover:ml-[6px] transition-all ease-in-out duration-300"
+                        className="py-4 text-[15px] md:text-base lg:py-[18px] hover:text-blue-700 ml-2 hover:ml-[14px] transition-all ease-in-out duration-300"
                       >
                         <Link href={subItem.url}>
                           <span>{subItem.title}</span>
