@@ -73,7 +73,7 @@ export function CustomerSection({
 
   return (
     <div className="space-y-6">
-      <div className="flex gap-4 justify-between">
+      <div className="flex flex-col md:flex-row gap-4 justify-between">
         <div className="flex flex-col gap-2.5 flex-1">
           <Label htmlFor="customer-select" className="text-gray-600">
             Select Customer
@@ -88,7 +88,7 @@ export function CustomerSection({
             classNamePrefix="react-select"
           />
         </div>
-        <div className="flex flex-col gap-3.5">
+        <div className="flex flex-col gap-3.5 max-w-[50%]">
           <Label htmlFor="date-select" className="text-gray-600">
             Select Date
           </Label>
@@ -96,7 +96,7 @@ export function CustomerSection({
         </div>
       </div>
       {customer && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           <div className="space-y-2">
             <Label htmlFor="customer-name" className="text-gray-600">
               Name

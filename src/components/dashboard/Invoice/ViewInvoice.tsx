@@ -49,14 +49,16 @@ export default function ViewInvoice({ id }: Props) {
           <div className="printable-content bg-white print:p-0">
             <div className="flex justify-between items-start mb-8">
               <div className="flex items-center space-x-2">
-                <span className="text-3xl font-semibold text-gray-900">
+                <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
                   {invoice?.company?.name}
                 </span>
               </div>
-              <h1 className="text-3xl font-semibold text-gray-900">Invoice</h1>
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
+                Invoice
+              </h1>
             </div>
 
-            <div className="flex justify-between mb-8">
+            <div className="flex flex-col md:flex-row justify-between mb-6 md:mb-8 gap-3">
               <div>
                 <p className="text-gray-600">
                   Date: {format(new Date(invoice?.created_at), "MM/dd/yyyy")}
@@ -67,7 +69,7 @@ export default function ViewInvoice({ id }: Props) {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-8 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8 justify-between">
               <div>
                 <h2 className="text-gray-600 mb-2">Invoiced To:</h2>
                 <p className="font-medium">{invoice?.customer?.name}</p>
@@ -85,8 +87,8 @@ export default function ViewInvoice({ id }: Props) {
             </div>
 
             <div className="mb-8">
-              <div className="border">
-                <table className="w-full">
+              <div className="border overflow-auto">
+                <table className="w-full min-w-[600px]">
                   <thead>
                     <tr className="bg-gray-50 border-b">
                       <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
@@ -95,11 +97,11 @@ export default function ViewInvoice({ id }: Props) {
                       <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
                         Company
                       </th>
-                      <th className="px-6 py-3 text-right text-sm font-semibold text-gray-600">
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
                         Rate
                       </th>
-                      <th className="px-6 py-3 text-right text-sm font-semibold text-gray-600">
-                        QTY
+                      <th className="px-6 py-3 text-left text-sm font-semibold text-gray-600">
+                        Quantity
                       </th>
                       <th className="px-6 py-3 text-right text-sm font-semibold text-gray-600">
                         Amount
@@ -107,25 +109,27 @@ export default function ViewInvoice({ id }: Props) {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {invoice?.products?.map((product: Product) => (
-                      <tr key={product?.id}>
-                        <td className="px-6 py-4 text-sm text-gray-900">
-                          {product?.name}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-600">
-                          {product?.company}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                          ${product?.price.toFixed(2)}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                          {product?.quantity}
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                          ${(product.price * product.quantity).toFixed(2)}
-                        </td>
-                      </tr>
-                    ))}
+                    {invoice?.products?.map(
+                      (product: Product, index: number) => (
+                        <tr key={index}>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            {product?.name}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-600">
+                            {product?.company}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900">
+                            {product?.price.toFixed(2)} BDT
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900 text-left">
+                            {product?.quantity}
+                          </td>
+                          <td className="px-6 py-4 text-sm text-gray-900 text-right">
+                            {(product.price * product.quantity).toFixed(2)} BDT
+                          </td>
+                        </tr>
+                      )
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -136,34 +140,43 @@ export default function ViewInvoice({ id }: Props) {
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Sub Total:</span>
                   <span className="font-medium">
-                    ${invoice.cost_summary.subtotal.toFixed(2)}
+                    {invoice.cost_summary.subtotal.toFixed(2)} BDT
                   </span>
                 </div>
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Tax:</span>
                   <span className="font-medium">
-                    ${invoice.cost_summary.tax.toFixed(2)}
+                    {invoice.cost_summary.tax.toFixed(2)} BDT
+                  </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-600">Paid:</span>
+                  <span className="font-medium">
+                    {invoice.cost_summary.total_paid.toFixed(2)} BDT
+                  </span>
+                </div>
+                <div className="flex justify-between py-2">
+                  <span className="text-gray-600">Due:</span>
+                  <span className="font-medium">
+                    {invoice.cost_summary.total_due.toFixed(2)} BDT
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
-                    ${invoice.cost_summary.total.toFixed(2)}
+                    {invoice.cost_summary.total.toFixed(2)} BDT
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Note */}
-            <div className="text-sm text-gray-500 mb-8 text-center">
+            <div className="text-sm text-gray-500 mb-8 text-left">
               <p>
-                NOTE: This is computer generated receipt and does not require
-                physical signature.
+                NOTE: This is a computer-generated receipt.
               </p>
             </div>
           </div>
 
-          {/* Print Button - Hidden in print */}
           <div className="print:hidden flex justify-center">
             <Button
               onClick={handlePrint}
@@ -189,6 +202,40 @@ export default function ViewInvoice({ id }: Props) {
                 left: 0;
                 top: 0;
                 width: 100%;
+              }
+
+              /* Force Desktop View */
+              .printable-content {
+                max-width: 900px; /* Ensure desktop width */
+                margin: auto;
+                font-size: 14px; /* Adjust font size for better readability */
+              }
+
+              .printable-content .flex {
+                display: flex !important;
+                flex-direction: row !important;
+              }
+
+              .printable-content .grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+              }
+
+              .printable-content .text-left {
+                text-align: left !important;
+              }
+
+              .printable-content .text-right {
+                text-align: right !important;
+              }
+
+              .printable-content table {
+                min-width: 100% !important;
+              }
+
+              /* Hide Print Button */
+              .print:hidden {
+                display: none !important;
               }
             }
           `}</style>
