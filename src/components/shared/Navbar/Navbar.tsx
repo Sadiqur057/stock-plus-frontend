@@ -34,9 +34,11 @@ export function Navbar() {
               </li>
             ))}
             <li className="navbar__actions">
-              <Button className="navbar__get-started-button">
-                Get Started
-              </Button>
+              <Link href={"/dashboard/my-account"}>
+                <Button className="navbar__get-started-button">
+                  Get Started
+                </Button>
+              </Link>
             </li>
           </ul>
         </nav>
