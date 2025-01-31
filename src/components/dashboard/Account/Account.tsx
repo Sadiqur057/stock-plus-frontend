@@ -11,9 +11,11 @@ import {
   MapPin,
   Calendar,
   Twitter,
-  Linkedin,
   Edit,
   BriefcaseBusiness,
+  Mail,
+  Phone,
+  Facebook,
 } from "lucide-react";
 import Image from "next/image";
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
@@ -24,6 +26,7 @@ import api from "@/interceptors/api";
 import Loader from "@/components/ui/Loader";
 import { useState } from "react";
 import UpdateAccount from "./UpdateAccount";
+import Link from "next/link";
 
 export default function Account() {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -152,15 +155,35 @@ export default function Account() {
                         </div>
                         <span className="text-sm">{formattedDate}</span>
                       </div>
-                      <div className="flex items-center space-x-4">
-                        <p className="">Social Accounts: </p>
-                        <Button variant="outline" size="icon">
-                          <Twitter className="h-4 w-4" />
-                        </Button>
-                        <Button variant="outline" size="icon">
-                          <Linkedin className="h-4 w-4" />
-                        </Button>
-                      </div>
+                      <p className="font-semibold">Contacts: </p>
+                      <ul className="space-y-2">
+                        <li className="flex items-center">
+                          <Mail className="h-5 w-5 text-muted-foreground mr-2" />
+                          <span>{user?.company_email || "NA"}</span>
+                        </li>
+                        <li className="flex items-center">
+                          <Phone className="h-5 w-5 text-muted-foreground mr-2" />
+                          <span>{user?.company_phone || "NA"}</span>
+                        </li>
+                        <li className="flex items-center">
+                          <Twitter className="h-5 w-5 text-muted-foreground mr-2" />
+                          <Link
+                            href={user?.twitter_url}
+                            className="text-blue-600"
+                          >
+                            {user?.twitter_url || "NA"}
+                          </Link>
+                        </li>
+                        <li className="flex items-center">
+                          <Facebook className="h-5 w-5 text-muted-foreground mr-2" />
+                          <Link
+                            href={user?.facebook_url}
+                            className="text-blue-600"
+                          >
+                            {user?.facebook_url || "NA"}
+                          </Link>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                 </TabsContent>

@@ -19,6 +19,8 @@ type userShape = {
   twitter_url: string;
   facebook_url: string;
   company_location: string;
+  company_phone: string;
+  company_email: string;
 };
 
 type Props = {
@@ -39,6 +41,8 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
     twitter_url: user?.twitter_url,
     facebook_url: user?.facebook_url,
     company_location: user?.company_location,
+    company_email: user?.company_email,
+    company_phone: user?.company_phone,
   });
 
   const handleInputChange = (
@@ -125,6 +129,28 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               value={formData?.company_location}
               name="company_location"
               placeholder="Enter Company Location"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="company_email">Company Email</Label>
+            <Input
+              id="company_email"
+              value={formData?.company_email}
+              name="company_email"
+              placeholder="Enter Company Email"
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <Label htmlFor="company_phone">Company Phone</Label>
+            <Input
+              id="company_phone"
+              value={formData?.company_phone}
+              name="company_phone"
+              placeholder="Enter Company Phone"
               onChange={handleInputChange}
               required
             />
