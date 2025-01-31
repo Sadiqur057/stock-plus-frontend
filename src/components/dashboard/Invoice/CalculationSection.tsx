@@ -1,28 +1,29 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react";
+import { CalculationShape } from "./CreateInvoicePage";
 
 interface CalculationSectionProps {
-  subtotal: number
+  calculation: CalculationShape;
+  setCalculation: (subtotal: CalculationShape) => void;
 }
 
-export function CalculationSection({ subtotal }: CalculationSectionProps) {
-  const [calculation, setCalculation] = useState({
-    subtotal: 0,
-    tax: 0,
-    total: 0,
-  })
-
+export function CalculationSection({
+  calculation,
+  setCalculation,
+}: CalculationSectionProps) {
   useEffect(() => {
-    const tax = subtotal * 0.1 // 10% tax
-    const total = subtotal + tax
+    const tax = calculation.subtotal * 0.1; 
+    const total = calculation.subtotal + tax;
 
-    setCalculation({
-      subtotal,
-      tax,
-      total,
-    })
-  }, [subtotal])
+    if (calculation.tax !== tax || calculation.total !== total) {
+      setCalculation({
+        subtotal: calculation.subtotal, 
+        tax,
+        total,
+      });
+    }
+  }, [calculation.subtotal, calculation.tax, calculation.total]); 
 
   return (
     <div className="space-y-4">
@@ -42,6 +43,5 @@ export function CalculationSection({ subtotal }: CalculationSectionProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }
-
