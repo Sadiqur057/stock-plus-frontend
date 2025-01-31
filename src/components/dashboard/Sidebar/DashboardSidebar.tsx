@@ -5,6 +5,7 @@ import {
   BookOpen,
   BookUser,
   GalleryVerticalEnd,
+  LayoutList,
   Settings2,
   SquareTerminal,
   Users,
@@ -39,10 +40,6 @@ const data = {
         {
           title: "Add Products",
           url: "/dashboard/products/add-product",
-        },
-        {
-          title: "Customize Attribute",
-          url: "/dashboard/products/customize-attribute",
         },
         {
           title: "History",
@@ -96,6 +93,11 @@ const data = {
       name: "Customers",
       url: "/dashboard/customers",
       icon: Users,
+    },
+    {
+      name: "Attributes",
+      url: "/dashboard/products/customize-attribute",
+      icon: LayoutList,
     },
   ],
 };
