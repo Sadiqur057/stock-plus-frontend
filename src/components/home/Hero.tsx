@@ -31,7 +31,7 @@ export function Hero() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3">
-            <Link href="/dashboard/my-account">
+            <Link href="/dashboard">
               <Button size="lg">Get Started</Button>
             </Link>
             <Button variant="outline" size="lg">
