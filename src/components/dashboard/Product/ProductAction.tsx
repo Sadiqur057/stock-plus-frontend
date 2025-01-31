@@ -83,15 +83,18 @@ const ProductAction = ({ productId, refetch }: Props) => {
               <Eye className="text-muted-foreground" />
               <span>View Product</span>
             </DropdownMenuItem>
+
             <DropdownMenuItem
               onClick={() => {
                 setIsEditModalOpen(true);
                 handleFetchProductData(productId);
+                setSelectedProductId(productId);
               }}
             >
               <FilePenLine className="text-muted-foreground" />
               <span>Edit Product</span>
             </DropdownMenuItem>
+
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
@@ -129,6 +132,9 @@ const ProductAction = ({ productId, refetch }: Props) => {
           <UpdateProduct
             productData={selectedProductData}
             isLoading={isLoading}
+            closeModal={() => setIsEditModalOpen(false)}
+            productId={selectedProductId}
+            refetch={refetch}
           />
         </Modal>
       )}

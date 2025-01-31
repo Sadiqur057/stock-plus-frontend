@@ -1,10 +1,6 @@
 "use client";
 import { ProductShape } from "@/types/product.type";
 import React, { useEffect } from "react";
-type productProps = {
-  productData: ProductShape;
-  isLoading: boolean;
-};
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
@@ -19,11 +15,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import toast from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  useMutation,
+} from "@tanstack/react-query";
 import api from "@/interceptors/api";
-import { useRouter } from "next/navigation";
 import Loader from "@/components/ui/Loader";
 
+type productProps = {
+  productData: ProductShape;
+  isLoading: boolean;
+  productId: string;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<ProductShape[], Error>>;
+  closeModal: () => void;
+};
 type Attribute = {
   key?: string;
   value?: string;
@@ -45,8 +53,14 @@ type ApiResponse = {
   success: boolean;
   message: string;
 };
-const UpdateProduct = ({ isLoading, productData }: productProps) => {
-  const router = useRouter();
+const UpdateProduct = ({
+  isLoading,
+  productData,
+  productId,
+  refetch,
+  closeModal,
+}: productProps) => {
+  console.log("the id is", productId);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
   const [formData, setFormData] = useState({
     productName: "",
@@ -120,15 +134,16 @@ const UpdateProduct = ({ isLoading, productData }: productProps) => {
     ProductData
   >({
     mutationFn: async (data) => {
-      return await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
+      return await api.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/update-product/${productId}`,
         data
       );
     },
     onSuccess: (result) => {
       if (result?.data?.success) {
         toast.success(result?.data?.message);
-        router.push("/dashboard/products");
+        refetch();
+        closeModal();
       } else {
         toast.error(
           result?.data?.message ||
@@ -149,6 +164,7 @@ const UpdateProduct = ({ isLoading, productData }: productProps) => {
       ...formData,
       attributes: processedAttributes,
     };
+    console.log("submitting", data);
     mutate(data);
   };
   if (isLoading) {
@@ -292,7 +308,7 @@ const UpdateProduct = ({ isLoading, productData }: productProps) => {
               <Plus className="h-4 w-4 mr-1" /> Add Attribute
             </Button>
             <Button type="submit" className="w-full">
-              <ClipboardPlus /> Add Product
+              <ClipboardPlus /> Update Product
             </Button>
           </div>
         </div>
