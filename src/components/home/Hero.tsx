@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import HeroImg from "@/assets/images/heroImg.jpg";
+import Link from "next/link";
 
 const stats = [
   { value: "10K+", label: "Active Users" },
@@ -29,8 +30,10 @@ export function Hero() {
             data-driven decisions with real-time analytics.
           </p>
 
-          <div className="buttonGroup">
-            <Button size="lg">Start Free Trial</Button>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link href="/dashboard/my-account">
+              <Button size="lg">Get Started</Button>
+            </Link>
             <Button variant="outline" size="lg">
               Watch Demo
             </Button>
