@@ -14,6 +14,8 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import InvoiceSummary from "./InvoiceSummary";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 type CustomerOption = {
   value: string;
@@ -62,13 +64,22 @@ export default function InvoicesPage() {
         <ScreenLoader />
       ) : (
         <section>
-          <div className="mb-4 lg:mb-8 bg-gray-50 border p-4 lg:p-6 rounded-md ">
-            <h1 className="text-2xl font-semibold text-gray-900">Invoices</h1>
-            <p className="text-gray-500 mt-1">Manage and track your order</p>
+          <div className="mb-4 lg:mb-8 bg-gray-50 border p-4 lg:p-6 rounded-md flex items-center justify-between gap-4">
+            <div>
+              <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+                Invoices
+              </h1>
+              <p className="text-gray-500 mt-1 text-sm md:text-base">
+                Manage and track your order
+              </p>
+            </div>
+            <Link href="/dashboard/create-invoice">
+              <Button size="sm">Create Invoice</Button>
+            </Link>
           </div>
           <InvoiceSummary />
 
-          <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">
                 Date Range
