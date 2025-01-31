@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Select from "react-select";
 import { User, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -8,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/shared/DatePicker/DatePicker";
 
 type Customer = {
-  id: string;
   name: string;
   email: string;
   phone: string;
@@ -23,14 +21,12 @@ const customerOptions = [
 
 const existingCustomers: { [key: string]: Customer } = {
   "1": {
-    id: "1",
     name: "John Doe",
     email: "john@example.com",
     phone: "123-456-7890",
     address: "123 Main St, City, Country",
   },
   "2": {
-    id: "2",
     name: "Jane Smith",
     email: "jane@example.com",
     phone: "098-765-4321",
@@ -41,6 +37,13 @@ const existingCustomers: { [key: string]: Customer } = {
 type Props = {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
+  setCustomer: (customer: {
+    name: string;
+    email: string;
+    phone: string;
+    address: string;
+  }) => void;
+  customer: Customer;
 };
 
 type OptionType = {
@@ -48,23 +51,23 @@ type OptionType = {
   label: string;
 };
 
-export function CustomerSection({ date, setDate }: Props) {
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
-    null
-  );
-
+export function CustomerSection({
+  customer,
+  setCustomer,
+  date,
+  setDate,
+}: Props) {
   const handleCustomerChange = (option: OptionType | null) => {
     if (!option) return;
     if (option.value === "new") {
-      setSelectedCustomer({
-        id: "new",
+      setCustomer({
         name: "",
         email: "",
         phone: "",
         address: "",
       });
     } else {
-      setSelectedCustomer(existingCustomers[option.value]);
+      setCustomer(existingCustomers[option.value]);
     }
   };
 
@@ -77,6 +80,7 @@ export function CustomerSection({ date, setDate }: Props) {
           </Label>
           <Select
             id="customer-select"
+            instanceId="customer-select"
             options={customerOptions}
             onChange={handleCustomerChange}
             placeholder="Select customer"
@@ -91,7 +95,7 @@ export function CustomerSection({ date, setDate }: Props) {
           <DatePicker date={date} setDate={setDate} />
         </div>
       </div>
-      {selectedCustomer && (
+      {customer && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="space-y-2">
             <Label htmlFor="customer-name" className="text-gray-600">
@@ -102,10 +106,10 @@ export function CustomerSection({ date, setDate }: Props) {
               <Input
                 id="customer-name"
                 placeholder="Customer Name"
-                value={selectedCustomer.name}
+                value={customer.name}
                 onChange={(e) =>
-                  setSelectedCustomer({
-                    ...selectedCustomer,
+                  setCustomer({
+                    ...customer,
                     name: e.target.value,
                   })
                 }
@@ -123,10 +127,10 @@ export function CustomerSection({ date, setDate }: Props) {
                 id="customer-email"
                 type="email"
                 placeholder="Email Address"
-                value={selectedCustomer.email}
+                value={customer.email}
                 onChange={(e) =>
-                  setSelectedCustomer({
-                    ...selectedCustomer,
+                  setCustomer({
+                    ...customer,
                     email: e.target.value,
                   })
                 }
@@ -143,10 +147,10 @@ export function CustomerSection({ date, setDate }: Props) {
               <Input
                 id="customer-phone"
                 placeholder="Phone Number"
-                value={selectedCustomer.phone}
+                value={customer.phone}
                 onChange={(e) =>
-                  setSelectedCustomer({
-                    ...selectedCustomer,
+                  setCustomer({
+                    ...customer,
                     phone: e.target.value,
                   })
                 }
@@ -163,10 +167,10 @@ export function CustomerSection({ date, setDate }: Props) {
               <Input
                 id="customer-address"
                 placeholder="Address"
-                value={selectedCustomer.address}
+                value={customer.address}
                 onChange={(e) =>
-                  setSelectedCustomer({
-                    ...selectedCustomer,
+                  setCustomer({
+                    ...customer,
                     address: e.target.value,
                   })
                 }

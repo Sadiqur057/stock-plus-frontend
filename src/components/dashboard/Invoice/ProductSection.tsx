@@ -1,18 +1,11 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { Plus, Minus, Trash } from "lucide-react";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-
-type Product = {
-  id: string;
-  name: string;
-  company: string;
-  price: number;
-  quantity: number;
-};
+import { CalculationShape, Product } from "./CreateInvoicePage";
 
 const existingProducts = {
   "1": { id: "1", name: "Product A", company: "Company X", price: 100 },
@@ -29,7 +22,9 @@ const productOptions = [
 ];
 
 interface ProductSectionProps {
-  onTotalChange: (total: number) => void;
+  onTotalChange: React.Dispatch<React.SetStateAction<CalculationShape>>;
+  products: Product[];
+  setProducts: (product: Product[] | []) => void;
 }
 
 type Option = {
@@ -37,9 +32,11 @@ type Option = {
   label: string;
 };
 
-export function ProductSection({ onTotalChange }: ProductSectionProps) {
-  const [products, setProducts] = useState<Product[]>([]);
-
+export function ProductSection({
+  products,
+  setProducts,
+  onTotalChange,
+}: ProductSectionProps) {
   const calculateAmount = (price: number, quantity: number) => {
     return price * quantity;
   };
@@ -56,7 +53,11 @@ export function ProductSection({ onTotalChange }: ProductSectionProps) {
   );
 
   useEffect(() => {
-    onTotalChange(calculateTotal(products));
+    const subtotal = calculateTotal(products);
+    onTotalChange((prevState: CalculationShape) => ({
+      ...prevState,
+      subtotal: subtotal,
+    }));
   }, [products, onTotalChange, calculateTotal]);
 
   const handleProductChange = (option: Option | null, index: number) => {
@@ -193,6 +194,7 @@ export function ProductSection({ onTotalChange }: ProductSectionProps) {
                     <Button
                       variant="outline"
                       size="icon"
+                      type="button"
                       onClick={() => adjustQuantity(index, false)}
                       className="h-9 w-9 bg-gray-200"
                     >
@@ -204,6 +206,7 @@ export function ProductSection({ onTotalChange }: ProductSectionProps) {
                     <Button
                       variant="outline"
                       size="icon"
+                      type="button"
                       onClick={() => adjustQuantity(index, true)}
                       className="h-9 w-9 bg-gray-200"
                     >
@@ -236,6 +239,7 @@ export function ProductSection({ onTotalChange }: ProductSectionProps) {
         variant="outline"
         className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-dashed border-2"
         onClick={addProduct}
+        type="button"
       >
         <Plus className="h-4 w-4 mr-2" />
         Add New Row
