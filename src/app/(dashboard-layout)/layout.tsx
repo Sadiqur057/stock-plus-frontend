@@ -21,7 +21,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
           <div>
             <DashboardSidebar />
           </div>
-          <div className="md:px-10 w-full md:flex-1 container  mb-6 ">
+          <div className="md:px-10 w-full md:flex-1 container  mb-6 overflow-hidden">
             {children}
           </div>
         </SidebarProvider>
