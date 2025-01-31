@@ -3,12 +3,12 @@
 import * as React from "react";
 import {
   BookOpen,
+  BookUser,
   Bot,
-  Frame,
   GalleryVerticalEnd,
-  PieChart,
   Settings2,
   SquareTerminal,
+  Users,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -52,21 +52,6 @@ const data = {
       ],
     },
     {
-      title: "Employees",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "All Employees",
-          url: "#",
-        },
-        {
-          title: "Add Employees",
-          url: "#",
-        },
-      ],
-    },
-    {
       title: "Invoices",
       url: "#",
       isActive: false,
@@ -104,14 +89,14 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
+      name: "Employees",
+      url: "/dashboard/employees",
+      icon: BookUser,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      name: "Customers",
+      url: "/dashboard/customers",
+      icon: Users,
     },
   ],
 };
