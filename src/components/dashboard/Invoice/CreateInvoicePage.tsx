@@ -9,6 +9,7 @@ import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import { useMutation } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import toast from "react-hot-toast";
+import Link from "next/link";
 
 export type CalculationShape = {
   subtotal: number;
@@ -91,13 +92,18 @@ export default function CreateInvoicePage() {
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
       <section>
-        <div className="mb-4 bg-gray-100 p-4 rounded-md">
-          <h1 className="text-2xl font-semibold text-gray-900">
-            Create Invoice
-          </h1>
-          <p className="text-gray-500 mt-1">
-            Fill in the details below to create a new invoice
-          </p>
+        <div className="mb-4 lg:mb-8 bg-gray-50 border p-4 lg:p-6 rounded-md flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+              Create Invoice
+            </h1>
+            <p className="text-gray-500 mt-1 text-sm md:text-base">
+              Fill in the details below to create a new invoice
+            </p>
+          </div>
+          <Link href="/dashboard/create-invoice">
+            <Button size="sm">All Invoices</Button>
+          </Link>
         </div>
 
         <form onSubmit={handleSubmit} className="grid gap-6">
