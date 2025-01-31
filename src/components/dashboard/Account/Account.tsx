@@ -165,24 +165,28 @@ export default function Account() {
                           <Phone className="h-5 w-5 text-muted-foreground mr-2" />
                           <span>{user?.company_phone || "NA"}</span>
                         </li>
-                        <li className="flex items-center">
-                          <Twitter className="h-5 w-5 text-muted-foreground mr-2" />
-                          <Link
-                            href={user?.twitter_url}
-                            className="text-blue-600"
-                          >
-                            {user?.twitter_url || "NA"}
-                          </Link>
-                        </li>
-                        <li className="flex items-center">
-                          <Facebook className="h-5 w-5 text-muted-foreground mr-2" />
-                          <Link
-                            href={user?.facebook_url}
-                            className="text-blue-600"
-                          >
-                            {user?.facebook_url || "NA"}
-                          </Link>
-                        </li>
+                        {user?.twitter_url && (
+                          <li className="flex items-center">
+                            <Twitter className="h-5 w-5 text-muted-foreground mr-2" />
+                            <Link
+                              href={user?.twitter_url}
+                              className="text-blue-600"
+                            >
+                              {user?.twitter_url || "NA"}
+                            </Link>
+                          </li>
+                        )}
+                        {user?.facebook_url && (
+                          <li className="flex items-center">
+                            <Facebook className="h-5 w-5 text-muted-foreground mr-2" />
+                            <Link
+                              href={user?.facebook_url}
+                              className="text-blue-600"
+                            >
+                              {user?.facebook_url || "NA"}
+                            </Link>
+                          </li>
+                        )}
                       </ul>
                     </div>
                   </div>
