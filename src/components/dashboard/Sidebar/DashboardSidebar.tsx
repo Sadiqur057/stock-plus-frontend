@@ -75,8 +75,8 @@ const data = {
           url: "/dashboard/create-invoice",
         },
         {
-          title: "History",
-          url: "#",
+          title: "Transactions",
+          url: "/dashboard/transactions",
         },
       ],
     },
@@ -148,7 +148,7 @@ export function DashboardSidebar({
           </div>
         </SidebarMenuButton>
       </SidebarHeader>
-      <SidebarContent>
+      <SidebarContent className="custom-scrollbar">
         <NavMain items={data.navMain} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
