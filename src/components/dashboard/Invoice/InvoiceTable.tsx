@@ -1,12 +1,15 @@
 import React from "react";
 import { format } from "date-fns";
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Invoice } from "@/types/invoice.type";
+import InvoiceOption from "./InvoiceOption/InvoiceOption";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 type InvoiceTableProps = {
   invoices: Invoice[];
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<Invoice[], Error>>;
 };
-const InvoiceTable = ({ invoices }: InvoiceTableProps) => {
+const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
   return (
     <div className="rounded-md border min-w-max">
       <table className="w-full">
@@ -70,13 +73,12 @@ const InvoiceTable = ({ invoices }: InvoiceTableProps) => {
                 </span>
               </td>
               <td className="py-4 px-6 text-right">
-                <div className="flex justify-end space-x-2">
-                  <Link href={`/dashboard/invoices/${invoice?._id}`}>
-                    <Button variant="outline" size="sm">
-                      View
-                    </Button>
-                  </Link>
-                </div>
+                <InvoiceOption
+                  invoiceId={invoice?._id}
+                  refetch={refetch}
+                  due_amount={invoice?.cost_summary?.total_due}
+                />
+
               </td>
             </tr>
           ))}
