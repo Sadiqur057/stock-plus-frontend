@@ -18,7 +18,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
       <NProgressBar />
       <QueryClientProvider client={queryClient}>
         <SidebarProvider className={`${poppins.className} md:flex`}>
-          <div>
+          <div className="md:min-w-20">
             <DashboardSidebar />
           </div>
           <div className="md:px-10 w-full md:flex-1 container  mb-6 overflow-hidden">
