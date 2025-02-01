@@ -7,6 +7,7 @@ export interface ProductShape {
   salePrice?: string;
   remarks?: string;
   attributes?: attributes[];
+  created_at?: string;
 }
 
 type attributes = {
