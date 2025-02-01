@@ -84,7 +84,6 @@ export default function CreateInvoicePage() {
       created_at: invoiceDate,
       total_cost: calculation,
     };
-    console.log("submitting", data);
     mutate(data);
   };
 
@@ -101,7 +100,7 @@ export default function CreateInvoicePage() {
               Fill in the details below to create a new invoice
             </p>
           </div>
-          <Link href="/dashboard/create-invoice">
+          <Link href="/dashboard/invoices">
             <Button size="sm">All Invoices</Button>
           </Link>
         </div>
