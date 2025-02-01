@@ -1,4 +1,5 @@
 import React from "react";
+import { format, parse } from "date-fns";
 import {
   Table,
   TableBody,
@@ -9,7 +10,7 @@ import {
 } from "@/components/ui/table";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Package, DollarSign, Tag, Info } from "lucide-react";
+import { Building2, Package, DollarSign, Tag, Info, CalendarDays } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { ProductShape } from "@/types/product.type";
 
@@ -26,14 +27,20 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
       </div>
     );
   }
+  const parsedDate = parse(
+    productData?.created_at ?? "",
+    "M/d/yyyy, h:mm:ss a",
+    new Date()
+  );
+  const formattedDate = format(parsedDate, "MMMM do, yyyy 'at' hh:mm a");
   return (
     <CardContent className="py-1 p-0">
       <div className="grid gap-6 mb-8">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col lg:flex-row gap-4 items-start justify-between">
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <Package className="h-5 w-5 text-primary" />
-              <h1 className="text-xl font-semibold">
+              <h1 className="text-lg md:text-xl font-semibold">
                 {productData?.productName}
               </h1>
             </div>
@@ -42,10 +49,16 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
               <span>{productData?.company}</span>
             </div>
           </div>
-          <Badge variant="secondary" className="h-fit">
-            <Tag className="h-3 w-3 mr-1" />
-            {productData?.remarks}
-          </Badge>
+          <div className="sm:text-right gap-4 lg:gap-2 flex flex-col items-start lg:items-end">
+            <div className="flex gap-2 text-muted-foreground text-sm lg:order-2">
+              <CalendarDays className="h-4 w-4 mr-1" />
+              <span>{formattedDate}</span>
+            </div>
+            <Badge variant="secondary" className="h-fit lg:order-1">
+              <Tag className="h-3 w-3 mr-1" />
+              {productData?.remarks}
+            </Badge>
+          </div>
         </div>
 
         <div className="grid sm:grid-cols-3 gap-4 pt-4">
