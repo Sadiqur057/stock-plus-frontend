@@ -35,7 +35,7 @@ export function Modal({
           <DialogTitle>{title}</DialogTitle>
           {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
-        <div className="mt-4 max-h-[70vh] overflow-auto">{children}</div>
+        <div className="mt-4 max-h-[70vh] overflow-auto custom-scrollbar">{children}</div>
       </DialogContent>
     </Dialog>
   );
