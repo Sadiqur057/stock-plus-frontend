@@ -34,7 +34,7 @@ export default function InvoicesPage() {
     useState<CustomerOption | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: invoices, isLoading } = useQuery({
+  const { data: invoices, isLoading, refetch } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
       const result = await api.get(
@@ -117,7 +117,7 @@ export default function InvoicesPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <InvoiceTable invoices={invoices} />
+            <InvoiceTable invoices={invoices} refetch={refetch} />
           </div>
         </section>
       )}
