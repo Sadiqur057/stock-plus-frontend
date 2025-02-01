@@ -64,7 +64,10 @@ const ProductAction = ({ productId, refetch }: Props) => {
       <SidebarMenuItem className="list-none border h-8 border-none">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuAction showOnHover>
+            <SidebarMenuAction
+              showOnHover
+              className="bg-gray-100 border w-6 rounded-full"
+            >
               <MoreHorizontal />
               <span className="sr-only">More</span>
             </SidebarMenuAction>
