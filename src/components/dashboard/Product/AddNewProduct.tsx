@@ -33,6 +33,7 @@ type FormData = {
   purchasePrice?: string;
   salePrice?: string;
   remarks?: string;
+  created_at: string;
 };
 type ProductData = FormData & {
   attributes?: Attribute[];
@@ -59,6 +60,7 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
     purchasePrice: "",
     salePrice: "",
     remarks: "",
+    created_at: new Date().toLocaleString(),
   });
 
   const existingAttributes = ["Color", "Size", "Material", "Weight"];
@@ -131,6 +133,7 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
           purchasePrice: "",
           salePrice: "",
           remarks: "",
+          created_at: "",
         });
         setAttributes([]);
       } else {
