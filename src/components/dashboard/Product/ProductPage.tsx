@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import api from "@/interceptors/api";
 import { Button } from "@/components/ui/button";
 import ProductAction from "./ProductAction";
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   Table,
   TableBody,
@@ -31,33 +31,87 @@ type ProductType = {
 
 import style from "./Product.module.scss";
 import { useQuery } from "@tanstack/react-query";
-import { CirclePlus, CloudDownload } from "lucide-react";
+import { CirclePlus, CloudDownload, ListRestart, Search } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { Modal } from "@/components/shared/Modal/Modal";
 import AddNewProduct from "./AddNewProduct";
+import {
+  SelectItem,
+  Select,
+  SelectContent,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+  SelectGroup,
+} from "@/components/ui/select";
 
 const ProductPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const breadcrumbList = [
-    {
-      name: "Products",
-      link: "/dashboard/products",
-    },
-  ];
+  const [filterProduct, setFilterProduct] = useState<string>("all");
+  const [sortValue, setSortValue] = useState<string>("");
+  const [searchKeyword, setSearchKeyword] = useState<string>("");
+  const [inputKeyword, setInputKeyword] = useState<string>("");
+
+  const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  const fetchProducts = async () => {
+    const response = await api.get(
+      `${process.env.NEXT_PUBLIC_API_URL}/products`,
+      {
+        params: {
+          filter: filterProduct !== "all" ? filterProduct : null,
+          search: searchKeyword ? searchKeyword : null,
+          sort: sortValue ? sortValue : null,
+        },
+      }
+    );
+    return response.data;
+  };
 
   const {
     data: products,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["products"],
-    queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/products`
-      );
-      return result?.data;
-    },
+    queryKey: [filterProduct, searchKeyword, sortValue],
+    queryFn: fetchProducts,
   });
+
+  const handleSort = (value: string) => {
+    setSortValue(value);
+  };
+
+  const handleFilter = (value: string) => {
+    setFilterProduct(value);
+  };
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInputKeyword(value);
+
+    if (debounceTimeout.current) {
+      clearTimeout(debounceTimeout.current);
+    }
+
+    debounceTimeout.current = setTimeout(() => {
+      setSearchKeyword(value);
+    }, 300);
+  };
+
+  const handleReset = () => {
+    setFilterProduct("all");
+    setSortValue("");
+    setSearchKeyword("");
+    setInputKeyword("");
+    refetch();
+  };
+
+  const breadcrumbList = [
+    {
+      name: "Products",
+      link: "/dashboard/products",
+    },
+  ];
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -80,7 +134,14 @@ const ProductPage = () => {
             </p>
           </div>
 
-          <div className="flex items-center mt-4 gap-x-3">
+          <div className="flex items-center mt-4 gap-x-2 lg:gap-x-3">
+            <Button
+              onClick={handleReset}
+              variant={"outline"}
+              className="py-3 px-2.5"
+            >
+              <ListRestart />
+            </Button>
             <Button variant={"outline"} className="py-3">
               <CloudDownload />
               <span>Import</span>
@@ -104,42 +165,78 @@ const ProductPage = () => {
           </div>
         </div>
 
-        <div className="my-6 md:flex md:items-center md:justify-between">
-          <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg dark:bg-gray-900 rtl:flex-row-reverse dark:border-gray-700 dark:divide-gray-700">
-            <button className="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 bg-gray-100 sm:text-sm dark:bg-gray-800 dark:text-gray-300">
-              View all
-            </button>
+        <div className="my-6 md:flex md:items-center md:justify-between gap-4 flex-col 2lg:flex-row">
+          <div className="flex w-full flex-col md:flex-row justify-between flex-1 gap-4">
+            <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg rtl:flex-row-reverse w-fit">
+              <button
+                onClick={() => handleFilter("all")}
+                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
+                  filterProduct === "all" && "bg-gray-600 text-white"
+                }`}
+              >
+                View all
+              </button>
 
-            <button className="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
-              In Stock
-            </button>
+              <button
+                onClick={() => handleFilter("inStock")}
+                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
+                  filterProduct === "inStock" && "bg-gray-600 text-white"
+                }`}
+              >
+                In Stock
+              </button>
 
-            <button className="px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200 sm:text-sm dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100">
-              Out of Stock
-            </button>
+              <button
+                onClick={() => handleFilter("stockOut")}
+                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
+                  filterProduct === "stockOut" && "bg-gray-600 text-white"
+                }`}
+              >
+                Out of Stock
+              </button>
+            </div>
+            <div>
+              <Select value={sortValue} onValueChange={handleSort}>
+                <SelectTrigger className="!py-[18px] w-full md:min-w-[100px] md:max-w-[196px]">
+                  <SelectValue placeholder="Sort By" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Sort By</SelectLabel>
+                    <SelectItem value="price-desc">
+                      Price(High to Low)
+                    </SelectItem>
+                    <SelectItem value="price-asc">
+                      Price(Low to high)
+                    </SelectItem>
+                    <SelectItem value="date-asc">
+                      Date(First to Last)
+                    </SelectItem>
+                    <SelectItem value="date-desc">
+                      Date(Last to First)
+                    </SelectItem>
+                    <SelectItem value="quantity-desc">
+                      Quantity(High to Low)
+                    </SelectItem>
+                    <SelectItem value="quantity-asc">
+                      Quantity(Low to high)
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
-          <div className="relative flex items-center mt-4 md:mt-0">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 mx-3 text-gray-400 dark:text-gray-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
+          <div className="relative w-full 2lg:w-fit flex items-center mt-4 md:mt-0">
+            <span className="ml-3 absolute">
+              <Search size={16} />
             </span>
 
             <input
-              type="text"
+              type="search"
               placeholder="Search"
+              value={inputKeyword}
+              onChange={handleSearch}
               className={style.searchBox}
             />
           </div>
