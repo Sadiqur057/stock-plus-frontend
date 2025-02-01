@@ -9,6 +9,7 @@ import {
   Settings2,
   SquareTerminal,
   Users,
+  LayoutDashboard
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -27,6 +28,18 @@ import api from "@/interceptors/api";
 
 const data = {
   navMain: [
+    {
+      title: "Dashboard",
+      url: "#",
+      icon: LayoutDashboard,
+      isActive: true,
+      items: [
+        {
+          title: "Overview",
+          url: "/dashboard",
+        },
+      ],
+    },
     {
       title: "Products",
       url: "#",

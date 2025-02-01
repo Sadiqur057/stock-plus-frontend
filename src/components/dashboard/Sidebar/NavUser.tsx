@@ -41,13 +41,13 @@ export function NavUser({ user }: { user: UserShape }) {
   return (
     <SidebarMenu>
       <SidebarMenuItem>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
+        <DropdownMenu >
+          <DropdownMenuTrigger className="mx-auto" asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+              className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground min-w-10 min-h-10"
             >
-              <Avatar className="h-8 w-8 rounded-lg">
+              <Avatar className="h-10 w-10 rounded-lg">
                 <Image src={userAvatar} alt={user?.name || "user"} />
                 <AvatarFallback className="rounded-lg">SP</AvatarFallback>
               </Avatar>
@@ -65,7 +65,7 @@ export function NavUser({ user }: { user: UserShape }) {
             sideOffset={4}
           >
             <DropdownMenuLabel className="p-0 font-normal">
-              <div className="flex items-center gap-2 px-1 py-1.5 text-left ">
+              <div className="flex items-center gap-2 px-1 py-1.5 text-left">
                 <Avatar className="h-8 w-8 rounded-lg">
                   <Image src={userAvatar} alt={user?.name || "user"} />
                   <AvatarFallback className="rounded-lg">SP</AvatarFallback>
