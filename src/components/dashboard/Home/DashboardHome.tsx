@@ -10,7 +10,7 @@ import { RecentTransactions } from "./RecentTransaction";
 const DashboardHome = () => {
   const breadcrumbList = [
     {
-      name: "Home",
+      name: "Overview",
       link: "/dashboard",
     },
   ];
