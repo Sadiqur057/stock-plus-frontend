@@ -149,31 +149,33 @@ export default function ViewInvoice({ id }: Props) {
                     {invoice.cost_summary.tax.toFixed(2)} BDT
                   </span>
                 </div>
-                <div className="flex justify-between py-2">
-                  <span className="text-gray-600">Paid:</span>
-                  <span className="font-medium">
-                    {invoice.cost_summary.total_paid.toFixed(2)} BDT
-                  </span>
-                </div>
-                <div className="flex justify-between py-2">
-                  <span className="text-gray-600">Due:</span>
-                  <span className="font-medium">
-                    {invoice.cost_summary.total_due.toFixed(2)} BDT
-                  </span>
-                </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
                     {invoice.cost_summary.total.toFixed(2)} BDT
                   </span>
                 </div>
+                {invoice?.cost_summary?.status !== "unpaid" && (
+                  <>
+                    <div className="flex justify-between py-2">
+                      <span className="text-gray-600">Paid:</span>
+                      <span className="font-medium">
+                        {invoice.cost_summary.total_paid.toFixed(2)} BDT
+                      </span>
+                    </div>
+                    <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
+                      <span>Due:</span>
+                      <span>
+                        {invoice.cost_summary.total_due.toFixed(2)} BDT
+                      </span>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
             <div className="text-sm text-gray-500 mb-8 text-left">
-              <p>
-                NOTE: This is a computer-generated receipt.
-              </p>
+              <p>NOTE: This is a computer-generated receipt.</p>
             </div>
           </div>
 
