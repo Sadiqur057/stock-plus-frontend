@@ -132,7 +132,8 @@ const CustomersPage = () => {
               <Table className="border">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[200px]">Name</TableHead>
+                    <TableHead>No.</TableHead>
+                    <TableHead>Name</TableHead>
                     <TableHead>Email</TableHead>
                     <TableHead>Phone</TableHead>
                     <TableHead>Address</TableHead>
@@ -140,8 +141,11 @@ const CustomersPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {customers?.map((customer: CustomerType) => (
+                  {customers?.map((customer: CustomerType, index:number) => (
                     <TableRow key={customer._id}>
+                      <TableCell className="font-medium">
+                        {index+1}.
+                      </TableCell>
                       <TableCell className="font-medium">
                         {customer?.name}
                       </TableCell>

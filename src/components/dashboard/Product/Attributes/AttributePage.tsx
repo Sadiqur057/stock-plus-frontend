@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/table";
 
 export type AttributeType = {
-  _id: string
+  _id: string;
   name: string;
   description: string;
 };
@@ -106,26 +106,32 @@ const AttributesPage = () => {
               <Table className="border">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[200px]">Name</TableHead>
+                    <TableHead>No.</TableHead>
+                    <TableHead>Name</TableHead>
                     <TableHead>Description</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {attributes?.map((attribute: AttributeType) => (
-                    <TableRow key={attribute._id}>
-                      <TableCell className="font-medium">
-                        {attribute?.name}
-                      </TableCell>
-                      <TableCell>{attribute?.description}</TableCell>
-                      <TableCell>
-                        <AttributeOption
-                          refetch={refetch}
-                          attributeId={attribute?._id}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {attributes?.map(
+                    (attribute: AttributeType, index: number) => (
+                      <TableRow key={attribute._id}>
+                        <TableCell className="font-medium">
+                          {index+1}.
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {attribute?.name}
+                        </TableCell>
+                        <TableCell>{attribute?.description}</TableCell>
+                        <TableCell>
+                          <AttributeOption
+                            refetch={refetch}
+                            attributeId={attribute?._id}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
