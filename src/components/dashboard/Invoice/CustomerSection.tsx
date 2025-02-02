@@ -5,44 +5,44 @@ import { User, Mail, Phone, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DatePicker } from "@/components/shared/DatePicker/DatePicker";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/interceptors/api";
+import toast from "react-hot-toast";
+import { useState } from "react";
 
 type Customer = {
+  _id: string;
   name: string;
   email: string;
   phone: string;
   address: string;
 };
 
-const customerOptions = [
-  { value: "new", label: "Add New Customer" },
-  { value: "1", label: "John Doe" },
-  { value: "2", label: "Jane Smith" },
-];
+// const customerOptions = [
+//   { value: "new", label: "Add New Customer" },
+//   { value: "1", label: "John Doe" },
+//   { value: "2", label: "Jane Smith" },
+// ];
 
-const existingCustomers: { [key: string]: Customer } = {
-  "1": {
-    name: "John Doe",
-    email: "john@example.com",
-    phone: "123-456-7890",
-    address: "123 Main St, City, Country",
-  },
-  "2": {
-    name: "Jane Smith",
-    email: "jane@example.com",
-    phone: "098-765-4321",
-    address: "456 Elm St, Town, Country",
-  },
-};
+// const existingCustomers: { [key: string]: Customer } = {
+//   "1": {
+//     name: "John Doe",
+//     email: "john@example.com",
+//     phone: "123-456-7890",
+//     address: "123 Main St, City, Country",
+//   },
+//   "2": {
+//     name: "Jane Smith",
+//     email: "jane@example.com",
+//     phone: "098-765-4321",
+//     address: "456 Elm St, Town, Country",
+//   },
+// };
 
 type Props = {
   date: Date | undefined;
   setDate: (date: Date | undefined) => void;
-  setCustomer: (customer: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-  }) => void;
+  setCustomer: (customer: Customer) => void;
   customer: Customer;
 };
 
@@ -57,17 +57,52 @@ export function CustomerSection({
   date,
   setDate,
 }: Props) {
+  const [customerOptions, setCustomerOptions] = useState<OptionType[]>([]);
+
+  const { data: customerList } = useQuery({
+    queryKey: ["customers"],
+    queryFn: async () => {
+      const result = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/customers`
+      );
+      if (!result?.data?.success) {
+        toast.error(result?.data?.message || "Something went wrong");
+        return [];
+      }
+      const customers = result?.data?.data;
+      if (customers && Array.isArray(customers)) {
+        const formattedOptions = customers.map((customer: Customer) => ({
+          value: customer._id,
+          label: customer.name,
+        }));
+
+        setCustomerOptions([
+          { value: "new", label: "New Customer" },
+          ...formattedOptions,
+        ]);
+      }
+      return result?.data?.data;
+    },
+  });
+
   const handleCustomerChange = (option: OptionType | null) => {
     if (!option) return;
+
     if (option.value === "new") {
       setCustomer({
+        _id: new Date().toLocaleDateString(),
         name: "",
         email: "",
         phone: "",
         address: "",
       });
     } else {
-      setCustomer(existingCustomers[option.value]);
+      const selectedCustomer = customerList?.find(
+        (cust: Customer) => cust._id === option.value
+      );
+      if (selectedCustomer) {
+        setCustomer(selectedCustomer);
+      }
     }
   };
 
