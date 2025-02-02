@@ -1,25 +1,13 @@
 "use client";
 
-import { useEffect, useCallback } from "react";
+import { useEffect, useCallback, useState, useRef } from "react";
 import { Plus, Minus, Trash } from "lucide-react";
 import Select from "react-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CalculationShape, Product } from "./CreateInvoicePage";
-
-const existingProducts = {
-  "1": { id: "1", name: "Product A", company: "Company X", price: 100 },
-  "2": { id: "2", name: "Product B", company: "Company Y", price: 200 },
-  "3": { id: "3", name: "Product C", company: "Company Z", price: 150 },
-};
-
-const productOptions = [
-  { value: "new", label: "+ Add New Product" },
-  ...Object.values(existingProducts).map((product) => ({
-    value: product.id,
-    label: product.name,
-  })),
-];
+import api from "@/interceptors/api";
+import { useQuery } from "@tanstack/react-query";
 
 interface ProductSectionProps {
   onTotalChange: React.Dispatch<React.SetStateAction<CalculationShape>>;
@@ -37,18 +25,93 @@ export function ProductSection({
   setProducts,
   onTotalChange,
 }: ProductSectionProps) {
-  const calculateAmount = (price: number, quantity: number) => {
-    return price * quantity;
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const debounceRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Fetch products from API with dynamic search
+  const { data: productList, refetch } = useQuery({
+    queryKey: ["products"],
+    queryFn: async () => {
+      const response = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/products`,
+        {
+          params: {
+            search: searchKeyword || null, // Only add search param if it's not empty
+          },
+        }
+      );
+      return response.data?.data || [];
+    },
+    staleTime: 5000, // Avoid frequent refetching
+  });
+
+  // Format products for React Select
+  const productOptions = [
+    { value: "new", label: "+ Add New Product" },
+    ...(productList?.map((product: Product) => ({
+      value: product._id,
+      label: product.productName,
+    })) || []),
+  ];
+
+  // Debounced search handler
+  const handleSearchChange = (newValue: string) => {
+    setSearchKeyword(newValue);
+
+    // Clear the previous timeout if it exists
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    // Set a new timeout
+    debounceRef.current = setTimeout(() => {
+      refetch(); // Triggers API refetch after debounce delay
+    }, 500); // 500ms debounce delay
   };
 
-  const calculateTotal = useCallback(
-    (products: Product[]) => {
-      return products.reduce(
-        (sum, product) =>
-          sum + calculateAmount(product.price, product.quantity),
-        0
+  const handleProductChange = (option: Option | null, index: number) => {
+    if (!option) return;
+
+    const updatedProducts = [...products];
+
+    if (option.value === "new") {
+      // Add a new empty product entry
+      updatedProducts[index] = {
+        _id: Date.now().toString(),
+        productName: "",
+        company: "",
+        salePrice: 0,
+        quantity: 1,
+      };
+    } else {
+      // Find selected product from API response
+      const selectedProduct = productList?.find(
+        (product: Product) => product._id === option.value
       );
-    },
+
+      if (selectedProduct) {
+        updatedProducts[index] = {
+          _id: selectedProduct._id,
+          productName: selectedProduct.productName,
+          company: selectedProduct.company || "",
+          salePrice: selectedProduct.salePrice || 0,
+          quantity: 1,
+        };
+      }
+    }
+
+    setProducts(updatedProducts);
+  };
+
+  const calculateAmount = (price: number, quantity: number) => price * quantity;
+
+  const calculateTotal = useCallback(
+    (products: Product[]) =>
+      products.reduce(
+        (sum, product) =>
+          sum + calculateAmount(product.salePrice, product.quantity),
+        0
+      ),
     [products]
   );
 
@@ -56,73 +119,15 @@ export function ProductSection({
     const subtotal = calculateTotal(products);
     onTotalChange((prevState: CalculationShape) => ({
       ...prevState,
-      subtotal: subtotal,
+      subtotal,
     }));
   }, [products, onTotalChange, calculateTotal]);
-
-  const handleProductChange = (option: Option | null, index: number) => {
-    const updatedProducts = [...products];
-    if (option === null) return;
-    if (option.value === "new") {
-      updatedProducts[index] = {
-        id: Date.now().toString(),
-        name: "",
-        company: "",
-        price: 0,
-        quantity: 1,
-      };
-    } else {
-      const selectedProduct =
-        existingProducts[option.value as keyof typeof existingProducts];
-      updatedProducts[index] = {
-        ...selectedProduct,
-        quantity: 1,
-      };
-    }
-    setProducts(updatedProducts);
-  };
-
-  const updateProduct = (
-    index: number,
-    field: keyof Product,
-    value: string | number
-  ) => {
-    const updatedProducts = [...products];
-    updatedProducts[index] = { ...updatedProducts[index], [field]: value };
-    setProducts(updatedProducts);
-  };
-
-  const adjustQuantity = (index: number, increment: boolean) => {
-    const updatedProducts = [...products];
-    const currentQuantity = updatedProducts[index].quantity;
-    updatedProducts[index].quantity = increment
-      ? currentQuantity + 1
-      : Math.max(1, currentQuantity - 1);
-    setProducts(updatedProducts);
-  };
-
-  const addProduct = () => {
-    setProducts([
-      ...products,
-      {
-        id: Date.now().toString(),
-        name: "",
-        company: "",
-        price: 0,
-        quantity: 1,
-      },
-    ]);
-  };
-
-  const removeProduct = (index: number) => {
-    setProducts(products.filter((_, i) => i !== index));
-  };
 
   return (
     <div className="space-y-6">
       <div className="overflow-x-auto">
-        <div className="rounded-lg border border-gray-200  min-w-[1160px]">
-          <div className="grid grid-cols-12 gap-4 bg-gray-50 p-4 rounded-t-lg text-sm font-medium text-gray-600 ">
+        <div className="rounded-lg border border-gray-200 min-w-[1160px]">
+          <div className="grid grid-cols-12 gap-4 bg-gray-50 p-4 rounded-t-lg text-sm font-medium text-gray-600">
             <div className="col-span-2">Select Product</div>
             <div className="col-span-2">Product Name</div>
             <div className="col-span-2">Company</div>
@@ -135,7 +140,7 @@ export function ProductSection({
           <div className="divide-y divide-gray-200">
             {products.map((product, index) => (
               <div
-                key={product.id}
+                key={product._id}
                 className="grid grid-cols-12 gap-4 p-4 items-center"
               >
                 <div className="col-span-2">
@@ -143,23 +148,26 @@ export function ProductSection({
                     options={productOptions}
                     value={
                       productOptions.find(
-                        (option) => option.value === product.id
+                        (option) => option.value === product._id
                       ) || null
                     }
                     menuPortalTarget={document.body}
                     onChange={(option) => handleProductChange(option, index)}
                     className="react-select-container min-w-[180px]"
                     classNamePrefix="react-select"
+                    onInputChange={handleSearchChange} // Handle search
                   />
                 </div>
                 <div className="col-span-2">
                   <Input
                     placeholder="Product Name"
-                    value={product.name}
+                    value={product.productName}
                     className="min-w-[180px]"
-                    onChange={(e) =>
-                      updateProduct(index, "name", e.target.value)
-                    }
+                    onChange={(e) => {
+                      const updatedProducts = [...products];
+                      updatedProducts[index].productName = e.target.value;
+                      setProducts(updatedProducts);
+                    }}
                   />
                 </div>
 
@@ -168,23 +176,24 @@ export function ProductSection({
                     placeholder="Company"
                     value={product.company}
                     className="min-w-[180px]"
-                    onChange={(e) =>
-                      updateProduct(index, "company", e.target.value)
-                    }
+                    onChange={(e) => {
+                      const updatedProducts = [...products];
+                      updatedProducts[index].company = e.target.value;
+                      setProducts(updatedProducts);
+                    }}
                   />
                 </div>
 
                 <div className="col-span-2">
                   <Input
                     type="number"
-                    value={product.price}
-                    onChange={(e) =>
-                      updateProduct(
-                        index,
-                        "price",
-                        Number.parseFloat(e.target.value) || 0
-                      )
-                    }
+                    value={product.salePrice}
+                    onChange={(e) => {
+                      const updatedProducts = [...products];
+                      updatedProducts[index].salePrice =
+                        parseFloat(e.target.value) || 0;
+                      setProducts(updatedProducts);
+                    }}
                     className="text-right"
                   />
                 </div>
@@ -195,7 +204,14 @@ export function ProductSection({
                       variant="outline"
                       size="icon"
                       type="button"
-                      onClick={() => adjustQuantity(index, false)}
+                      onClick={() => {
+                        const updatedProducts = [...products];
+                        updatedProducts[index].quantity = Math.max(
+                          1,
+                          updatedProducts[index].quantity - 1
+                        );
+                        setProducts(updatedProducts);
+                      }}
                       className="h-9 w-9 bg-gray-200"
                     >
                       <Minus className="h-4 w-4" />
@@ -207,7 +223,11 @@ export function ProductSection({
                       variant="outline"
                       size="icon"
                       type="button"
-                      onClick={() => adjustQuantity(index, true)}
+                      onClick={() => {
+                        const updatedProducts = [...products];
+                        updatedProducts[index].quantity += 1;
+                        setProducts(updatedProducts);
+                      }}
                       className="h-9 w-9 bg-gray-200"
                     >
                       <Plus className="h-4 w-4" />
@@ -216,14 +236,19 @@ export function ProductSection({
                 </div>
 
                 <div className="col-span-1 font-medium">
-                  ${calculateAmount(product.price, product.quantity).toFixed(2)}
+                  $
+                  {calculateAmount(product.salePrice, product.quantity).toFixed(
+                    2
+                  )}
                 </div>
 
                 <div className="col-span-1">
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() => removeProduct(index)}
+                    onClick={() =>
+                      setProducts(products.filter((_, i) => i !== index))
+                    }
                     className="w-8 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
                   >
                     <Trash />
@@ -237,9 +262,20 @@ export function ProductSection({
 
       <Button
         variant="outline"
-        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-dashed border-2"
-        onClick={addProduct}
         type="button"
+        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 border-dashed border-2"
+        onClick={() =>
+          setProducts([
+            ...products,
+            {
+              _id: Date.now().toString(),
+              productName: "",
+              company: "",
+              salePrice: 0,
+              quantity: 1,
+            },
+          ])
+        }
       >
         <Plus className="h-4 w-4 mr-2" />
         Add New Row
