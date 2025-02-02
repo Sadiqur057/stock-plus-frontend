@@ -17,19 +17,21 @@ export type CalculationShape = {
   tax: number;
 };
 export type Product = {
-  id: string;
-  name: string;
+  _id: string;
+  productName: string;
   company: string;
-  price: number;
+  salePrice: number;
   quantity: number;
 };
+export type Customer = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+};
 type InvoiceType = {
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-    address: string;
-  };
+  customer: Customer;
   products: Product[];
   created_at: Date | undefined;
   total_cost: CalculationShape;
@@ -54,6 +56,7 @@ export default function CreateInvoicePage() {
   ];
 
   const [customer, setCustomer] = useState({
+    _id: "",
     name: "",
     email: "",
     phone: "",
