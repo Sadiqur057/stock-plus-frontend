@@ -253,7 +253,7 @@ const ProductPage = () => {
                     <TableHead className="w-[200px]">Name</TableHead>
                     <TableHead>Company</TableHead>
                     <TableHead>Quantity</TableHead>
-                    <TableHead>Price</TableHead>
+                    <TableHead>Price <span className="text-[10px]">(BDT)</span></TableHead>
                     <TableHead>Attributes</TableHead>
                     <TableHead></TableHead>
                   </TableRow>

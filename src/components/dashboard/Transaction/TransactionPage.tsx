@@ -139,7 +139,9 @@ const TransactionPage = () => {
                     <TableHead>No.</TableHead>
                     <TableHead>Payment By</TableHead>
                     <TableHead>Payment method</TableHead>
-                    <TableHead>Amount</TableHead>
+                    <TableHead>
+                      Amount <span className="text-[10px]">(BDT)</span>
+                    </TableHead>
                     <TableHead>Time</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -155,7 +157,7 @@ const TransactionPage = () => {
                           {transaction?.customer?.name}
                         </TableCell>
                         <TableCell>{transaction?.payment_method}</TableCell>
-                        <TableCell>{transaction?.amount} BDT.</TableCell>
+                        <TableCell>{transaction?.amount}</TableCell>
                         <TableCell>
                           {getFormattedDate(transaction?.created_at)}
                         </TableCell>
