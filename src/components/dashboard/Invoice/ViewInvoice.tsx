@@ -113,19 +113,19 @@ export default function ViewInvoice({ id }: Props) {
                       (product: Product, index: number) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-sm text-gray-900">
-                            {product?.name}
+                            {product?.productName}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-600">
                             {product?.company}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">
-                            {product?.price.toFixed(2)} BDT
+                            {product?.salePrice?.toFixed(2)} BDT
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-left">
                             {product?.quantity}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                            {(product.price * product.quantity).toFixed(2)} BDT
+                            {(product.salePrice * product.quantity).toFixed(2)} BDT
                           </td>
                         </tr>
                       )
