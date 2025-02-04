@@ -32,14 +32,14 @@ export const metadata: Metadata = {
     title: "Stock Plus - Your Inventory management and Invoicing solutions",
     description:
       "Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.",
-    images: ["https://i.postimg.cc/7YZyXqML/logo.png"],
+    images: ["https://i.postimg.cc/g2wbF47F/heroImg.jpg"],
     url: "https://www.stockpluspro.shop",
   },
   twitter: {
     title: "Stock Plus - Your Inventory management and Invoicing solutions",
     description:
       "Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.",
-    images: ["https://i.postimg.cc/7YZyXqML/logo.png"],
+    images: ["https://i.postimg.cc/g2wbF47F/heroImg.jpg"],
     card: "summary_large_image",
     creator: "Sadiqur057",
   },
