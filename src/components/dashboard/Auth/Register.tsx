@@ -1,5 +1,6 @@
 "use client";
 
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 import { setCookie } from "cookies-next";
@@ -124,7 +125,7 @@ export default function RegisterForm() {
             disabled={loading}
             className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium text-white hover:bg-black/90 "
           >
-            {loading ? "loading..." : "Login"}
+            {loading ? <ButtonLoader /> : "Register"}
           </button>
 
           <div className="relative">

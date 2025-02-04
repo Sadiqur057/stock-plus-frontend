@@ -6,12 +6,15 @@ import axios from "axios";
 import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast from "react-hot-toast";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
+
+type FormData = {
+  email: string;
+  password: string;
+};
 
 export default function LoginForm() {
-  type FormData = {
-    email: string;
-    password: string;
-  };
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -27,6 +30,7 @@ export default function LoginForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
+      setLoading(true);
       const result = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/login`,
         formData
@@ -41,8 +45,9 @@ export default function LoginForm() {
     } catch (err) {
       console.log(err);
       toast.error("Something Went wrong. Please try again later");
+    } finally {
+      setLoading(false);
     }
-    console.log(formData);
   };
 
   return (
@@ -98,9 +103,10 @@ export default function LoginForm() {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium text-white hover:bg-black/90 "
+            disabled={loading}
+            className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium flex justify-center text-white hover:bg-black/90 "
           >
-            Login
+            {loading ? <ButtonLoader /> : "Login"}
           </button>
 
           <div className="relative">

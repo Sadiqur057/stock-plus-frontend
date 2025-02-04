@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import Link from "next/link";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 export type CalculationShape = {
   subtotal: number;
@@ -39,6 +40,7 @@ type InvoiceType = {
 
 export default function CreateInvoicePage() {
   const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(new Date());
+  const [loading, setLoading] = useState<boolean>(false);
   const [calculation, setCalculation] = useState<CalculationShape>({
     tax: 0,
     subtotal: 0,
@@ -67,20 +69,29 @@ export default function CreateInvoicePage() {
 
   const { mutate } = useMutation({
     mutationFn: async (data: InvoiceType) => {
-      const result = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/create-invoice`,
-        data
-      );
-      if (!result?.data?.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        const result = await api.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/create-invoice`,
+          data
+        );
+
+        if (!result?.data?.success) {
+          toast.error(result?.data?.message || "Something went wrong.");
+          return;
+        }
+        toast.success(result?.data?.message);
+      } catch (error) {
+        toast.error("An unexpected error occurred.");
+        console.error(error);
+      } finally {
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      console.log("return", result);
     },
   });
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true);
     const data = {
       customer,
       products,
@@ -137,8 +148,8 @@ export default function CreateInvoicePage() {
             setCalculation={setCalculation}
           />
           <div className="mt-6 flex justify-end">
-            <Button size="lg" type="submit" className="px-8">
-              Create Invoice
+            <Button size="lg" type="submit" className="px-8" disabled={loading}>
+              {loading ? <ButtonLoader /> : "Create Invoice"}
             </Button>
           </div>
         </form>
