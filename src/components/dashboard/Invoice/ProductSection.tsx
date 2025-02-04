@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { CalculationShape, Product } from "./CreateInvoicePage";
 import api from "@/interceptors/api";
 import { useQuery } from "@tanstack/react-query";
+import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 interface ProductSectionProps {
   onTotalChange: React.Dispatch<React.SetStateAction<CalculationShape>>;
@@ -28,7 +30,12 @@ export function ProductSection({
   const [searchKeyword, setSearchKeyword] = useState("");
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fetch products from API with dynamic search
+  const generateObjectId = () => {
+    return Array.from(crypto.getRandomValues(new Uint8Array(12)))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
+  };
+
   const { data: productList, refetch } = useQuery({
     queryKey: ["products"],
     queryFn: async () => {
@@ -36,16 +43,15 @@ export function ProductSection({
         `${process.env.NEXT_PUBLIC_API_URL}/products`,
         {
           params: {
-            search: searchKeyword || null, // Only add search param if it's not empty
+            search: searchKeyword || null,
           },
         }
       );
       return response.data?.data || [];
     },
-    staleTime: 5000, // Avoid frequent refetching
+    staleTime: 5000,
   });
 
-  // Format products for React Select
   const productOptions = [
     { value: "new", label: "+ Add New Product" },
     ...(productList?.map((product: Product) => ({
@@ -54,19 +60,16 @@ export function ProductSection({
     })) || []),
   ];
 
-  // Debounced search handler
   const handleSearchChange = (newValue: string) => {
     setSearchKeyword(newValue);
 
-    // Clear the previous timeout if it exists
     if (debounceRef.current) {
       clearTimeout(debounceRef.current);
     }
 
-    // Set a new timeout
     debounceRef.current = setTimeout(() => {
-      refetch(); // Triggers API refetch after debounce delay
-    }, 500); // 500ms debounce delay
+      refetch();
+    }, 500);
   };
 
   const handleProductChange = (option: Option | null, index: number) => {
@@ -75,16 +78,23 @@ export function ProductSection({
     const updatedProducts = [...products];
 
     if (option.value === "new") {
-      // Add a new empty product entry
       updatedProducts[index] = {
-        _id: Date.now().toString(),
+        _id: generateObjectId(),
         productName: "",
         company: "",
         salePrice: 0,
         quantity: 1,
       };
     } else {
-      // Find selected product from API response
+      const isDuplicate = products.some(
+        (p) => p._id === option.value && p._id !== updatedProducts[index]._id
+      );
+
+      if (isDuplicate) {
+        toast.error("This product has already been added!");
+        return;
+      }
+
       const selectedProduct = productList?.find(
         (product: Product) => product._id === option.value
       );
@@ -148,14 +158,14 @@ export function ProductSection({
                     options={productOptions}
                     value={
                       productOptions.find(
-                        (option) => option.value === product._id
+                        (option) => option.value === String(product._id)
                       ) || null
                     }
                     menuPortalTarget={document.body}
                     onChange={(option) => handleProductChange(option, index)}
                     className="react-select-container min-w-[180px]"
                     classNamePrefix="react-select"
-                    onInputChange={handleSearchChange} // Handle search
+                    onInputChange={handleSearchChange}
                   />
                 </div>
                 <div className="col-span-2">
@@ -246,9 +256,13 @@ export function ProductSection({
                   <Button
                     variant="destructive"
                     size="sm"
-                    onClick={() =>
-                      setProducts(products.filter((_, i) => i !== index))
-                    }
+                    type="button"
+                    onClick={() => {
+                      const updatedProducts = products.filter(
+                        (_, i) => i !== index
+                      );
+                      setProducts([...updatedProducts]);
+                    }}
                     className="w-8 border border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white bg-transparent"
                   >
                     <Trash />
@@ -268,7 +282,7 @@ export function ProductSection({
           setProducts([
             ...products,
             {
-              _id: Date.now().toString(),
+              _id: generateObjectId(),
               productName: "",
               company: "",
               salePrice: 0,
