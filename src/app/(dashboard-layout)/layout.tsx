@@ -6,7 +6,7 @@ import * as React from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import poppins from "@/fonts/font";
 import NProgressBar from "@/components/Nprogress/NProgressBar";
-import Loader from "@/components/ui/Loader";
+import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -14,7 +14,7 @@ interface LayoutProps {
 const queryClient = new QueryClient();
 export default function DashboardLayout({ children }: LayoutProps) {
   return (
-    <React.Suspense fallback={<Loader />}>
+    <React.Suspense fallback={<ScreenLoader />}>
       <NProgressBar />
       <QueryClientProvider client={queryClient}>
         <SidebarProvider className={`${poppins.className} md:flex`}>
