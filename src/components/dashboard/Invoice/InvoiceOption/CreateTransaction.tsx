@@ -22,6 +22,7 @@ import {
   SelectItem,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type Props = {
   closeModal: () => void;
@@ -48,7 +49,7 @@ const CreateTransaction = ({
   invoiceId,
 }: Props) => {
   const [paymentMethod, setPaymentMethod] = useState<string>("");
-
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormDataType>({
     amount: null,
     payment_description: "",
@@ -76,17 +77,25 @@ const CreateTransaction = ({
 
   const { mutate } = useMutation({
     mutationFn: async (data: PaymentShape) => {
-      const result = await api.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/create-transaction/${invoiceId}`,
-        { data }
-      );
-      console.log("checking result", result);
-      if (!result.data.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        setLoading(true);
+        const result = await api.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/create-transaction/${invoiceId}`,
+          { data }
+        );
+
+        if (!result.data.success) {
+          return toast.error(result?.data?.message || "Something went wrong.");
+        }
+        toast.success(result?.data?.message);
+        refetch();
+      } catch (error) {
+        toast.error("Something went wrong!");
+        console.error(error);
+      } finally {
+        closeModal();
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      refetch();
-      closeModal();
     },
   });
 
@@ -95,10 +104,12 @@ const CreateTransaction = ({
     if (
       formData?.amount === null ||
       isNaN(formData?.amount) ||
-      formData?.amount > due_amount
+      formData?.amount > due_amount ||
+      formData?.amount <= 0
     ) {
-      toast.error("Please enter a valid amount.");
-      return;
+      return toast.error("Please enter a valid amount.");
+    } else if (!paymentMethod) {
+      return toast.error("Please select payment method.");
     }
     const data = {
       ...formData,
@@ -152,12 +163,17 @@ const CreateTransaction = ({
             value={formData?.payment_description}
             placeholder="Enter payment description"
             onChange={handleInputChange}
-            required
           />
         </div>
         <div className="flex justify-between">
-          <Button type="submit" className="w-full">
-            <Wallet /> Confirm Payment
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <ButtonLoader />
+            ) : (
+              <>
+                <Wallet /> Confirm Payment
+              </>
+            )}
           </Button>
         </div>
       </form>
