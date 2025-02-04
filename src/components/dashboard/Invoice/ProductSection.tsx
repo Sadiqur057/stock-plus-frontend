@@ -143,7 +143,9 @@ export function ProductSection({
             <div className="col-span-2">Company</div>
             <div className="col-span-2">Price</div>
             <div className="col-span-2">Quantity</div>
-            <div className="col-span-1">Amount</div>
+            <div className="col-span-1">
+              Total <span className="text-[10px]">(BDT)</span>
+            </div>
             <div className="col-span-1"></div>
           </div>
 
@@ -246,7 +248,6 @@ export function ProductSection({
                 </div>
 
                 <div className="col-span-1 font-medium">
-                  $
                   {calculateAmount(product.salePrice, product.quantity).toFixed(
                     2
                   )}
