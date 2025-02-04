@@ -17,6 +17,7 @@ import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
+  useQuery,
 } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import { ProductShape } from "@/types/product.type";
@@ -26,6 +27,7 @@ type Attribute = {
   value: string;
   newKey?: string;
 };
+
 type FormData = {
   productName: string;
   company: string;
@@ -35,6 +37,7 @@ type FormData = {
   remarks?: string;
   created_at: string;
 };
+
 type ProductData = FormData & {
   attributes?: Attribute[];
 };
@@ -63,15 +66,26 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
     created_at: new Date().toLocaleString(),
   });
 
-  const existingAttributes = ["Color", "Size", "Material", "Weight"];
+  const { data: attributeList = [] } = useQuery({
+    queryKey: ["attributes"],
+    queryFn: async () => {
+      const result = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/attributes`
+      );
+      if (!result?.data?.success) {
+        toast.error(result?.data?.message || "Something went wrong");
+        return [];
+      }
+      return result?.data?.data;
+    },
+  });
 
   const handleAddAttribute = () => {
     setAttributes([...attributes, { key: "", value: "" }]);
   };
 
   const handleRemoveAttribute = (index: number) => {
-    const newAttributes = attributes.filter((_, i) => i !== index);
-    setAttributes(newAttributes);
+    setAttributes(attributes.filter((_, i) => i !== index));
   };
 
   const handleAttributeChange = (
@@ -81,7 +95,6 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
   ) => {
     const newAttributes = [...attributes];
     newAttributes[index][field] = value;
-
     if (
       field === "key" &&
       value !== "new" &&
@@ -90,11 +103,9 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
       toast.error("This attribute is already added.");
       return;
     }
-
     if (field === "key" && value === "new") {
       newAttributes[index].newKey = "";
     }
-
     setAttributes(newAttributes);
   };
 
@@ -120,12 +131,8 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
     onSuccess: (result) => {
       if (result?.data?.success) {
         toast.success(result?.data?.message);
-        if (refetch) {
-          refetch();
-        }
-        if (closeModal) {
-          closeModal(false);
-        }
+        refetch?.();
+        closeModal?.(false);
         setFormData({
           productName: "",
           company: "",
@@ -137,26 +144,17 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
         });
         setAttributes([]);
       } else {
-        toast.error(
-          result?.data?.message ||
-            "Something went wrong! Please try again later"
-        );
+        toast.error(result?.data?.message || "Something went wrong!");
       }
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const processedAttributes = attributes.map((attr) =>
       attr.key === "new" ? { key: attr.newKey || "", value: attr.value } : attr
     );
-
-    const data: ProductData = {
-      ...formData,
-      attributes: processedAttributes,
-    };
-    mutate(data);
+    mutate({ ...formData, attributes: processedAttributes });
   };
 
   return (
@@ -243,53 +241,45 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
                   handleAttributeChange(index, "key", value)
                 }
               >
-                <SelectTrigger className="max-w-[180px] lg:min-w-[180px] w-fit py-[22px] px-4">
+                <SelectTrigger>
                   <SelectValue placeholder="Select attribute" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="new">Add New</SelectItem>
-                  {existingAttributes.map((attr) => (
-                    <SelectItem key={attr} value={attr}>
-                      {attr}
+                  {attributeList.map((attr: { _id: string; name: string }) => (
+                    <SelectItem key={attr._id} value={attr.name}>
+                      {attr.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {attr.key === "new" ? (
+              {attr.key === "new" && (
                 <Input
                   placeholder="New attribute key"
                   value={attr.newKey || ""}
                   onChange={(e) =>
                     handleAttributeChange(index, "newKey", e.target.value)
                   }
-                  className="max-w-[180px]"
                 />
-              ) : null}
+              )}
               <Input
                 placeholder="Attribute value"
                 value={attr.value}
                 onChange={(e) =>
                   handleAttributeChange(index, "value", e.target.value)
                 }
-                className="flex-grow"
               />
               <Button
                 type="button"
                 variant="outline"
-                className="px-[22px] py-[22px] hover:text-white hover:bg-blue-900"
-                size="icon"
                 onClick={() => handleRemoveAttribute(index)}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           ))}
-          <div className="flex items-center gap-5 justify-between">
-            <Button
-              type="button"
-              onClick={handleAddAttribute}
-              className="text-blue-800 bg-transparent border-blue-800 border hover:text-white hover:bg-blue-900 w-1/2"
-            >
+          <div className="flex gap-3 justify-end">
+            <Button type="button" variant="outline" className="w-1/2" onClick={handleAddAttribute}>
               <Plus className="h-4 w-4 mr-1" /> Add Attribute
             </Button>
             <Button type="submit" className="w-full">

@@ -88,7 +88,6 @@ const AddAttribute = ({ refetch, closeModal }: Props) => {
               value={formData?.description}
               placeholder="Enter attribute description"
               onChange={handleInputChange}
-              required
             />
           </div>
 
