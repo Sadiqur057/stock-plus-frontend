@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import logo from "@/assets/images/logo.png";
 import Image from "next/image";
 import poppins from "@/fonts/font";
+import AuthButton from "./AuthButton";
 
 const navItems = [
   { name: "Home", href: "/" },
@@ -16,7 +16,7 @@ export function Navbar() {
     <header className="navbar mb-20">
       <div className={`navbar__container container ${poppins.className}`}>
         <Link href="/" className="navbar__logo">
-          <Image src={logo} height={100} width={140} alt="StockPlus" />
+          <Image src={logo} height={120} width={160} alt="StockPlus" />
         </Link>
         <input type="checkbox" id="navbar-toggle" className="navbar__toggle" />
         <label htmlFor="navbar-toggle" className="navbar__toggle-label">
@@ -33,13 +33,7 @@ export function Navbar() {
                 </Link>
               </li>
             ))}
-            <li className="navbar__actions">
-              <Link href={"/dashboard"}>
-                <Button className="navbar__get-started-button">
-                  Get Started
-                </Button>
-              </Link>
-            </li>
+            <AuthButton />
           </ul>
         </nav>
       </div>
