@@ -113,25 +113,27 @@ const AttributesPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {attributes?.map(
-                    (attribute: AttributeType, index: number) => (
-                      <TableRow key={attribute._id}>
-                        <TableCell className="font-medium">
-                          {index+1}.
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {attribute?.name}
-                        </TableCell>
-                        <TableCell>{attribute?.description}</TableCell>
-                        <TableCell>
-                          <AttributeOption
-                            refetch={refetch}
-                            attributeId={attribute?._id}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
+                  {Array.isArray(attributes)
+                    ? attributes.map(
+                        (attribute: AttributeType, index: number) => (
+                          <TableRow key={attribute._id}>
+                            <TableCell className="font-medium">
+                              {index + 1}.
+                            </TableCell>
+                            <TableCell className="font-medium">
+                              {attribute?.name}
+                            </TableCell>
+                            <TableCell>{attribute?.description}</TableCell>
+                            <TableCell>
+                              <AttributeOption
+                                refetch={refetch}
+                                attributeId={attribute?._id}
+                              />
+                            </TableCell>
+                          </TableRow>
+                        )
+                      )
+                    : null}
                 </TableBody>
               </Table>
             </div>
