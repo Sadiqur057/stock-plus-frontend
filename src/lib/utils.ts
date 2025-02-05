@@ -18,5 +18,5 @@ export function getReadableDate(data: string) {
 }
 
 export function getFormattedPrice(price: number) {
-  return price.toLocaleString("en-IN");
+  return price?.toLocaleString("en-IN");
 }
