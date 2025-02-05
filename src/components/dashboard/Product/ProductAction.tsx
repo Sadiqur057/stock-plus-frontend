@@ -1,4 +1,10 @@
-import { Eye, FilePenLine, MoreHorizontal, Trash2 } from "lucide-react";
+import {
+  ClipboardPlus,
+  Eye,
+  FilePenLine,
+  MoreHorizontal,
+  Trash2,
+} from "lucide-react";
 import { SidebarMenuAction, SidebarMenuItem } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -16,6 +22,8 @@ import ViewProduct from "./ViewProduct";
 import { ProductShape } from "@/types/product.type";
 import toast from "react-hot-toast";
 import UpdateProduct from "./UpdateProduct";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 type Props = {
   productId: string;
@@ -28,6 +36,8 @@ const ProductAction = ({ productId, refetch }: Props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isAddStockModalOpen, setIsAddStockModalOpen] =
+    useState<boolean>(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [selectedProductId, setSelectedProductId] = useState<string>("");
   const [selectedProductData, setSelectedProductData] = useState({});
@@ -39,6 +49,27 @@ const ProductAction = ({ productId, refetch }: Props) => {
         `${process.env.NEXT_PUBLIC_API_URL}/product/${id}`
       );
       setSelectedProductData(result?.data?.data);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAddProductStock = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsLoading(true);
+    e.preventDefault();
+    const quantity = e.currentTarget.quantity.value;
+    const data = { quantity: quantity };
+    try {
+      const result = await api.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/add-stock/${selectedProductId}`,
+        data
+      );
+      if (!result.data?.success) {
+        return toast.error(result?.data?.message || "Something went wrong!");
+      }
+      toast.success(result?.data?.message);
+      refetch();
+      setIsAddStockModalOpen(false);
     } finally {
       setIsLoading(false);
     }
@@ -97,6 +128,16 @@ const ProductAction = ({ productId, refetch }: Props) => {
               <FilePenLine className="text-muted-foreground" />
               <span>Edit Product</span>
             </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                setIsAddStockModalOpen(true);
+                handleFetchProductData(productId);
+                setSelectedProductId(productId);
+              }}
+            >
+              <ClipboardPlus className="text-muted-foreground" />
+              <span>Add Stock</span>
+            </DropdownMenuItem>
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -141,6 +182,34 @@ const ProductAction = ({ productId, refetch }: Props) => {
           />
         </Modal>
       )}
+      {isAddStockModalOpen && (
+        <Modal
+          isOpen={isAddStockModalOpen}
+          onClose={() => setIsAddStockModalOpen(false)}
+          title="Update Product Stock"
+          size="sm"
+        >
+          <form onSubmit={handleAddProductStock} className="space-y-4">
+            <div className="space-y-4 lg:space-y-6">
+              <div className="space-y-1">
+                <Label htmlFor="name">Quantity</Label>
+                <Input
+                  id="quantity"
+                  name="quantity"
+                  type="number"
+                  placeholder="Enter product quantity"
+                  required
+                />
+              </div>
+            </div>
+            <div className="flex justify-end">
+              <Button type="submit" className="w-full">
+                <ClipboardPlus /> Add Stock
+              </Button>
+            </div>
+          </form>
+        </Modal>
+      )}
 
       {isDeleteModalOpen && (
         <Modal
@@ -148,10 +217,6 @@ const ProductAction = ({ productId, refetch }: Props) => {
           onClose={() => setIsDeleteModalOpen(false)}
           title="Delete this product?"
         >
-          <form className="space-y-4">
-            <div className="space-y-1"></div>
-          </form>
-
           <div className="space-y-3">
             <h3 className="text-xl font-semibold">
               Are you sure want to delete this product?
