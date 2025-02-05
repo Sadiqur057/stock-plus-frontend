@@ -111,7 +111,7 @@ const AttributeOption = ({ attributeId, refetch }: Props) => {
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           title="Update Attribute Information"
-          size="lg"
+          size="sm"
         >
           <UpdateAttribute
             attributeData={selectedAttributeData}
