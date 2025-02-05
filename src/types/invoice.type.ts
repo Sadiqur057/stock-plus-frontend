@@ -26,6 +26,8 @@ export type Invoice = {
   _id: string;
   company: {
     name: string;
+    email: string;
+    phone: string;
     location: string;
   };
   customer: Customer;
