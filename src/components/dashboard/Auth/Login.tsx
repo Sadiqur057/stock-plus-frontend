@@ -16,8 +16,8 @@ type FormData = {
 export default function LoginForm() {
   const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState<FormData>({
-    email: "",
-    password: "",
+    email: "sadiqur057@gmail.com",
+    password: "123456",
   });
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
