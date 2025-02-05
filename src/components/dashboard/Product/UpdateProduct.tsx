@@ -1,7 +1,6 @@
 "use client";
 import { ProductShape } from "@/types/product.type";
 import React, { useEffect } from "react";
-import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -51,10 +50,6 @@ type ProductData = FormData & {
   attributes?: Attribute[];
 };
 
-type ApiResponse = {
-  success: boolean;
-  message: string;
-};
 const UpdateProduct = ({
   isLoading,
   productData,
@@ -87,7 +82,6 @@ const UpdateProduct = ({
     }
   }, [productData]);
 
-  const existingAttributes = ["Color", "Size", "Material", "Weight"];
 
   const { data: attributeList = [] } = useQuery({
     queryKey: ["attributes"],
