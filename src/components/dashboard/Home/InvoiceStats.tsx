@@ -20,21 +20,23 @@ export function InvoiceStats({ summary }: Props) {
       <StatsCard
         title="Total Invoice Created"
         Icon={FileText}
-        value={summary?.invoice_count}
-        comment={`Total sell is ${getFormattedPrice(summary?.total_sell)} BDT.`}
+        value={summary?.invoice_count || "0"}
+        comment={`Total sell is ${
+          getFormattedPrice(summary?.total_sell) || 0
+        } BDT.`}
         trend="up"
       />
       <StatsCard
         title="Total Paid"
         Icon={DollarSign}
-        value={`${getFormattedPrice(summary?.total_payment)}  BDT.`}
+        value={`${getFormattedPrice(summary?.total_payment) || 0}  BDT.`}
         comment={`${summary?.transaction_count} transactions so far`}
         trend="up"
       />
       <StatsCard
         title="Total Due"
         Icon={DollarSign}
-        value={`${getFormattedPrice(summary?.due_invoice_amount)}  BDT.`}
+        value={`${getFormattedPrice(summary?.due_invoice_amount) || 0}  BDT.`}
         comment={`${summary?.due_invoice_count} invoice need to be cleared`}
         trend="up"
       />
@@ -42,7 +44,9 @@ export function InvoiceStats({ summary }: Props) {
         title="Total Customer"
         Icon={Users}
         value={summary?.customer_count}
-        comment={`${getFormattedPrice(summary?.total_sell)} BDT. purchased so far`}
+        comment={`${
+          getFormattedPrice(summary?.total_sell) || 0
+        } BDT. purchased so far`}
         trend="up"
       />
     </section>
