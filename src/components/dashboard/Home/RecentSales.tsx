@@ -7,105 +7,75 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-const bookings = [
-  {
-    name: "Pradeep Bansal",
-    bookingId: "PBSDB638",
-    date: "25th July, 2020",
-    time: "10:00 AM",
-    status: "In Progress",
-  },
-  {
-    name: "Neer Sehay",
-    bookingId: "SSND5668",
-    date: "28th July, 2020",
-    time: "11:20 AM",
-    status: "Completed",
-  },
-  {
-    name: "Navneet Goyal",
-    bookingId: "NGED9063",
-    date: "29th July, 2020",
-    time: "10:45 AM",
-    status: "Rejected",
-  },
-  {
-    name: "Chirag Tripathi",
-    bookingId: "CTWD5338",
-    date: "05th Aug, 2020",
-    time: "10:30 AM",
-    status: "Canceled",
-  },
-  {
-    name: "Neer Sehay",
-    bookingId: "SSND5668",
-    date: "28th July, 2020",
-    time: "11:20 AM",
-    status: "Completed",
-  },
-  {
-    name: "Navneet Goyal",
-    bookingId: "NGED9063",
-    date: "29th July, 2020",
-    time: "10:45 AM",
-    status: "Rejected",
-  },
-];
-
-export function RecentSales() {
+import { getReadableDate } from "@/lib/utils";
+import { Invoice } from "@/types/invoice.type";
+import SectionHeader from "./SectionHeader";
+import EmptyMessage from "./EmptyMessage";
+type Props = {
+  invoices: Invoice[];
+};
+export function RecentSales({ invoices }: Props) {
   return (
     <>
-      <div className="p-0 mb-4 lg:mb-6">
-        <h2 className="text-xl font-semibold tracking-tight">
-          Recent Invoices
-        </h2>
-        <p className="text-sm text-muted-foreground">
-          You have created 24 invoices this month.
-        </p>
-      </div>
-      <div>
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>Name</TableHead>
-              <TableHead>Booking ID</TableHead>
-              <TableHead>Date</TableHead>
-              <TableHead>Time</TableHead>
-              <TableHead>Status</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {bookings.map((booking) => (
-              <TableRow
-                key={booking.bookingId}
-                className="group hover:bg-primary/10"
-              >
-                <TableCell className="font-medium">{booking.name}</TableCell>
-                <TableCell>{booking.bookingId}</TableCell>
-                <TableCell>{booking.date}</TableCell>
-                <TableCell>{booking.time}</TableCell>
-                <TableCell>
-                  <Badge
-                    variant="secondary"
-                    className={
-                      booking.status === "In Progress"
-                        ? "bg-green-100 text-green-800 hover:bg-green-100"
-                        : booking.status === "Completed"
-                        ? "bg-blue-100 text-blue-800 hover:bg-blue-100"
-                        : booking.status === "Rejected"
-                        ? "bg-red-100 text-red-800 hover:bg-red-100"
-                        : "bg-gray-100 text-gray-800 hover:bg-gray-100"
-                    }
-                  >
-                    {booking.status}
-                  </Badge>
-                </TableCell>
+      <SectionHeader
+        buttonText="View All"
+        header="Recent Invoices"
+        text={`You have created ${invoices?.length} invoices.`}
+        url="/dashboard/invoices"
+      />
+      {invoices?.length ? (
+        <div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Name</TableHead>
+                <TableHead>
+                  Amount <span className="text-[10px]">(BDT)</span>
+                </TableHead>
+                <TableHead>Time</TableHead>
+                <TableHead>Due</TableHead>
+                <TableHead>Status</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </div>
+            </TableHeader>
+            <TableBody>
+              {invoices?.slice(0, 5)?.map((invoice) => (
+                <TableRow
+                  key={invoice?._id}
+                  className="group hover:bg-primary/10"
+                >
+                  <TableCell>{invoice?.customer?.name}</TableCell>
+                  <TableCell>{invoice?.cost_summary?.total}</TableCell>
+                  <TableCell>
+                    {invoice?.created_at &&
+                      getReadableDate(invoice?.created_at)}
+                  </TableCell>
+                  <TableCell>{invoice?.cost_summary?.total_due}</TableCell>
+                  <TableCell>
+                    <Badge
+                      variant="secondary"
+                      className={
+                        invoice?.cost_summary?.status === "paid"
+                          ? "bg-green-100 text-green-800 hover:bg-green-100"
+                          : invoice?.cost_summary?.status === "partially paid"
+                          ? "bg-orange-100 text-blue-800 hover:bg-blue-100"
+                          : invoice?.cost_summary?.status === "unpaid"
+                          ? "bg-red-100 text-red-800 hover:bg-red-100"
+                          : "bg-gray-100 text-gray-800 hover:bg-gray-100"
+                      }
+                    >
+                      {invoice?.cost_summary?.status === "partially paid"
+                        ? "due"
+                        : invoice?.cost_summary?.status}
+                    </Badge>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+      ) : (
+        <EmptyMessage />
+      )}
     </>
   );
 }
