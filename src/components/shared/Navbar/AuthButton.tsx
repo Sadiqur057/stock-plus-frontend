@@ -21,7 +21,7 @@ const AuthButton = async () => {
               <Button size="lg" variant="outline">Login</Button>
             </Link>
 
-            <Link href={"/Register"}>
+            <Link href={"/register"}>
               <Button size="lg">Register</Button>
             </Link>
           </li>{" "}
