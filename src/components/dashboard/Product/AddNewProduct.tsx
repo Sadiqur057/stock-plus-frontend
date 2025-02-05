@@ -241,7 +241,7 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
                   handleAttributeChange(index, "key", value)
                 }
               >
-                <SelectTrigger>
+                <SelectTrigger className="max-w-[180px] lg:min-w-[180px] w-fit py-[22px] px-4" >
                   <SelectValue placeholder="Select attribute" />
                 </SelectTrigger>
                 <SelectContent>
