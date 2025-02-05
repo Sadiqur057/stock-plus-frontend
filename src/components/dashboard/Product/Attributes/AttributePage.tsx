@@ -30,8 +30,8 @@ const AttributesPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const breadcrumbList = [
     {
-      name: "Products",
-      link: "/dashboard/products",
+      name: "Attributes",
+      link: "/dashboard/attributes",
     },
   ];
 

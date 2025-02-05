@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Loader from "@/components/ui/Loader";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type CustomerProps = {
   customerData: CustomerType;
@@ -37,6 +38,7 @@ const UpdateCustomer = ({
   refetch,
   closeModal,
 }: CustomerProps) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -65,22 +67,30 @@ const UpdateCustomer = ({
 
   const { mutate } = useMutation({
     mutationFn: async (data: FormData) => {
-      const result = await api.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/update-customer/${customerId}`,
-        data
-      );
-      console.log("checking result", result);
-      if (!result.data.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        const result = await api.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/update-customer/${customerId}`,
+          data
+        );
+        console.log("checking result", result);
+        if (!result.data.success) {
+          return toast.error(result?.data?.message || "Something went wrong.");
+        }
+        toast.success(result?.data?.message);
+        refetch();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      refetch();
-      closeModal();
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     mutate(formData);
   };
 
@@ -144,8 +154,14 @@ const UpdateCustomer = ({
           </div>
         </div>
         <div className="flex justify-between">
-          <Button type="submit" className="w-full">
-            <ClipboardPlus /> Update Customer
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <ButtonLoader />
+            ) : (
+              <>
+                <ClipboardPlus /> Update Customer
+              </>
+            )}
           </Button>
         </div>
       </form>

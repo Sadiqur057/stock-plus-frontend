@@ -123,7 +123,7 @@ export default function RegisterForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium text-white hover:bg-black/90 "
+            className="w-full rounded-md bg-gray-500 p-3 text-sm font-medium flex justify-center text-white hover:bg-black/90"
           >
             {loading ? <ButtonLoader /> : "Register"}
           </button>

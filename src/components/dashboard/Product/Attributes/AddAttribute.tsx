@@ -13,11 +13,11 @@ import api from "@/interceptors/api";
 import { ProductShape } from "@/types/product.type";
 import { ClipboardPlus } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type FormData = {
   name: string;
   description: string;
-
 };
 
 type Props = {
@@ -27,16 +27,18 @@ type Props = {
   ) => Promise<QueryObserverResult<ProductShape[], Error>>;
 };
 
-
 const AddAttribute = ({ refetch, closeModal }: Props) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const handleInputChange = (    e:
-        | React.ChangeEvent<HTMLInputElement>
-        | React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleInputChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>
+  ) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
       ...prevState,
@@ -46,22 +48,30 @@ const AddAttribute = ({ refetch, closeModal }: Props) => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: FormData) => {
-      const result = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/add-attribute`,
-        data
-      );
-      console.log("checking result", result);
-      if (!result.data.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        const result = await api.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/add-attribute`,
+          data
+        );
+        console.log("checking result", result);
+        if (!result.data.success) {
+          return toast.error(result?.data?.message || "Something went wrong.");
+        }
+        toast.success(result?.data?.message);
+        refetch();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      refetch();
-      closeModal();
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     mutate(formData);
   };
   return (
@@ -90,11 +100,16 @@ const AddAttribute = ({ refetch, closeModal }: Props) => {
               onChange={handleInputChange}
             />
           </div>
-
         </div>
         <div className="flex justify-between">
-          <Button type="submit" className="w-full">
-            <ClipboardPlus /> Add Attribute
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? (
+              <ButtonLoader />
+            ) : (
+              <>
+                <ClipboardPlus /> Add Attribute
+              </>
+            )}
           </Button>
         </div>
       </form>

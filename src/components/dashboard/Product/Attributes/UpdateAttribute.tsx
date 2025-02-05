@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import Loader from "@/components/ui/Loader";
 import { Textarea } from "@/components/ui/textarea";
 import { AttributeType } from "./AttributePage";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type AttributeProps = {
   attributeData: AttributeType;
@@ -40,6 +41,7 @@ const UpdateAttribute = ({
     name: "",
     description: "",
   });
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     if (attributeData) {
@@ -64,22 +66,30 @@ const UpdateAttribute = ({
 
   const { mutate } = useMutation({
     mutationFn: async (data: FormData) => {
-      const result = await api.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/update-attribute/${attributeId}`,
-        data
-      );
-      console.log("checking result", result);
-      if (!result.data.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        const result = await api.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/update-attribute/${attributeId}`,
+          data
+        );
+        console.log("checking result", result);
+        if (!result.data.success) {
+          return toast.error(result?.data?.message || "Something went wrong.");
+        }
+        toast.success(result?.data?.message);
+        refetch();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      refetch();
-      closeModal();
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     mutate(formData);
   };
 
@@ -119,8 +129,15 @@ const UpdateAttribute = ({
           </div>
         </div>
         <div className="flex justify-between">
-          <Button type="submit" className="w-full">
-            <ClipboardPlus /> Update Attribute
+          <Button type="submit" disabled={loading} className="w-full">
+            {loading ? (
+              <ButtonLoader />
+            ) : (
+              <>
+                <ClipboardPlus className="mr-2 h-4 w-4" />
+                Update Attribute
+              </>
+            )}
           </Button>
         </div>
       </form>

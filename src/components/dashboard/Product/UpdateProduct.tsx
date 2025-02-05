@@ -19,9 +19,11 @@ import {
   QueryObserverResult,
   RefetchOptions,
   useMutation,
+  useQuery,
 } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import Loader from "@/components/ui/Loader";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type productProps = {
   productData: ProductShape;
@@ -60,8 +62,8 @@ const UpdateProduct = ({
   refetch,
   closeModal,
 }: productProps) => {
-  console.log("the id is", productId);
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     productName: "",
     company: "",
@@ -87,13 +89,26 @@ const UpdateProduct = ({
 
   const existingAttributes = ["Color", "Size", "Material", "Weight"];
 
+  const { data: attributeList = [] } = useQuery({
+    queryKey: ["attributes"],
+    queryFn: async () => {
+      const result = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/attributes`
+      );
+      if (!result?.data?.success) {
+        toast.error(result?.data?.message || "Something went wrong");
+        return [];
+      }
+      return result?.data?.data;
+    },
+  });
+
   const handleAddAttribute = () => {
     setAttributes([...attributes, { key: "", value: "" }]);
   };
 
   const handleRemoveAttribute = (index: number) => {
-    const newAttributes = attributes.filter((_, i) => i !== index);
-    setAttributes(newAttributes);
+    setAttributes(attributes.filter((_, i) => i !== index));
   };
 
   const handleAttributeChange = (
@@ -103,7 +118,6 @@ const UpdateProduct = ({
   ) => {
     const newAttributes = [...attributes];
     newAttributes[index][field] = value;
-
     if (
       field === "key" &&
       value !== "new" &&
@@ -112,11 +126,9 @@ const UpdateProduct = ({
       toast.error("This attribute is already added.");
       return;
     }
-
     if (field === "key" && value === "new") {
       newAttributes[index].newKey = "";
     }
-
     setAttributes(newAttributes);
   };
 
@@ -128,27 +140,28 @@ const UpdateProduct = ({
     }));
   };
 
-  const { mutate } = useMutation<
-    AxiosResponse<ApiResponse>,
-    Error,
-    ProductData
-  >({
-    mutationFn: async (data) => {
-      return await api.patch(
-        `${process.env.NEXT_PUBLIC_API_URL}/update-product/${productId}`,
-        data
-      );
-    },
-    onSuccess: (result) => {
-      if (result?.data?.success) {
-        toast.success(result?.data?.message);
-        refetch();
-        closeModal();
-      } else {
-        toast.error(
-          result?.data?.message ||
-            "Something went wrong! Please try again later"
+  const { mutate } = useMutation({
+    mutationFn: async (data: ProductData) => {
+      try {
+        const result = await api.patch(
+          `${process.env.NEXT_PUBLIC_API_URL}/update-product/${productId}`,
+          data
         );
+        if (result?.data?.success) {
+          toast.success(result?.data?.message);
+          refetch();
+          closeModal();
+        } else {
+          toast.error(
+            result?.data?.message ||
+              "Something went wrong! Please try again later"
+          );
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     },
   });
@@ -164,7 +177,7 @@ const UpdateProduct = ({
       ...formData,
       attributes: processedAttributes,
     };
-    console.log("submitting", data);
+    setLoading(true);
     mutate(data);
   };
   if (isLoading) {
@@ -263,52 +276,55 @@ const UpdateProduct = ({
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="new">Add New</SelectItem>
-                  {existingAttributes.map((attr) => (
-                    <SelectItem key={attr} value={attr}>
-                      {attr}
+                  {attributeList.map((attr: { _id: string; name: string }) => (
+                    <SelectItem key={attr._id} value={attr.name}>
+                      {attr.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
-              {attr.key === "new" ? (
+              {attr.key === "new" && (
                 <Input
                   placeholder="New attribute key"
                   value={attr.newKey || ""}
                   onChange={(e) =>
                     handleAttributeChange(index, "newKey", e.target.value)
                   }
-                  className="max-w-[180px]"
                 />
-              ) : null}
+              )}
               <Input
                 placeholder="Attribute value"
                 value={attr.value}
                 onChange={(e) =>
                   handleAttributeChange(index, "value", e.target.value)
                 }
-                className="flex-grow"
               />
               <Button
                 type="button"
                 variant="outline"
-                className="px-[22px] py-[22px] hover:text-white hover:bg-blue-900"
-                size="icon"
                 onClick={() => handleRemoveAttribute(index)}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           ))}
-          <div className="flex items-center gap-5 justify-between">
+          <div className="flex gap-3 justify-end">
             <Button
               type="button"
+              variant="outline"
+              className="w-1/2"
               onClick={handleAddAttribute}
-              className="text-blue-800 bg-transparent border-blue-800 border hover:text-white hover:bg-blue-900 w-1/2"
             >
               <Plus className="h-4 w-4 mr-1" /> Add Attribute
             </Button>
-            <Button type="submit" className="w-full">
-              <ClipboardPlus /> Update Product
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? (
+                <ButtonLoader />
+              ) : (
+                <>
+                  <ClipboardPlus /> Update Product
+                </>
+              )}
             </Button>
           </div>
         </div>

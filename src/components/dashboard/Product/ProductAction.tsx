@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import UpdateProduct from "./UpdateProduct";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type Props = {
   productId: string;
@@ -33,6 +34,7 @@ type Props = {
 };
 
 const ProductAction = ({ productId, refetch }: Props) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -41,6 +43,7 @@ const ProductAction = ({ productId, refetch }: Props) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [selectedProductId, setSelectedProductId] = useState<string>("");
   const [selectedProductData, setSelectedProductData] = useState({});
+  const [selectedProductStock, setSelectedProductStock] = useState<number>(0);
 
   const handleFetchProductData = async (id: string) => {
     setIsLoading(true);
@@ -55,10 +58,9 @@ const ProductAction = ({ productId, refetch }: Props) => {
   };
 
   const handleAddProductStock = async (e: React.FormEvent<HTMLFormElement>) => {
-    setIsLoading(true);
+    setLoading(true);
     e.preventDefault();
-    const quantity = e.currentTarget.quantity.value;
-    const data = { quantity: quantity };
+    const data = { quantity: selectedProductStock };
     try {
       const result = await api.patch(
         `${process.env.NEXT_PUBLIC_API_URL}/add-stock/${selectedProductId}`,
@@ -71,12 +73,13 @@ const ProductAction = ({ productId, refetch }: Props) => {
       refetch();
       setIsAddStockModalOpen(false);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleDeleteProduct = async (id: string) => {
     try {
+      setLoading(true);
       const result = await api.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/product/${id}`
       );
@@ -86,7 +89,9 @@ const ProductAction = ({ productId, refetch }: Props) => {
       toast.success(result?.data?.message);
       refetch();
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -195,6 +200,10 @@ const ProductAction = ({ productId, refetch }: Props) => {
                 <Label htmlFor="name">Quantity</Label>
                 <Input
                   id="quantity"
+                  value={selectedProductStock}
+                  onChange={(e) =>
+                    setSelectedProductStock(Number(e.target.value))
+                  }
                   name="quantity"
                   type="number"
                   placeholder="Enter product quantity"
@@ -203,8 +212,14 @@ const ProductAction = ({ productId, refetch }: Props) => {
               </div>
             </div>
             <div className="flex justify-end">
-              <Button type="submit" className="w-full">
-                <ClipboardPlus /> Add Stock
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? (
+                  <ButtonLoader />
+                ) : (
+                  <>
+                    <ClipboardPlus /> Add Stock
+                  </>
+                )}
               </Button>
             </div>
           </form>
@@ -233,10 +248,11 @@ const ProductAction = ({ productId, refetch }: Props) => {
                 Cancel
               </Button>
               <Button
+                disabled={loading}
                 className="py-3"
                 onClick={() => handleDeleteProduct(selectedProductId)}
               >
-                Delete
+                {loading ? <ButtonLoader /> : "Delete"}
               </Button>
             </div>
           </div>

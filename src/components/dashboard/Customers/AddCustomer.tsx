@@ -12,6 +12,7 @@ import {
 import api from "@/interceptors/api";
 import { ProductShape } from "@/types/product.type";
 import { ClipboardPlus } from "lucide-react";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type FormData = {
   name: string;
@@ -27,8 +28,8 @@ type Props = {
   ) => Promise<QueryObserverResult<ProductShape[], Error>>;
 };
 
-
 const AddCustomer = ({ refetch, closeModal }: Props) => {
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -46,21 +47,29 @@ const AddCustomer = ({ refetch, closeModal }: Props) => {
 
   const { mutate } = useMutation({
     mutationFn: async (data: FormData) => {
-      const result = await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/add-customer`,
-        data
-      );
-      console.log("checking result", result);
-      if (!result.data.success) {
-        return toast.error(result?.data?.message || "Something went wrong.");
+      try {
+        const result = await api.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/add-customer`,
+          data
+        );
+        console.log("checking result", result);
+        if (!result.data.success) {
+          return toast.error(result?.data?.message || "Something went wrong.");
+        }
+        toast.success(result?.data?.message);
+        refetch();
+        closeModal();
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
-      toast.success(result?.data?.message);
-      refetch();
-      closeModal();
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
+    setLoading(true);
     e.preventDefault();
     mutate(formData);
   };
@@ -117,8 +126,14 @@ const AddCustomer = ({ refetch, closeModal }: Props) => {
           </div>
         </div>
         <div className="flex justify-between">
-          <Button type="submit" className="w-full">
-            <ClipboardPlus /> Add Customer
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <ButtonLoader />
+            ) : (
+              <>
+                <ClipboardPlus /> Add Customer
+              </>
+            )}
           </Button>
         </div>
       </form>

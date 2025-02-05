@@ -1,4 +1,3 @@
-import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { ClipboardPlus, Plus, Trash2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -21,6 +20,7 @@ import {
 } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import { ProductShape } from "@/types/product.type";
+import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 
 type Attribute = {
   key: string;
@@ -42,11 +42,6 @@ type ProductData = FormData & {
   attributes?: Attribute[];
 };
 
-type ApiResponse = {
-  success: boolean;
-  message: string;
-};
-
 type Props = {
   closeModal?: React.Dispatch<React.SetStateAction<boolean>>;
   refetch?: (
@@ -56,6 +51,7 @@ type Props = {
 
 const AddNewProduct = ({ refetch, closeModal }: Props) => {
   const [attributes, setAttributes] = useState<Attribute[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
   const [formData, setFormData] = useState({
     productName: "",
     company: "",
@@ -117,40 +113,42 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
     }));
   };
 
-  const { mutate } = useMutation<
-    AxiosResponse<ApiResponse>,
-    Error,
-    ProductData
-  >({
-    mutationFn: async (data) => {
-      return await api.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
-        data
-      );
-    },
-    onSuccess: (result) => {
-      if (result?.data?.success) {
-        toast.success(result?.data?.message);
-        refetch?.();
-        closeModal?.(false);
-        setFormData({
-          productName: "",
-          company: "",
-          quantity: "",
-          purchasePrice: "",
-          salePrice: "",
-          remarks: "",
-          created_at: "",
-        });
-        setAttributes([]);
-      } else {
-        toast.error(result?.data?.message || "Something went wrong!");
+  const { mutate } = useMutation({
+    mutationFn: async (data: ProductData) => {
+      try {
+        const result = await api.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
+          data
+        );
+        if (result?.data?.success) {
+          toast.success(result?.data?.message);
+          refetch?.();
+          closeModal?.(false);
+          setFormData({
+            productName: "",
+            company: "",
+            quantity: "",
+            purchasePrice: "",
+            salePrice: "",
+            remarks: "",
+            created_at: "",
+          });
+          setAttributes([]);
+        } else {
+          toast.error(result?.data?.message || "Something went wrong!");
+        }
+      } catch (error) {
+        console.error(error);
+        toast.error("Something went wrong. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     },
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
     const processedAttributes = attributes.map((attr) =>
       attr.key === "new" ? { key: attr.newKey || "", value: attr.value } : attr
     );
@@ -241,7 +239,7 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
                   handleAttributeChange(index, "key", value)
                 }
               >
-                <SelectTrigger className="max-w-[180px] lg:min-w-[180px] w-fit py-[22px] px-4" >
+                <SelectTrigger className="max-w-[180px] lg:min-w-[180px] w-fit py-[22px] px-4">
                   <SelectValue placeholder="Select attribute" />
                 </SelectTrigger>
                 <SelectContent>
@@ -279,11 +277,22 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
             </div>
           ))}
           <div className="flex gap-3 justify-end">
-            <Button type="button" variant="outline" className="w-1/2" onClick={handleAddAttribute}>
+            <Button
+              type="button"
+              variant="outline"
+              className="w-1/2"
+              onClick={handleAddAttribute}
+            >
               <Plus className="h-4 w-4 mr-1" /> Add Attribute
             </Button>
-            <Button type="submit" className="w-full">
-              <ClipboardPlus /> Add Product
+            <Button type="submit" disabled={loading} className="w-full">
+              {loading ? (
+                <ButtonLoader />
+              ) : (
+                <>
+                  <ClipboardPlus /> Add Product
+                </>
+              )}
             </Button>
           </div>
         </div>
