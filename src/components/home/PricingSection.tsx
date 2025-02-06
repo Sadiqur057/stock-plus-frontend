@@ -89,14 +89,6 @@ export function PricingSection() {
 
   const handlePlanSelection = async (plan: PlanTier) => {
     try {
-      console.log("Selected plan:", {
-        plan,
-        interval,
-        price:
-          interval === "monthly"
-            ? plans[plan].price.monthly
-            : plans[plan].price.annual,
-      });
       toast.error("Under maintenance. Will be added soon");
     } catch (error) {
       console.error("Error processing plan selection:", error);
