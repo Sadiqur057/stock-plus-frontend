@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import poppins from "@/fonts/font";
 import NProgressBar from "@/components/Nprogress/NProgressBar";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -23,6 +24,7 @@ export default function DashboardLayout({ children }: LayoutProps) {
           </div>
           <div className="md:px-10 w-full md:flex-1 container  mb-6 overflow-hidden">
             {children}
+            <SpeedInsights />
           </div>
         </SidebarProvider>
       </QueryClientProvider>
