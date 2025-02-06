@@ -13,7 +13,7 @@ const navItems = [
 
 export function Navbar() {
   return (
-    <header className="navbar mb-20">
+    <header className="navbar">
       <div className={`navbar__container container ${poppins.className}`}>
         <Link href="/" className="navbar__logo">
           <Image src={logo} height={120} width={160} alt="StockPlus" />
