@@ -4,8 +4,8 @@ import HeroImg from "@/assets/images/heroImg.jpg";
 import Link from "next/link";
 
 const stats = [
-  { value: "10K+", label: "Active Users" },
-  { value: "95%", label: "Customer Satisfaction" },
+  { value: "10+", label: "Active Users" },
+  { value: "100%", label: "Customer Satisfaction" },
   { value: "24/7", label: "Support Available" },
 ];
 
@@ -18,23 +18,21 @@ export function Hero() {
 
       <div className="container heroContainer relative grid">
         <div className="flex flex-col items-center md:items-start mx-0 md:text-left justify-center m-auto">
-          <div className="badge">The most comprehensive inventory solution</div>
+          <div className="badge">Inventory Management and Invoicing solution</div>
 
           <h1 className="title font-bold">
             Transform Your Inventory Management Today
           </h1>
 
           <p className="subtitle mb-6">
-            Streamline your business operations with our powerful stock
-            management system. Track products, generate invoices, and make
-            data-driven decisions with real-time analytics.
+          Take control of your business with our comprehensive inventory management solution. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3">
+          <div className="flex flex-wrap gap-3">
             <Link href="/dashboard">
-              <Button size="lg">Get Started</Button>
+              <Button className="px-5 sm:px-8" size="lg">Get Started</Button>
             </Link>
-            <Button variant="outline" size="lg">
+            <Button className="px-5 sm:px-8" variant="outline" size="lg">
               Watch Demo
             </Button>
           </div>
@@ -98,7 +96,7 @@ export function Hero() {
                 </div>
                 <div>
                   <div className="text-sm font-medium">Stock Level</div>
-                  <div className="text-xs text-gray-500">98% optimal</div>
+                  <div className="text-xs text-gray-500">100% optimal</div>
                 </div>
               </div>
             </div>
