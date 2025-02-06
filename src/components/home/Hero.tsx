@@ -18,21 +18,40 @@ export function Hero() {
 
       <div className="container heroContainer relative grid">
         <div className="flex flex-col items-center md:items-start mx-0 md:text-left justify-center m-auto">
-          <div className="badge">Inventory Management and Invoicing solution</div>
+          <span
+            className="badge"
+            aria-label="Inventory Management and Invoicing solution"
+          >
+            Inventory Management and Invoicing solution
+          </span>
 
           <h1 className="title font-bold">
             Transform Your Inventory Management Today
           </h1>
 
           <p className="subtitle mb-6">
-          Take control of your business with our comprehensive inventory management solution. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.
+            Take control of your business with our comprehensive inventory
+            management solution. Generate Invoice in just 30 seconds efficiently
+            and effective. A fully user friendly stock management and Invoicing
+            solutions that your business needs.
           </p>
 
           <div className="flex flex-wrap gap-3">
             <Link href="/dashboard">
-              <Button className="px-5 sm:px-8" size="lg">Get Started</Button>
+              <Button
+                className="px-5 sm:px-8"
+                size="lg"
+                aria-label="Click to get started"
+              >
+                Get Started
+              </Button>
             </Link>
-            <Button className="px-5 sm:px-8" variant="outline" size="lg">
+            <Button
+              className="px-5 sm:px-8"
+              variant="outline"
+              size="lg"
+              aria-label="Watch a demo of the inventory management solution"
+            >
               Watch Demo
             </Button>
           </div>
@@ -51,13 +70,13 @@ export function Hero() {
           <div className="imageContainer">
             <Image
               src={HeroImg}
-              alt="Dashboard Preview"
+              alt="Inventory Management and Invoicing solution Image"
               width={800}
               height={800}
               className="mainImage"
               priority
             />
-            <div className="floatingCard cardTop">
+            <div className="floatingCard cardTop" tabIndex={0} aria-label="Revenue increased by 32.5% this month">
               <div className="flex items-center gap-3">
                 <div className="h-8 w-8 rounded-full bg-green-100 flex items-center justify-center">
                   <svg

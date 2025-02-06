@@ -114,22 +114,19 @@ export function PricingSection() {
           Choose the plan that's right for you. Our flexible pricing plans are perfect for all type of business."
         />
 
-        {/* Billing interval toggle */}
         <div className="mt-12 flex justify-center">
-          <div className="inline-flex rounded-full bg-green-200 p-1">
+          <div className="inline-flex rounded-full bg-green-100 p-1">
             <button
               onClick={() => setInterval("monthly")}
               className={`relative rounded-full px-12 lg:px-[72px] py-3 lg:py-4 text-sm font-medium transition-colors
-                ${
-                  interval === "monthly"
-                    ? "text-white bg-green-600"
-                    : "text-green-800"
-                }`}
+        ${
+          interval === "monthly" ? "text-white bg-green-700" : "text-green-900"
+        }`}
             >
               Monthly
               {interval === "monthly" && (
                 <div
-                  className="absolute inset-0 bg-[#00BA81] rounded-full"
+                  className="absolute inset-0 bg-green-700 rounded-full"
                   style={{ zIndex: -1 }}
                 />
               )}
@@ -137,16 +134,14 @@ export function PricingSection() {
             <button
               onClick={() => setInterval("annual")}
               className={`relative rounded-full px-12 py-3 lg:py-4 text-sm font-medium transition-colors
-                ${
-                  interval === "annual"
-                    ? "text-white bg-green-600"
-                    : "text-green-800"
-                }`}
+        ${
+          interval === "annual" ? "text-white bg-green-700" : "text-green-900"
+        }`}
             >
               Yearly
               {interval === "annual" && (
                 <div
-                  className="absolute inset-0 bg-[#00BA81] rounded-full"
+                  className="absolute inset-0 bg-green-700 rounded-full"
                   style={{ zIndex: -1 }}
                 />
               )}

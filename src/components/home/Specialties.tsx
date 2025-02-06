@@ -56,7 +56,7 @@ export function Specialties() {
                 >
                   <div className="flex justify-between items-center gap-3">
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-indigo-600 text-white">
-                      <feature.icon className="h-6 w-6" />
+                      <feature.icon className="h-6 w-6" aria-hidden="true" />
                     </div>
                     <div className="flex items-baseline gap-1">
                       <span className="text-xl md:text-2xl font-bold text-indigo-600">
@@ -74,7 +74,11 @@ export function Specialties() {
                     <p className="mt-2 text-gray-600">{feature.description}</p>
                   </div>
                   <div className="mt-2 flex items-center gap-2 text-sm font-medium text-indigo-600">
-                    <Link href="/dashboard" className="flex gap-2 items-center">
+                    <Link
+                      href="/dashboard"
+                      className="flex gap-2 items-center"
+                      aria-label="Try our inventory management solution now"
+                    >
                       Try now <ArrowRight className="h-4 w-4" />
                     </Link>
                   </div>
@@ -101,28 +105,38 @@ export function Specialties() {
                       <div className="">
                         <Image
                           src={statImage1}
-                          alt="Stat Image"
+                          alt="Statistical card showing inventory insights about invoices and incomes"
                           className="rounded-md"
                         />
                         <Image
                           src={statImage2}
-                          alt="Stat Image"
+                          alt="Statistical card showing inventory insights about due payments and number of customers"
                           className="rounded-md"
                         />
                       </div>
                       <div className="flex gap-4">
                         <div className="flex-1">
-                          <Image src={barChartImage} alt="Bar chart" />
+                          <Image
+                            src={barChartImage}
+                            alt="Bar chart visualizing business sales"
+                          />
                         </div>
                         <div className="flex-1">
-                          <Image src={lineChartImage} alt="Line chart" />
+                          <Image
+                            alt="Line chart displaying due and paid amount over time"
+                            src={lineChartImage}
+                          />
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div className="floatingCard cardTop">
+              <div
+                className="floatingCard cardTop"
+                tabIndex={0}
+                aria-label="System status is optimal"
+              >
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-400 text-white">
                     <TrendingUp className="h-4 w-4" />
@@ -136,7 +150,11 @@ export function Specialties() {
                 </div>
               </div>
 
-              <div className="floatingCard cardBottom">
+              <div
+                className="floatingCard cardBottom"
+                tabIndex={0}
+                aria-label="Efficiency Score 100% improvement"
+              >
                 <div className="flex items-center gap-2">
                   <div className="flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 text-white">
                     <TrendingUp className="h-4 w-4" />

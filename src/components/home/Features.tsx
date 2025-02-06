@@ -49,7 +49,10 @@ const features = [
 
 export function Features() {
   return (
-    <section className="featuresSection relative overflow-hidden">
+    <section
+      className="featuresSection relative overflow-hidden"
+      aria-labelledby="features-heading"
+    >
       <div className="container">
         <SectionHeading
           subtitle="Powerful Features"
@@ -58,11 +61,15 @@ export function Features() {
         />
         <div className="grid grid-cols-1 gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3 mt-6 lg:mt-16">
           {features.map((feature) => (
-            <div key={feature.name} className="feature-card bg-white p-4 lg:p-8">
+            <div
+              key={feature.name}
+              className="feature-card bg-white p-4 lg:p-8"
+              tabIndex={0}
+            >
               <div className="iconWrapper items-center justify-center flex text-white">
-                <feature.icon size={24} />
+                <feature.icon size={24} aria-hidden={true} />
               </div>
-              <h4 className="featureTitle">{feature.name}</h4>
+              <h3 className="featureTitle">{feature.name}</h3>
               <p className="featureDescription">{feature.description}</p>
             </div>
           ))}
