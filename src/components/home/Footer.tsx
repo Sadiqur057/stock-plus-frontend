@@ -45,7 +45,7 @@ export function Footer() {
         {/* Support Section */}
         <div>
           <h2 className="text-lg font-semibold mb-4">Support</h2>
-          <address className="text-sm not-italic space-y-2">
+          <address className="text-sm not-italic space-y-3 md:space-y-4">
             <p>Reach us directly</p>
             <p>
               <a href="mailto:exclusive@gmail.com" className="hover:underline">
@@ -58,13 +58,25 @@ export function Footer() {
               </a>
             </p>
             <div className="flex gap-3 items-center">
-              <a target="_blank" href="https://www.facebook.com/Sadiqur057">
+              <a
+                target="_blank"
+                href="https://www.facebook.com/Sadiqur057"
+                aria-label="Visit my Facebook profile"
+              >
                 <Facebook size={20} />
               </a>
-              <a target="_blank" href="https://www.github.com/Sadiqur057">
+              <a
+                target="_blank"
+                href="https://www.github.com/Sadiqur057"
+                aria-label="Visit my GitHub profile"
+              >
                 <Github size={20} />
               </a>
-              <a target="_blank" href="https://www.linkedin.com/in/sadiqur057">
+              <a
+                target="_blank"
+                href="https://www.linkedin.com/in/sadiqur057"
+                aria-label="Visit my LinkedIn profile"
+              >
                 <Linkedin size={20} />
               </a>
             </div>
@@ -74,7 +86,7 @@ export function Footer() {
         {/* Account Section */}
         <div>
           <h2 className="text-lg font-semibold mb-4">Account</h2>
-          <ul className="text-sm space-y-2">
+          <ul className="text-sm space-y-3 md:space-y-4">
             <li>
               <Link href="/dashboard/my-account" className="hover:underline">
                 My Account
@@ -96,7 +108,7 @@ export function Footer() {
         {/* Quick Links Section */}
         {/* <div>
           <h2 className="text-lg font-semibold mb-4">Quick Links</h2>
-          <ul className="text-sm space-y-2">
+          <ul className="text-sm space-y-3 md:space-y-4">
             <li>
               <a href="/privacy-policy" className="hover:underline">
                 Privacy Policy
@@ -121,12 +133,12 @@ export function Footer() {
           <p className="text-sm mb-4">Our app will be launched soon.</p>
           <div className="flex items-center space-x-4">
             <button
-              className="bg-gray-800 px-4 py-8 rounded-md text-sm"
+              className="bg-gray-800 px-4 py-9 rounded-md text-sm"
               aria-label="QR Code for App Download"
             >
               QR Code
             </button>
-            <div className="flex flex-col space-y-2">
+            <div className="flex flex-col space-y-3 md:space-y-4">
               <a
                 href="#"
                 className="bg-gray-800 px-4 py-2 rounded-md text-sm text-center hover:bg-gray-700"
@@ -141,47 +153,18 @@ export function Footer() {
               </a>
             </div>
           </div>
-
-          {/* Social Media Links */}
-          <div className="flex space-x-4 mt-4">
-            <a
-              href="#"
-              className="text-white"
-              aria-label="Facebook"
-              title="Facebook"
-            >
-              <i className="fab fa-facebook"></i>
-            </a>
-            <a
-              href="#"
-              className="text-white"
-              aria-label="Twitter"
-              title="Twitter"
-            >
-              <i className="fab fa-twitter"></i>
-            </a>
-            <a
-              href="#"
-              className="text-white"
-              aria-label="Instagram"
-              title="Instagram"
-            >
-              <i className="fab fa-instagram"></i>
-            </a>
-            <a
-              href="#"
-              className="text-white"
-              aria-label="LinkedIn"
-              title="LinkedIn"
-            >
-              <i className="fab fa-linkedin"></i>
-            </a>
-          </div>
         </div>
       </div>
       <p className="text-center text-gray-300 py-6 border-t border-gray-700 mt-6">
         &copy; StockPlus Pro. Designed and developed by{" "}
-        <a target="_blank" href="https://sadiqur057-portfolio.vercel.app" className="font-medium text-white hover:underline"> Sadiqur Rahman</a>
+        <a
+          target="_blank"
+          href="https://sadiqur057-portfolio.vercel.app"
+          className="font-medium text-white hover:underline"
+        >
+          {" "}
+          Sadiqur Rahman
+        </a>
       </p>
     </footer>
   );
