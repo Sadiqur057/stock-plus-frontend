@@ -132,7 +132,7 @@
   animation: navbarSlideDown 0.5s ease-out;
 
   &__container {
-    @apply flex items-center justify-between px-4 py-4 max-w-7xl mx-auto;
+    @apply flex items-center justify-between px-4 py-5 mx-auto;
   }
 
   &__logo {
