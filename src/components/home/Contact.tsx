@@ -96,9 +96,9 @@ export default function Contact() {
 
   return (
     <div id="contact" className="container mx-auto py-20 lg:py-24">
-      <div className="border mx-auto">
+      <div className="border mx-auto rounded-lg">
         <div className="grid grid-cols-1 md:grid-cols-2">
-          <div className="p-6 lg:p-8 bg-gradient-to-br from-primary/10 to-secondary/10 rounded-l-lg flex flex-col justify-center">
+          <div className="p-6 lg:p-8 bg-gradient-to-br from-primary/10 to-secondary/10 md:rounded-l-lg flex flex-col justify-center">
             <div>
               <h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
               <p className="mb-6 text-gray-700">

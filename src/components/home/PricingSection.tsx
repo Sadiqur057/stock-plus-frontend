@@ -97,7 +97,7 @@ export function PricingSection() {
   };
 
   return (
-    <section id="pricing" className="pt:20 lg:pt-24 bg-white">
+    <section id="pricing" className="pt-20 lg:pt-24 bg-white">
       <div className="container">
         <SectionHeading
           subtitle="Flexible Pricing Plans"
