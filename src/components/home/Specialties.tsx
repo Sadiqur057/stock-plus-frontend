@@ -5,6 +5,7 @@ import lineChartImage from "@/assets/images/line-chart-2.png";
 import barChartImage from "@/assets/images/bar-chart-2.png";
 import statImage1 from "@/assets/images/stat-card-1.png";
 import statImage2 from "@/assets/images/stat-card-2.png";
+import SectionHeading from "./SectionHeading";
 
 const features = [
   {
@@ -35,21 +36,13 @@ const features = [
 
 export function Specialties() {
   return (
-    <section className="enhanced-features-bg py-24 sm:py-32">
+    <section className="enhanced-features-bg pt-24 pb-16">
       <div className="relative container">
-        <div className="mx-auto lg:max-w-2xl lg:text-center">
-          <p className="text-base font-semibold leading-7 text-indigo-600 animate-fadeInUp">
-            Advanced Features
-          </p>
-          <h2 className="mt-2 text-[26px] font-bold tracking-tight text-gray-900 sm:text-4xl animate-fadeInUp animate-delay-100">
-            Everything you need to manage your inventory smarter
-          </h2>
-          <p className="mt-6 text-lg leading-8 text-gray-600 animate-fadeInUp animate-delay-200">
-            Take control of your business with our comprehensive inventory
-            management solution. Boost efficiency, reduce costs, and drive
-            growth with powerful features designed for modern businesses.
-          </p>
-        </div>
+        <SectionHeading
+          subtitle="Advanced Features"
+          title="Everything you need to manage your inventory smarter"
+          description="Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses."
+        />
 
         <div className="mx-auto mt-16 sm:mt-20 lg:mt-24">
           <div className="grid gap-x-20 gap-y-20 lg:grid-cols-2 2xl:grid-cols-7">
