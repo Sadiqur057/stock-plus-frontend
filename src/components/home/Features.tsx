@@ -6,42 +6,43 @@ import {
   FileText,
   ShieldCheck,
 } from "lucide-react";
+import SectionHeading from "./SectionHeading";
 
 const features = [
   {
     name: "Real-time Analytics",
     description:
-      "Get instant insights into your inventory performance with our powerful analytics dashboard.",
+      "Get instant insights into your inventory statistics with our powerful analytics dashboard.",
     icon: BarChart3,
   },
   {
-    name: "Automated Reordering",
+    name: "Automated Updating",
     description:
-      "Never run out of stock again with our smart reordering system that predicts when you need to restock.",
+      "Keep your inventory up-to-date with our automated inventory management system.",
     icon: Clock,
   },
   {
-    name: "Multi-channel Integration",
+    name: "Revenue Monitoring",
     description:
-      "Seamlessly manage inventory across multiple sales channels, from e-commerce to brick-and-mortar stores.",
+      "Monitor your revenue growth and profitability with our detailed revenue tracking features.",
     icon: TrendingUp,
   },
   {
     name: "Advanced Search",
     description:
-      "Find any product in your inventory instantly with our powerful search and filter capabilities.",
+      "Find any product or anything in your inventory instantly with our powerful search and filter capabilities.",
     icon: Search,
   },
   {
-    name: "Custom Reporting",
+    name: "Custom Invoicing",
     description:
-      "Generate detailed reports tailored to your business needs for better decision-making.",
+      "Generate customized invoices for your customers with our user-friendly invoicing system.",
     icon: FileText,
   },
   {
     name: "Secure Data Management",
     description:
-      "Rest easy knowing your inventory data is protected with enterprise-grade security measures.",
+      "Your data is completely safe and secure with our robust security measures in our system.",
     icon: ShieldCheck,
   },
 ];
@@ -50,20 +51,14 @@ export function Features() {
   return (
     <section className="featuresSection relative overflow-hidden">
       <div className="container">
-        <div className="header">
-          <h2 className="subheading">Powerful Features</h2>
-          <h3 className="heading">
-            Everything you need to manage your inventory efficiently
-          </h3>
-          <p className="subtitle">
-            Our comprehensive set of features is designed to streamline your
-            inventory management process, increase efficiency, and boost your
-            bottom line.
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+        <SectionHeading
+          subtitle="Powerful Features"
+          title="Unleash the Power of Inventory Management"
+          description="Our comprehensive set of features is designed to streamline your inventory management process, increase efficiency, and boost your bottom line."
+        />
+        <div className="grid grid-cols-1 gap-6 lg:gap-8 md:grid-cols-2 lg:grid-cols-3 mt-6 lg:mt-16">
           {features.map((feature) => (
-            <div key={feature.name} className="feature-card bg-white ">
+            <div key={feature.name} className="feature-card bg-white p-4 lg:p-8">
               <div className="iconWrapper items-center justify-center flex text-white">
                 <feature.icon size={24} />
               </div>
