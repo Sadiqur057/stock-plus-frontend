@@ -133,7 +133,7 @@ export function PricingSection() {
             </button>
             <button
               onClick={() => setInterval("annual")}
-              className={`relative rounded-full px-12 py-3 lg:py-4 text-sm font-medium transition-colors
+              className={`relative rounded-full px-[56px] lg:px-[84px] py-3 lg:py-4  text-sm font-medium transition-colors
         ${
           interval === "annual" ? "text-white bg-green-700" : "text-green-900"
         }`}
@@ -149,7 +149,6 @@ export function PricingSection() {
           </div>
         </div>
 
-        {/* Pricing cards */}
         <div className="mt-12 grid gap-8 lg:grid-cols-3">
           {(Object.entries(plans) as [PlanTier, PricingPlan][]).map(
             ([tier, plan]) => (
@@ -171,7 +170,7 @@ export function PricingSection() {
                 <div className="mb-6">
                   <div className="flex items-baseline">
                     <span className="text-3xl font-bold text-gray-900">
-                      BDT.
+                      BDT. &nbsp;
                       {interval === "monthly"
                         ? plan.price.monthly
                         : plan.price.annual}
