@@ -1,11 +1,13 @@
+import { Facebook, Github, Linkedin } from "lucide-react";
+import Link from "next/link";
+
 export function Footer() {
   return (
-    <footer className="bg-black text-white py-10 px-6">
-      <div className="container mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
-        {/* Subscribe Section */}
+    <footer className="bg-black text-white pt-10">
+      <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-8">
         <div>
           <h2 className="text-lg font-semibold mb-4">Subscribe</h2>
-          <p className="text-sm mb-4">Get 10% off your first order</p>
+          <p className="text-sm mb-4">Get 10% off your first purchase</p>
           <form className="flex items-center bg-gray-800 rounded-md overflow-hidden">
             <label htmlFor="email" className="sr-only">
               Enter your email
@@ -44,17 +46,28 @@ export function Footer() {
         <div>
           <h2 className="text-lg font-semibold mb-4">Support</h2>
           <address className="text-sm not-italic space-y-2">
-            <p>111 Bijoy Sarani, Dhaka, DH 1515, Bangladesh</p>
+            <p>Reach us directly</p>
             <p>
               <a href="mailto:exclusive@gmail.com" className="hover:underline">
-                exclusive@gmail.com
+                sadiqur057@gmail.com
               </a>
             </p>
             <p>
               <a href="tel:+88015888889999" className="hover:underline">
-                +88015-88888-9999
+                +8801760521688
               </a>
             </p>
+            <div className="flex gap-3 items-center">
+              <a target="_blank" href="https://www.facebook.com/Sadiqur057">
+                <Facebook size={20} />
+              </a>
+              <a target="_blank" href="https://www.github.com/Sadiqur057">
+                <Github size={20} />
+              </a>
+              <a target="_blank" href="https://www.linkedin.com/in/sadiqur057">
+                <Linkedin size={20} />
+              </a>
+            </div>
           </address>
         </div>
 
@@ -63,14 +76,14 @@ export function Footer() {
           <h2 className="text-lg font-semibold mb-4">Account</h2>
           <ul className="text-sm space-y-2">
             <li>
-              <a href="/account" className="hover:underline">
+              <Link href="/dashboard/my-account" className="hover:underline">
                 My Account
-              </a>
+              </Link>
             </li>
             <li>
-              <a href="/login" className="hover:underline">
+              <Link href="/login" className="hover:underline">
                 Login / Register
-              </a>
+              </Link>
             </li>
             <li>
               <a href="/cart" className="hover:underline">
@@ -81,7 +94,7 @@ export function Footer() {
         </div>
 
         {/* Quick Links Section */}
-        <div>
+        {/* <div>
           <h2 className="text-lg font-semibold mb-4">Quick Links</h2>
           <ul className="text-sm space-y-2">
             <li>
@@ -100,12 +113,12 @@ export function Footer() {
               </a>
             </li>
           </ul>
-        </div>
+        </div> */}
 
         {/* Download App Section */}
         <div>
           <h2 className="text-lg font-semibold mb-4">Download App</h2>
-          <p className="text-sm mb-4">Save $3 with App New User Only</p>
+          <p className="text-sm mb-4">Our app will be launched soon.</p>
           <div className="flex items-center space-x-4">
             <button
               className="bg-gray-800 px-4 py-8 rounded-md text-sm"
@@ -166,6 +179,10 @@ export function Footer() {
           </div>
         </div>
       </div>
+      <p className="text-center text-gray-300 py-6 border-t border-gray-700 mt-6">
+        &copy; StockPlus Pro. Designed and developed by{" "}
+        <a target="_blank" href="https://sadiqur057-portfolio.vercel.app" className="font-medium text-white hover:underline"> Sadiqur Rahman</a>
+      </p>
     </footer>
   );
 }
