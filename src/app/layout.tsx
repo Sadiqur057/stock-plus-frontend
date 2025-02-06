@@ -6,15 +6,16 @@ import { Analytics } from "@vercel/analytics/react";
 
 export const metadata: Metadata = {
   title: {
-    default: "Stock Plus - Your Inventory management and Invoicing solutions",
-    template: "%s | Stock Plus",
+    default: "StockPlus Pro | Simplify Inventory & Invoicing in 20 Seconds!",
+    template: "%s | StockPlus Pro",
   },
   description:
-    "Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.",
+    "Save time, reduce costs, & boost efficiency with StockPlus Pro. The ultimate inventory management & invoicing solution that your business needs. Try now!",
   keywords: [
     "Stock Management",
     "Stock Plus",
     "stockpluspro",
+    "stock plus pro",
     "StockPlus",
     "invoicing",
     "invoicing solutions",
@@ -30,16 +31,18 @@ export const metadata: Metadata = {
     "manage business",
   ],
   openGraph: {
-    title: "Stock Plus - Your Inventory management and Invoicing solutions",
+    title: "StockPlus Pro | Simplify Inventory & Invoicing in 20 Seconds!",
     description:
-      "Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.",
+      "Save time, reduce costs, & boost efficiency with StockPlus Pro. The ultimate inventory management & invoicing solution that your business needs. Try now!",
     images: ["https://i.postimg.cc/g2wbF47F/heroImg.jpg"],
     url: "https://www.stockpluspro.shop",
+    siteName: "StockPlus Pro",
+    type: "website",
   },
   twitter: {
-    title: "Stock Plus - Your Inventory management and Invoicing solutions",
+    title: "StockPlus Pro - Your Inventory management and Invoicing solutions",
     description:
-      "Take control of your business with our comprehensive inventory management solution. Boost efficiency, reduce costs, and drive growth with powerful features designed for modern businesses. Generate Invoice in just 30 seconds efficiently and effective. A fully user friendly stock management and Invoicing solutions that your business needs.",
+      "Save time, reduce costs, & boost efficiency with StockPlus Pro. The ultimate inventory management & invoicing solution that your business needs. Try now!",
     images: ["https://i.postimg.cc/g2wbF47F/heroImg.jpg"],
     card: "summary_large_image",
     creator: "Sadiqur057",
