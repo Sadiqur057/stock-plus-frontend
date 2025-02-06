@@ -49,7 +49,7 @@ const features = [
 
 export function Features() {
   return (
-    <section
+    <section id="features"
       className="featuresSection relative overflow-hidden"
       aria-labelledby="features-heading"
     >
