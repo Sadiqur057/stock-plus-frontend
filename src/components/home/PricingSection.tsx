@@ -87,7 +87,7 @@ const plans: Record<PlanTier, PricingPlan> = {
 export function PricingSection() {
   const [interval, setInterval] = useState<BillingInterval>("monthly");
 
-  const handlePlanSelection = async (plan: PlanTier) => {
+  const handlePlanSelection = async () => {
     try {
       toast.error("Under maintenance. Will be added soon");
     } catch (error) {
@@ -186,7 +186,7 @@ export function PricingSection() {
                   ))}
                 </ul>
                 <button
-                  onClick={() => handlePlanSelection(tier)}
+                  onClick={() => handlePlanSelection()}
                   className={`${plan.buttonColor} text-white rounded-lg py-3 px-4 text-sm font-medium transition-colors mt-auto`}
                 >
                   Get This Plan
