@@ -155,7 +155,7 @@ export function Footer() {
           </div>
         </div>
       </div>
-      <p className="text-center text-gray-300 py-6 border-t border-gray-700 mt-6">
+      <p className="text-center text-gray-300 py-6 border-t border-gray-700 mt-6 px-6 text-sm md:text-base">
         &copy; StockPlus Pro. Designed and developed by{" "}
         <a
           target="_blank"
