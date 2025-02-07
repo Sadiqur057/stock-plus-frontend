@@ -101,13 +101,13 @@ export default function Contact() {
           <div className="p-6 lg:p-8 bg-gradient-to-br from-primary/10 to-secondary/10 md:rounded-l-lg flex flex-col justify-center">
             <div>
               <h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
-              <p className="mb-6 text-gray-700">
+              <p className="mb-6 text-gray-700 text-sm md:text-base leading-relaxed">
                 We&apos;d love to hear from you. Whether you have a question
                 about our inventory management and invoice solutions, need a
                 demo, or anything else, our team is ready to answer all your
                 questions.
               </p>
-              <div className="space-y-4">
+              <div className="space-y-4 text-sm md:text-bas">
                 <div className="flex items-center space-x-3 hover:text-blue-800">
                   <Mail className="h-6 w-6" />
                   <a
@@ -159,7 +159,7 @@ export default function Contact() {
             <CardTitle className="text-2xl font-semibold mb-3">
               Send Us a Message
             </CardTitle>
-            <p className="mb-6 text-gray-700">
+            <p className="mb-6 text-gray-700 text-sm md:text-base leading-relaxed">
               Fill out the form below and we&apos;ll get back to you as soon as
               possible.
             </p>

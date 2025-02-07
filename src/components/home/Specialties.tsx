@@ -71,7 +71,7 @@ export function Specialties() {
                     <h3 className="md:text-xl font-semibold text-gray-900">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-gray-600">{feature.description}</p>
+                    <p className="mt-2 text-gray-600 leading-relaxed text-sm md:text-base">{feature.description}</p>
                   </div>
                   <div className="mt-2 flex items-center gap-2 text-sm font-medium text-indigo-600">
                     <Link

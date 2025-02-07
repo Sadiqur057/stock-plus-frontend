@@ -31,7 +31,7 @@ export function Hero() {
 
           <p className="subtitle mb-6">
             Take control of your business with our comprehensive inventory
-            management solution. Generate Invoice in just 30 seconds efficiently
+            management solution. Generate Invoice in just 20 seconds efficiently
             and effective. A fully user friendly stock management and Invoicing
             solutions that your business needs.
           </p>
