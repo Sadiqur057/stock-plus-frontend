@@ -125,7 +125,8 @@ export default function ViewInvoice({ id }: Props) {
                             {product?.quantity}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-right">
-                            {(product.salePrice * product.quantity).toFixed(2)} BDT
+                            {(product.salePrice * product.quantity).toFixed(2)}{" "}
+                            BDT
                           </td>
                         </tr>
                       )
@@ -143,6 +144,14 @@ export default function ViewInvoice({ id }: Props) {
                     {invoice.cost_summary.subtotal.toFixed(2)} BDT
                   </span>
                 </div>
+                {invoice?.cost_summary?.discount > 0 && (
+                  <div className="flex justify-between py-2">
+                    <span className="text-gray-600">Discount:</span>
+                    <span className="font-medium">
+                      {invoice.cost_summary.discount.toFixed(2)} BDT
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Tax:</span>
                   <span className="font-medium">
