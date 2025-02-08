@@ -20,6 +20,8 @@ export type CostSummary = {
   total_paid: number;
   total_due: number;
   status: string;
+  revenue: number;
+  revenue_percentage: number;
 };
 
 export type Invoice = {
