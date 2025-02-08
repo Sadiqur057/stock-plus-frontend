@@ -12,6 +12,8 @@ import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import { DashboardFilter } from "./DashboardFilter";
+import { RevenueOverview } from "./RevenueOverview";
+import RecentRevenue from "./RecentRevenue";
 
 const DashboardHome = () => {
   const breadcrumbList = [
@@ -49,10 +51,16 @@ const DashboardHome = () => {
             <InvoiceStats summary={data?.summary} />
             <div className="grid gap-4 lg:gap-6 md:grid-cols-2">
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
-                <InvoiceOverview chartData={data?.invoiceChartData}/>
+                <InvoiceOverview chartData={data?.invoiceChartData} />
               </div>
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
                 <RecentSales invoices={data?.invoices} />
+              </div>
+              <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
+                <RevenueOverview chartData={data?.revenueChartData}/>
+              </div>
+              <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
+                <RecentRevenue revenues={data?.invoices}/>
               </div>
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
                 <RecentTransactions transactions={data?.transactions} />
