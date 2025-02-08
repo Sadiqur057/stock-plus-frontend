@@ -53,21 +53,24 @@ const DashboardHome = () => {
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
                 <InvoiceOverview chartData={data?.invoiceChartData} />
               </div>
+
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
                 <RecentSales invoices={data?.invoices} />
               </div>
+          
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
-                <RevenueOverview chartData={data?.revenueChartData}/>
+                <RecentRevenue revenues={data?.invoices} />
               </div>
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
-                <RecentRevenue revenues={data?.invoices}/>
-              </div>
-              <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
-                <RecentTransactions transactions={data?.transactions} />
+                <RevenueOverview chartData={data?.revenueChartData} />
               </div>
               <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
                 <PaymentOverview chartData={data?.paymentChartData} />
               </div>
+              <div className="border rounded-md p-4 lg:p-6 max-h-[472px] overflow-auto custom-scrollbar">
+                <RecentTransactions transactions={data?.transactions} />
+              </div>
+              
             </div>
           </div>
         )}
