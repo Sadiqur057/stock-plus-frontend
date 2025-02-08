@@ -3,15 +3,26 @@
 import {
   Bar,
   BarChart,
+  CartesianGrid,
   ResponsiveContainer,
   XAxis,
-  YAxis,
-  Tooltip as RechartsTooltip,
-  TooltipProps,  
 } from "recharts";
+
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+} from "@/components/ui/chart";
 import SectionHeader from "./SectionHeader";
-import { getFormattedPrice } from "@/lib/utils";
 import EmptyMessage from "./EmptyMessage";
+import { CustomTooltip } from "./CustomToolTip";
+
+const chartConfig = {
+  total_invoice_amount: {
+    label: "Total Invoice Amount",
+    color: "hsl(var(--chart-1))",
+  },
+} satisfies ChartConfig;
 
 type Data = {
   name: string;
@@ -21,38 +32,6 @@ type Data = {
 
 type Props = {
   chartData: Data[];
-};
-
-const CustomTooltip = ({
-  payload,
-  label,
-}: TooltipProps<number, string>) => {  
-  if (payload && payload.length > 0) {
-    const { total_invoice_created, total_invoice_amount } = payload[0].payload;
-    return (
-      <div
-        className="custom-tooltip"
-        style={{
-          padding: "10px",
-          background: "#fff",
-          border: "1px solid #ddd",
-          borderRadius: "5px",
-        }}
-      >
-        <p>
-          <span className="font-medium">Month:</span> {label}
-        </p>
-        <p>
-          <span className="font-medium">Invoice Created:</span> {total_invoice_created}
-        </p>
-        <p>
-          <span className="font-medium">Total Amount:</span>{" "}
-          {total_invoice_amount.toLocaleString()} BDT
-        </p>
-      </div>
-    );
-  }
-  return null;
 };
 
 export function InvoiceOverview({ chartData }: Props) {
@@ -67,31 +46,31 @@ export function InvoiceOverview({ chartData }: Props) {
 
       {chartData?.length ? (
         <ResponsiveContainer width="100%" height={350}>
-          <BarChart data={chartData}>
-            <XAxis
-              dataKey="name"
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => `${value.slice(0,3)}`}
-            />
-            <YAxis
-              stroke="#888888"
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => `${getFormattedPrice(value)}`}
-            />
-            <RechartsTooltip content={CustomTooltip} />
-            <Bar
-              dataKey="total_invoice_amount"
-              fill="hsl(var(--primary))"
-              radius={[4, 4, 0, 0]}
-              className="fill-primary"
-              barSize={24}
-            />
-          </BarChart>
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="name"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <CustomTooltip
+                    labels={{
+                      month: "Month",
+                      total_invoice_created: "Invoices Created",
+                      total_invoice_amount: "Total Amount:BDT",
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey="total_invoice_amount" className="fill-blue-800" radius={8} />
+            </BarChart>
+          </ChartContainer>
         </ResponsiveContainer>
       ) : (
         <EmptyMessage />
