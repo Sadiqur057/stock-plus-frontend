@@ -34,7 +34,11 @@ export default function InvoicesPage() {
     useState<CustomerOption | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const { data: invoices, isLoading, refetch } = useQuery({
+  const {
+    data: invoiceData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["invoices"],
     queryFn: async () => {
       const result = await api.get(
@@ -77,7 +81,7 @@ export default function InvoicesPage() {
               <Button size="sm">Create Invoice</Button>
             </Link>
           </div>
-          <InvoiceSummary />
+          <InvoiceSummary summary={invoiceData?.invoice_summary} />
 
           <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
             <div className="space-y-2">
@@ -117,7 +121,7 @@ export default function InvoicesPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <InvoiceTable invoices={invoices} refetch={refetch} />
+            <InvoiceTable invoices={invoiceData?.invoices} refetch={refetch} />
           </div>
         </section>
       )}
