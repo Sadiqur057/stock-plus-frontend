@@ -104,7 +104,7 @@ export default function CreateInvoicePage() {
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
-      <section>
+      <section className="mb-10">
         <div className="mb-4 lg:mb-8 bg-gray-50 border p-4 lg:p-6 rounded-md flex items-center justify-between gap-4">
           <div>
             <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
