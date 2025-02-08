@@ -1,4 +1,4 @@
-import { Eye, FilePenLine, MoreHorizontal } from "lucide-react";
+import { Eye, FilePenLine, MoreHorizontal, Trash2 } from "lucide-react";
 import { SidebarMenuAction, SidebarMenuItem } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -13,6 +13,9 @@ import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import CreateTransaction from "./CreateTransaction";
 import { Invoice } from "@/types/invoice.type";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import api from "@/interceptors/api";
+import toast from "react-hot-toast";
 // import UpdateInvoice from "./UpdateInvoice";
 // import { InvoiceType } from "./InvoicesPage";
 
@@ -26,24 +29,24 @@ type Props = {
 
 const InvoiceOption = ({ invoiceId, refetch, due_amount }: Props) => {
   const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
-  // const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
   // const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
-  // const [selectedInvoiceId, setSelectedInvoiceId] = useState<string>("");
-// 
-  // const handleDeleteInvoice = async (id: string) => {
-  //   try {
-  //     const result = await api.delete(
-  //       `${process.env.NEXT_PUBLIC_API_URL}/delete-invoice/${id}`
-  //     );
-  //     if (!result.data?.success) {
-  //       return toast.error(result?.data?.message || "Something went wrong!");
-  //     }
-  //     toast.success(result?.data?.message);
-  //     refetch();
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
+  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string>("");
+  //
+  const handleDeleteInvoice = async (id: string) => {
+    try {
+      const result = await api.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/delete-invoice/${id}`
+      );
+      if (!result.data?.success) {
+        return toast.error(result?.data?.message || "Something went wrong!");
+      }
+      toast.success(result?.data?.message);
+      refetch();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <>
@@ -94,7 +97,7 @@ const InvoiceOption = ({ invoiceId, refetch, due_amount }: Props) => {
             </DropdownMenuItem> */}
 
             <DropdownMenuSeparator />
-            {/* <DropdownMenuItem
+            <DropdownMenuItem
               onClick={() => {
                 setIsDeleteModalOpen(true);
                 setSelectedInvoiceId(invoiceId);
@@ -102,7 +105,7 @@ const InvoiceOption = ({ invoiceId, refetch, due_amount }: Props) => {
             >
               <Trash2 className="text-red-700" />
               <span className="text-red-700">Delete Invoice</span>
-            </DropdownMenuItem> */}
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
@@ -138,7 +141,7 @@ const InvoiceOption = ({ invoiceId, refetch, due_amount }: Props) => {
           />
         </Modal>
       )}
-
+*/}
       {isDeleteModalOpen && (
         <Modal
           isOpen={isDeleteModalOpen}
@@ -173,7 +176,7 @@ const InvoiceOption = ({ invoiceId, refetch, due_amount }: Props) => {
             </div>
           </div>
         </Modal>
-      )} */}
+      )}
     </>
   );
 };
