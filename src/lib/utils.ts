@@ -8,7 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function getFormattedDate(date: string) {
   const parsedDate = parse(date ?? "", "M/d/yyyy, h:mm:ss a", new Date());
-  const formattedDate = format(parsedDate, "MMMM do, yyyy 'at' hh:mm a");
+  const formattedDate = format(parsedDate, "MMM do, yyyy 'at' hh:mm a");
   return formattedDate;
 }
 
@@ -19,4 +19,8 @@ export function getReadableDate(data: string) {
 
 export function getFormattedPrice(price: number) {
   return price?.toLocaleString("en-IN");
+}
+
+export function beautifyDate(date: string) {
+  return format(parseISO(date), "MMM d, yyyy 'at' hh:mm a");
 }
