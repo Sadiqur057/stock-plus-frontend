@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/chart";
 import SectionHeader from "./SectionHeader";
 import { CustomTooltip } from "./CustomToolTip";
+import EmptyMessage from "./EmptyMessage";
 
 const chartConfig = {
   cost: {
@@ -39,7 +40,6 @@ type Props = {
 };
 
 export function RevenueOverview({ chartData }: Props) {
-
   console.log("trying to see the data", chartData);
   return (
     <div>
@@ -49,7 +49,7 @@ export function RevenueOverview({ chartData }: Props) {
         text={`Hover on bar to get more details`}
         url="/dashboard/transactions"
       />
-      <div>
+      {chartData?.length ? (
         <ResponsiveContainer width="100%" height={350}>
           <ChartContainer config={chartConfig}>
             <BarChart accessibilityLayer data={chartData}>
@@ -89,7 +89,9 @@ export function RevenueOverview({ chartData }: Props) {
             </BarChart>
           </ChartContainer>
         </ResponsiveContainer>
-      </div>
+      ) : (
+        <EmptyMessage />
+      )}
     </div>
   );
 }
