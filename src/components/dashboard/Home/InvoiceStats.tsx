@@ -1,4 +1,4 @@
-import { DollarSign, Users, FileText } from "lucide-react";
+import { CircleDollarSign, FileText, HandCoins, Wallet } from "lucide-react";
 import StatsCard from "./StatsCard";
 import { getFormattedPrice } from "@/lib/utils";
 
@@ -11,6 +11,7 @@ type Props = {
     due_invoice_count: number;
     transaction_count: number;
     customer_count: string;
+    total_revenue_amount: number;
   };
 };
 
@@ -28,19 +29,26 @@ export function InvoiceStats({ summary }: Props) {
       />
       <StatsCard
         title="Total Paid"
-        Icon={DollarSign}
+        Icon={HandCoins}
         value={`${getFormattedPrice(summary?.total_payment) || 0}  BDT.`}
         comment={`${summary?.transaction_count} transactions so far`}
         trend="up"
       />
       <StatsCard
         title="Total Due"
-        Icon={DollarSign}
+        Icon={CircleDollarSign}
         value={`${getFormattedPrice(summary?.due_invoice_amount) || 0}  BDT.`}
         comment={`${summary?.due_invoice_count} invoice need to be cleared`}
         trend="up"
       />
       <StatsCard
+        title="Total Revenue"
+        Icon={Wallet}
+        value={`${getFormattedPrice(summary?.total_revenue_amount) || 0}  BDT.`}
+        comment={`From ${summary?.invoice_count || 0} invoices`}
+        trend="up"
+      />
+      {/* <StatsCard
         title="Total Customer"
         Icon={Users}
         value={summary?.customer_count}
@@ -48,7 +56,7 @@ export function InvoiceStats({ summary }: Props) {
           getFormattedPrice(summary?.total_sell) || 0
         } BDT. purchased so far`}
         trend="up"
-      />
+      /> */}
     </section>
   );
 }
