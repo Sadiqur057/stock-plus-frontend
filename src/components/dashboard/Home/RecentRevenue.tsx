@@ -12,6 +12,7 @@ import {
 import SectionHeader from "./SectionHeader";
 import { Invoice } from "@/types/invoice.type";
 import { getReadableDate } from "@/lib/utils";
+import EmptyMessage from "./EmptyMessage";
 
 type Props = {
   revenues: Invoice[];
@@ -37,31 +38,38 @@ export default function RecentRevenue({ revenues }: Props) {
             <TableHead>Change</TableHead>
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {revenues.map((item) => (
-            <TableRow key={item?._id}>
-              <TableCell>{item?.customer?.name}</TableCell>
-              <TableCell>{getReadableDate(item?.created_at)}</TableCell>
-              <TableCell>{item?.cost_summary?.revenue}</TableCell>
-              <TableCell>
-                <div
-                  className={`flex items-center ${
-                    item?.cost_summary?.revenue_percentage >= 0
-                      ? "text-green-500"
-                      : "text-red-500"
-                  }`}
-                >
-                  {item?.cost_summary?.revenue_percentage >= 0 ? (
-                    <ArrowUpIcon className="mr-1 h-4 w-4" />
-                  ) : (
-                    <ArrowDownIcon className="mr-1 h-4 w-4" />
-                  )}
-                  {Math.abs(item?.cost_summary?.revenue_percentage).toFixed(2)}%
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+        {revenues?.length ? (
+          <TableBody>
+            {revenues?.slice(0, 5)?.map((item) => (
+              <TableRow key={item?._id}>
+                <TableCell>{item?.customer?.name}</TableCell>
+                <TableCell>{getReadableDate(item?.created_at)}</TableCell>
+                <TableCell>{item?.cost_summary?.revenue}</TableCell>
+                <TableCell>
+                  <div
+                    className={`flex items-center ${
+                      item?.cost_summary?.revenue_percentage >= 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {item?.cost_summary?.revenue_percentage >= 0 ? (
+                      <ArrowUpIcon className="mr-1 h-4 w-4" />
+                    ) : (
+                      <ArrowDownIcon className="mr-1 h-4 w-4" />
+                    )}
+                    {Math.abs(item?.cost_summary?.revenue_percentage).toFixed(
+                      2
+                    )}
+                    %
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        ) : (
+          <EmptyMessage />
+        )}
       </Table>
     </div>
   );
