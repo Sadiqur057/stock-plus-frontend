@@ -47,7 +47,7 @@ export function RevenueOverview({ chartData }: Props) {
         buttonText="View All"
         header="Revenue Overview"
         text={`Hover on bar to get more details`}
-        url="/dashboard/transactions"
+        url="/dashboard/revenues"
       />
       {chartData?.length ? (
         <ResponsiveContainer width="100%" height={350}>

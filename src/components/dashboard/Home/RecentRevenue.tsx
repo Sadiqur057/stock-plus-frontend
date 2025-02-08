@@ -23,22 +23,23 @@ export default function RecentRevenue({ revenues }: Props) {
     <div className="w-full max-w-3xl">
       <SectionHeader
         buttonText="View All"
-        header="Revenue Overview"
-        text={`Hover on bar to get more details`}
-        url="/dashboard/transactions"
+        header="Recent Revenues"
+        text={`All the revenue generated from invoices`}
+        url="/dashboard/revenues"
       />
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Time</TableHead>
-            <TableHead>
-              Amount <span className="text-[10px]">(BDT)</span>
-            </TableHead>
-            <TableHead>Change</TableHead>
-          </TableRow>
-        </TableHeader>
-        {revenues?.length ? (
+
+      {revenues?.length ? (
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead>Time</TableHead>
+              <TableHead>
+                Amount <span className="text-[10px]">(BDT)</span>
+              </TableHead>
+              <TableHead>Change</TableHead>
+            </TableRow>
+          </TableHeader>
           <TableBody>
             {revenues?.slice(0, 5)?.map((item) => (
               <TableRow key={item?._id}>
@@ -67,10 +68,10 @@ export default function RecentRevenue({ revenues }: Props) {
               </TableRow>
             ))}
           </TableBody>
-        ) : (
-          <EmptyMessage />
-        )}
-      </Table>
+        </Table>
+      ) : (
+        <EmptyMessage />
+      )}
     </div>
   );
 }
