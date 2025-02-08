@@ -50,10 +50,10 @@ const data = {
           title: "All Products",
           url: "/dashboard/products",
         },
-        {
-          title: "Add Products",
-          url: "/dashboard/products/add-product",
-        },
+        // {
+        //   title: "Add Products",
+        //   url: "/dashboard/products/add-product",
+        // },
         {
           title: "History",
           url: "#",
@@ -78,6 +78,10 @@ const data = {
           title: "Transactions",
           url: "/dashboard/transactions",
         },
+        {
+          title: "Revenues",
+          url: "/dashboard/revenues",
+        },
       ],
     },
     {
@@ -86,11 +90,11 @@ const data = {
       icon: Settings2,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "My Account",
+          url: "/dashboard/my-account",
         },
         {
-          title: "Billing",
+          title: "General",
           url: "#",
         },
       ],
