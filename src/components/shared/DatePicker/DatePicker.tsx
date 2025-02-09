@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -17,10 +18,16 @@ interface DatePickerProps {
 }
 
 export function DatePicker({ date, setDate }: DatePickerProps) {
-  // Function to set both date and current time
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setHydrated(true); 
+  }, []);
+
+
   const handleSelect = (selectedDate: Date | undefined) => {
     if (selectedDate) {
-      const now = new Date(); // Get current time
+      const now = new Date(); 
       selectedDate.setHours(
         now.getHours(),
         now.getMinutes(),
@@ -42,7 +49,7 @@ export function DatePicker({ date, setDate }: DatePickerProps) {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {date ? format(date, "PPpp") : <span>Pick a date</span>}
+          {hydrated && date ? format(date, "PPpp") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
