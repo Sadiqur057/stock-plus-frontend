@@ -34,13 +34,13 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
     useState<TransactionType>({
       customer: {
         name: "",
-        email: ""
+        email: "",
       },
       payment_method: "",
       payment_description: "",
       _id: "",
-      added_by: "",
-      user_name: "",
+      created_by_email: "",
+      created_by_name: "",
       created_at: "",
       amount: 0,
     });
@@ -52,7 +52,7 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
       const result = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/transaction/${id}`
       );
-      console.log("transaction result",result)
+      console.log("transaction result", result);
       setSelectedTransactionData(result?.data?.data);
     } finally {
       setIsLoading(false);

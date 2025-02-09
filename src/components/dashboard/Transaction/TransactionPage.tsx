@@ -20,8 +20,8 @@ export type TransactionType = {
   payment_method: string;
   payment_description: string;
   _id: string;
-  added_by: string;
-  user_name: string;
+  created_by_email: string;
+  created_by_name: string;
   created_at: string;
   amount: number;
 };

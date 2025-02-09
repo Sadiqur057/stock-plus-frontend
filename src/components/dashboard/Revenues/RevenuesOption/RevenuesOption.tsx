@@ -36,7 +36,8 @@ const RevenueOption = ({ revenueId, refetch }: Props) => {
     revenue_percentage: 0,
     created_at: "",
     company_email: "",
-    created_by: "",
+    created_by_name: "",
+    created_by_email: "",
     customer_email: "",
     customer_name: "",
   });

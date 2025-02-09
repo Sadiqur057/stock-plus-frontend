@@ -27,7 +27,8 @@ export type RevenueType = {
   revenue_percentage: number;
   created_at: string;
   company_email: string;
-  created_by: string;
+  created_by_name: string;
+  created_by_email: string;
   customer_email: string;
   customer_name: string;
   products?: Product[];

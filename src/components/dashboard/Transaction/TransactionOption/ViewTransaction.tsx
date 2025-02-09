@@ -51,11 +51,11 @@ const ViewTransaction = ({ transactionData, isLoading }: TransactionProps) => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <User className="h-4 w-4 text-gray-600" />
-                  <span>{transactionData?.user_name}</span>
+                  <span>{transactionData?.created_by_name}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Mail className="h-4 w-4 text-gray-600" />
-                  <span>{transactionData?.added_by}</span>
+                  <span>{transactionData?.created_by_email}</span>
                 </div>
               </div>
             </div>
