@@ -53,10 +53,10 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
                 </div>
               </td>
               <td className="py-4 px-6 text-sm text-gray-900">
-                {invoice?.cost_summary?.total.toFixed(2)}
+                {invoice?.cost_summary?.total}
               </td>
               <td className="py-4 px-6 text-sm text-gray-900">
-              {invoice?.cost_summary?.total_due.toFixed(2)}
+              {invoice?.cost_summary?.total_due}
               </td>
               <td className="py-4 px-6 text-sm text-gray-500">
                 {format(new Date(invoice?.created_at), "MMM dd, yyyy")}
