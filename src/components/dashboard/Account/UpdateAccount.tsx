@@ -16,11 +16,10 @@ type userShape = {
   company_name: string;
   company_description: string;
   company_type: string;
-  twitter_url: string;
-  facebook_url: string;
+  twitter_url?: string;
+  facebook_url?: string;
   company_location: string;
   company_phone: string;
-  company_email: string;
 };
 
 type Props = {
@@ -41,7 +40,6 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
     twitter_url: user?.twitter_url,
     facebook_url: user?.facebook_url,
     company_location: user?.company_location,
-    company_email: user?.company_email,
     company_phone: user?.company_phone,
   });
 
@@ -95,7 +93,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="name"
               value={formData?.name}
               name="name"
-              placeholder="Enter Your Name"
+              placeholder="e.g. John Doe"
               onChange={handleInputChange}
               required
             />
@@ -106,7 +104,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="company_name"
               value={formData?.company_name}
               name="company_name"
-              placeholder="Enter Company Name"
+              placeholder="e.g. My Company"
               onChange={handleInputChange}
               required
             />
@@ -117,7 +115,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="company_type"
               value={formData?.company_type}
               name="company_type"
-              placeholder="Enter Company Type"
+              placeholder="e.g. International Business"
               onChange={handleInputChange}
               required
             />
@@ -128,18 +126,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="company_location"
               value={formData?.company_location}
               name="company_location"
-              placeholder="Enter Company Location"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="company_email">Company Email</Label>
-            <Input
-              id="company_email"
-              value={formData?.company_email}
-              name="company_email"
-              placeholder="Enter Company Email"
+              placeholder="e.g. Dhaka, Bangladesh"
               onChange={handleInputChange}
               required
             />
@@ -150,7 +137,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="company_phone"
               value={formData?.company_phone}
               name="company_phone"
-              placeholder="Enter Company Phone"
+              placeholder="e.g. +880123456789"
               onChange={handleInputChange}
               required
             />
@@ -161,9 +148,8 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="facebook_url"
               value={formData?.facebook_url}
               name="facebook_url"
-              placeholder="Enter Facebook URL"
+              placeholder="e.g. https://www.facebook.com/mycompany"
               onChange={handleInputChange}
-              required
             />
           </div>
           <div className="space-y-1">
@@ -172,9 +158,8 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="twitter_url"
               value={formData?.twitter_url}
               name="twitter_url"
-              placeholder="Enter Twitter URL"
+              placeholder="e.g. https://twitter.com/mycompany"
               onChange={handleInputChange}
-              required
             />
           </div>
           <div className="gap-1.5 flex flex-col md:col-span-2">
@@ -185,7 +170,7 @@ const UpdateAccount = ({ isOpen, user, setIsOpen, refetch }: Props) => {
               id="company_description"
               value={formData?.company_description}
               onChange={handleInputChange}
-              placeholder="Type your company description here."
+              placeholder="e.g. My Company is a ..."
             />
           </div>
           <div className="space-y-1 flex justify-end md:col-span-2">
