@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { getReadableDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { Invoice } from "@/types/invoice.type";
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
@@ -47,7 +47,7 @@ export function RecentSales({ invoices }: Props) {
                   <TableCell>{invoice?.cost_summary?.total}</TableCell>
                   <TableCell>
                     {invoice?.created_at &&
-                      getReadableDate(invoice?.created_at)}
+                      formatDate(invoice?.created_at)}
                   </TableCell>
                   <TableCell>{invoice?.cost_summary?.total_due}</TableCell>
                   <TableCell>

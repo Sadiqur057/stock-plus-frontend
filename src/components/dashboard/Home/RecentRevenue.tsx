@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import SectionHeader from "./SectionHeader";
 import { Invoice } from "@/types/invoice.type";
-import { getReadableDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import EmptyMessage from "./EmptyMessage";
 
 type Props = {
@@ -44,7 +44,7 @@ export default function RecentRevenue({ revenues }: Props) {
             {revenues?.slice(0, 5)?.map((item) => (
               <TableRow key={item?._id}>
                 <TableCell>{item?.customer?.name}</TableCell>
-                <TableCell>{getReadableDate(item?.created_at)}</TableCell>
+                <TableCell>{formatDate(item?.created_at)}</TableCell>
                 <TableCell>{item?.cost_summary?.revenue}</TableCell>
                 <TableCell>
                   <div

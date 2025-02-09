@@ -90,7 +90,7 @@ export function CustomerSection({
 
     if (option.value === "new") {
       setCustomer({
-        _id: new Date().toLocaleDateString(),
+        _id: new Date().toLocaleString(),
         name: "",
         email: "",
         phone: "",
