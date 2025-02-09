@@ -2,12 +2,12 @@
 
 import * as React from "react";
 import {
-  BookOpen,
+  NotepadText,
   BookUser,
   GalleryVerticalEnd,
   LayoutList,
   Settings2,
-  SquareTerminal,
+  SquareTerminal ,
   Users,
   LayoutDashboard
 } from "lucide-react";
@@ -38,25 +38,29 @@ const data = {
           title: "Overview",
           url: "/dashboard",
         },
+        {
+          title: "Accounting",
+          url: "/dashboard/accounting",
+        },
       ],
     },
     {
-      title: "Products",
+      title: "Inventory",
       url: "#",
       icon: SquareTerminal,
       isActive: true,
       items: [
         {
           title: "All Products",
-          url: "/dashboard/products",
+          url: "/dashboard/inventory/products",
         },
-        // {
-        //   title: "Add Products",
-        //   url: "/dashboard/products/add-product",
-        // },
         {
-          title: "History",
-          url: "#",
+          title: "Add Products",
+          url: "/dashboard/inventory/add-products",
+        },
+        {
+          title: "Manage Inventory",
+          url: "/dashboard/inventory",
         },
       ],
     },
@@ -64,7 +68,7 @@ const data = {
       title: "Invoices",
       url: "#",
       isActive: false,
-      icon: BookOpen,
+      icon: NotepadText,
       items: [
         {
           title: "View Invoices",
