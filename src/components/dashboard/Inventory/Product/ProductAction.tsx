@@ -18,13 +18,13 @@ import { Modal } from "@/components/shared/Modal/Modal";
 import { Button } from "@/components/ui/button";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 import api from "@/interceptors/api";
-import ViewProduct from "./ViewProduct";
 import { ProductShape } from "@/types/product.type";
 import toast from "react-hot-toast";
 import UpdateProduct from "./UpdateProduct";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
+import ViewProduct from "./ViewProduct";
 
 type Props = {
   productId: string;

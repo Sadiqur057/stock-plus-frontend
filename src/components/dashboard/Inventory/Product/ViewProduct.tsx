@@ -1,5 +1,4 @@
 import React from "react";
-import { format, parse } from "date-fns";
 import {
   Table,
   TableBody,
@@ -13,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Building2, Package, DollarSign, Tag, Info, CalendarDays } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { ProductShape } from "@/types/product.type";
+import { formatDate } from "@/lib/utils";
 
 type productProps = {
   productData: ProductShape;
@@ -27,12 +27,6 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
       </div>
     );
   }
-  const parsedDate = parse(
-    productData?.created_at ?? "",
-    "M/d/yyyy, h:mm:ss a",
-    new Date()
-  );
-  const formattedDate = format(parsedDate, "MMMM do, yyyy 'at' hh:mm a");
   return (
     <CardContent className="py-1 p-0">
       <div className="grid gap-6 mb-8">
@@ -52,7 +46,7 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
           <div className="sm:text-right gap-4 lg:gap-2 flex flex-col items-start lg:items-end">
             <div className="flex gap-2 text-muted-foreground text-sm lg:order-2">
               <CalendarDays className="h-4 w-4 mr-1" />
-              <span>{formattedDate}</span>
+              <span>{productData?.created_at && formatDate(productData?.created_at)}</span>
             </div>
             <Badge variant="secondary" className="h-fit lg:order-1">
               <Tag className="h-3 w-3 mr-1" />

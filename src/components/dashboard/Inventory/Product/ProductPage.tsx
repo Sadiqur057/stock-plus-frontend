@@ -268,7 +268,7 @@ const ProductPage = () => {
                       <TableCell>{product.quantity}</TableCell>
                       <TableCell>{product.purchasePrice}</TableCell>
                       <TableCell>
-                        {product.attributes.map((attr, index) => (
+                        {product?.attributes && product.attributes.map((attr, index) => (
                           <span key={index}>
                             {attr.key !== "new"
                               ? `${attr.key}: ${attr.value}`

@@ -1,5 +1,5 @@
 import React from "react";
-import AttributePage from "@/components/dashboard/Product/Attributes/AttributePage";
+import AttributePage from "@/components/dashboard/Inventory/Product/Attributes/AttributePage";
 const page = () => {
   return <AttributePage />;
 };

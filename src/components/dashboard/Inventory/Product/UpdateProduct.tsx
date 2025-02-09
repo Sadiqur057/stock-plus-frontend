@@ -163,7 +163,7 @@ const UpdateProduct = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const processedAttributes = attributes.map((attr) =>
+    const processedAttributes = attributes?.map((attr) =>
       attr.key === "new" ? { key: attr.newKey || "", value: attr.value } : attr
     );
 
@@ -257,7 +257,7 @@ const UpdateProduct = ({
         </div>
 
         <div className="space-y-4">
-          {attributes.map((attr, index) => (
+          {attributes && attributes?.map((attr, index) => (
             <div key={index} className="flex items-center space-x-4">
               <Select
                 value={attr.key}
