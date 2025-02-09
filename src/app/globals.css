@@ -33,6 +33,26 @@ body {
 .searchBox {
   @apply block w-full py-2.5 pr-5 text-gray-700 bg-white border border-gray-200 rounded-lg placeholder-gray-400/70 pl-11 focus:border-blue-300 focus:outline-none;
 }
+.tooltip {
+  position: relative;
+}
+.tooltip {
+  .tooltip-text {
+    display: none;
+    position: absolute;
+    top: -44px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fff;
+    padding: 5px;
+    border-radius: 5px;
+    min-width: 302px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+  &:hover .tooltip-text {
+    display: block;
+  }
+}
 @layer base {
   :root {
     --background: 0 0% 100%;
