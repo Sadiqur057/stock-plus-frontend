@@ -33,7 +33,7 @@ export function RecentTransactions({ transactions }: Props) {
       {transactions?.length ? (
         <>
           <div className="space-y-8">
-            {transactions?.slice(0, 5)?.map((transaction) => (
+            {transactions?.slice(0, 5)?.map((transaction: Transaction) => (
               <div key={transaction?._id} className="flex items-center">
                 <div className="flex items-center flex-1 gap-4">
                   <div className="h-9 w-9 rounded-full bg-emerald-600 flex items-center justify-center">
@@ -41,7 +41,7 @@ export function RecentTransactions({ transactions }: Props) {
                   </div>
                   <div>
                     <p className="text-sm font-medium leading-none">
-                      {transaction?.user_name}
+                      {transaction?.customer?.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
                       {getFormattedDate(transaction?.created_at)}
