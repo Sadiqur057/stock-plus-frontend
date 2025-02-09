@@ -31,7 +31,7 @@ import { CloudDownload, FolderUp } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
 import TransactionOption from "./TransactionOption/TransactionOption";
-import { getFormattedDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 
 const TransactionPage = () => {
   // const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -159,7 +159,7 @@ const TransactionPage = () => {
                         <TableCell>{transaction?.payment_method}</TableCell>
                         <TableCell>{transaction?.amount}</TableCell>
                         <TableCell>
-                          {getFormattedDate(transaction?.created_at)}
+                          {formatDate(transaction?.created_at)}
                         </TableCell>
                         <TableCell>
                           <TransactionOption

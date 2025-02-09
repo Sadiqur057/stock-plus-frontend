@@ -2,7 +2,7 @@ import { Separator } from "@/components/ui/separator";
 import { Clock, CreditCard, User, Mail, DollarSign } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { TransactionType } from "../TransactionPage";
-import { getFormattedDate } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 type TransactionProps = {
   transactionData: TransactionType;
   isLoading: boolean;
@@ -22,7 +22,7 @@ const ViewTransaction = ({ transactionData, isLoading }: TransactionProps) => {
           <h4 className="text-xl font-semibold">Transaction Details</h4>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
             <Clock className="h-4 w-4" />
-            {getFormattedDate(transactionData?.created_at)}
+            {formatDate(transactionData?.created_at)}
           </div>
         </div>
       </div>
