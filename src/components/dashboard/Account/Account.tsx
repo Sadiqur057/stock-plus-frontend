@@ -50,9 +50,9 @@ export default function Account() {
     },
   });
   const date = new Date(user?.created_at);
-  const formattedDate = date.toLocaleDateString("en-US", {
+  const formattedDate = date.toLocaleString("en-US", {
     day: "numeric",
-    month: "long",
+    month: "short",
     year: "numeric",
   });
 
