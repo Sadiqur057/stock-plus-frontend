@@ -7,15 +7,17 @@ import { useMutation } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
-import { CalculationShape } from "../../Invoice/CreateInvoicePage";
+import {
+  CalculationShape,
+  PaymentDataType,
+} from "../../Invoice/CreateInvoicePage";
 import ProductSection from "./ProductSection";
 import { CalculationSection } from "../../Invoice/CalculationSection";
+import { SupplierSection } from "./SupplierSection";
+import Link from "next/link";
+
 
 const breadcrumbList = [
-  {
-    name: "Inventory",
-    link: "/dashboard/inventory",
-  },
   {
     name: "Add Products",
     link: "/dashboard/inventory/add-product",
@@ -35,22 +37,47 @@ export type Product = {
   existing?: boolean;
 };
 
+export type Supplier = {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+};
+
 type InventoryDataType = {
   products: Product[];
   total_cost: CalculationShape;
-  created_at: string;
+  created_at: Date | undefined;
+  supplier: Supplier;
+  transaction_data?: {
+    amount: number | null;
+    payment_description: string;
+    payment_method: string;
+  };
 };
 
 const AddProductsPage = () => {
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
+  const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(new Date());
+  const [supplier, setSupplier] = useState({
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
   const [calculation, setCalculation] = useState<CalculationShape>({
     tax: 0,
     subtotal: 0,
     total: 0,
   });
-
-
+  const [paymentData, setPaymentData] = useState<PaymentDataType>({
+    amount: null,
+    payment_description: "",
+  });
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
 
   const { mutate } = useMutation({
     mutationFn: async (data: InventoryDataType) => {
@@ -77,9 +104,10 @@ const AddProductsPage = () => {
     e.preventDefault();
     setLoading(true);
     const data = {
+      supplier,
       products,
       total_cost: calculation,
-      created_at: new Date().toLocaleString(),
+      created_at: invoiceDate,
     };
     console.log("checking", data);
     mutate(data);
@@ -88,12 +116,26 @@ const AddProductsPage = () => {
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
-      <h2 className="text-2xl font-bold">Quick Add Products</h2>
-      <p className="text-muted-foreground mt-1.5">
-        Quickly add multiple products and generate invoice of new stock update.
-        Added products will be added as new products in your inventory
-      </p>
       <form onSubmit={handleSubmit} className="my-6">
+        <div className="mb-4 lg:mb-8 bg-gray-50 border p-4 lg:p-6 rounded-md flex items-center justify-between gap-4">
+          <div>
+            <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+              Add Products
+            </h1>
+            <p className="text-gray-500 mt-1 text-sm md:text-base">
+              Fill in the details below to create a new invoice
+            </p>
+          </div>
+          <Link href="/dashboard/inventory/reports">
+            <Button size="sm">All Reports</Button>
+          </Link>
+        </div>
+        <SupplierSection
+          setSupplier={setSupplier}
+          supplier={supplier}
+          date={invoiceDate}
+          setDate={setInvoiceDate}
+        />
         <ProductSection
           setProducts={setProducts}
           products={products}
@@ -102,6 +144,10 @@ const AddProductsPage = () => {
         <CalculationSection
           calculation={calculation}
           setCalculation={setCalculation}
+          paymentData={paymentData}
+          setPaymentData={setPaymentData}
+          setPaymentMethod={setPaymentMethod}
+          paymentMethod={paymentMethod}
         />
         <div className="mt-6 flex justify-end">
           <Button size="lg" type="submit" className="px-8" disabled={loading}>
