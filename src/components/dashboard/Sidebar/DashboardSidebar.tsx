@@ -38,10 +38,10 @@ const data = {
           title: "Overview",
           url: "/dashboard",
         },
-        // {
-        //   title: "Accounting",
-        //   url: "/dashboard/accounting",
-        // },
+        {
+          title: "Accounting",
+          url: "/dashboard/accounting",
+        },
       ],
     },
     {
