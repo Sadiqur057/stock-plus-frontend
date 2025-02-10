@@ -3,13 +3,13 @@
 import * as React from "react";
 import {
   NotepadText,
-  BookUser,
   GalleryVerticalEnd,
   LayoutList,
   Settings2,
-  SquareTerminal ,
+  SquareTerminal,
   Users,
-  LayoutDashboard
+  LayoutDashboard,
+  ContactRound,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -38,10 +38,10 @@ const data = {
           title: "Overview",
           url: "/dashboard",
         },
-        {
-          title: "Accounting",
-          url: "/dashboard/accounting",
-        },
+        // {
+        //   title: "Accounting",
+        //   url: "/dashboard/accounting",
+        // },
       ],
     },
     {
@@ -51,7 +51,7 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "All Products",
+          title: "Manage Products",
           url: "/dashboard/inventory/products",
         },
         {
@@ -59,8 +59,8 @@ const data = {
           url: "/dashboard/inventory/add-products",
         },
         {
-          title: "Manage Inventory",
-          url: "/dashboard/inventory",
+          title: "Inventory Reports",
+          url: "/dashboard/inventory/reports",
         },
       ],
     },
@@ -71,7 +71,7 @@ const data = {
       icon: NotepadText,
       items: [
         {
-          title: "View Invoices",
+          title: "Manage Invoices",
           url: "/dashboard/invoices",
         },
         {
@@ -97,23 +97,28 @@ const data = {
           title: "My Account",
           url: "/dashboard/my-account",
         },
-        {
-          title: "General",
-          url: "#",
-        },
+        // {
+        //   title: "General",
+        //   url: "#",
+        // },
       ],
     },
   ],
   projects: [
-    {
-      name: "Employees",
-      url: "/dashboard/employees",
-      icon: BookUser,
-    },
+    // {
+    //   name: "Employees",
+    //   url: "/dashboard/employees",
+    //   icon: BookUser,
+    // },
     {
       name: "Customers",
       url: "/dashboard/customers",
       icon: Users,
+    },
+    {
+      name: "Suppliers",
+      url: "/dashboard/suppliers",
+      icon: ContactRound,
     },
     {
       name: "Attributes",
