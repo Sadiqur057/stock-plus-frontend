@@ -16,7 +16,6 @@ import { CalculationSection } from "../../Invoice/CalculationSection";
 import { SupplierSection } from "./SupplierSection";
 import Link from "next/link";
 
-
 const breadcrumbList = [
   {
     name: "Add Products",
@@ -103,13 +102,19 @@ const AddProductsPage = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    const cost_summary = Object.assign({}, calculation);
+    delete cost_summary.due;
     const data = {
       supplier,
       products,
-      total_cost: calculation,
+      total_cost: cost_summary,
       created_at: invoiceDate,
+      transaction_data: {
+        payment_method: paymentMethod,
+        amount: paymentData?.amount,
+        payment_description: paymentData?.payment_description,
+      },
     };
-    console.log("checking", data);
     mutate(data);
   };
 
