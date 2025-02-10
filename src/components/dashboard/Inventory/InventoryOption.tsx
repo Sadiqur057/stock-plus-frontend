@@ -70,7 +70,7 @@ const InventoryOption = ({ inventoryId, refetch }: Props) => {
             align={"start"}
           >
             <DropdownMenuItem>
-              <Link href={`/dashboard/inventory/${inventoryId}`} className="flex gap-1 items-center">
+              <Link href={`/dashboard/inventory/reports/${inventoryId}`} className="flex gap-1 items-center">
                 <Eye className="text-muted-foreground w-4" />
                 <span>View Inventory</span>
               </Link>
