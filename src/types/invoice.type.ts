@@ -3,6 +3,7 @@ export type Product = {
   productName: string;
   company: string;
   salePrice: number;
+  purchasePrice?: number;
   quantity: number;
 };
 
