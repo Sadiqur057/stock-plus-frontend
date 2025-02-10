@@ -41,6 +41,7 @@ import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
 import { Product } from "@/types/invoice.type";
+import { formatDate } from "@/lib/utils";
 
 const InventoryPage = () => {
   // const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -107,8 +108,8 @@ const InventoryPage = () => {
 
   const breadcrumbList = [
     {
-      name: "Products",
-      link: "/dashboard/products",
+      name: "Reports",
+      link: "/dashboard/inventory",
     },
   ];
   return (
@@ -255,7 +256,7 @@ const InventoryPage = () => {
                       <TableCell className="font-medium">
                         {item?.created_by_name}
                       </TableCell>
-                      <TableCell>{item?.created_at}</TableCell>
+                      <TableCell>{item?.created_at && formatDate(item?.created_at)}</TableCell>
                       <TableCell>{item?.products?.length}</TableCell>
                       <TableCell>{item?.total_cost?.total}</TableCell>
                       <TableCell>{item?.purchasePrice}</TableCell>
