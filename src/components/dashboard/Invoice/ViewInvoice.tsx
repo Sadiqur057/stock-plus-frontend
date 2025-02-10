@@ -169,7 +169,7 @@ export default function ViewInvoice({ id }: Props) {
                     <div className="flex justify-between py-2">
                       <span className="text-gray-600">Paid:</span>
                       <span className="font-medium">
-                        {invoice.cost_summary.total_paid.toFixed(2)} BDT
+                        {invoice.cost_summary.total_paid} BDT
                       </span>
                     </div>
                     <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
