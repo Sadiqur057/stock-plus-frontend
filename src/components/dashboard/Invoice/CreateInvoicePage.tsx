@@ -16,6 +16,9 @@ export type CalculationShape = {
   subtotal: number;
   total: number;
   tax: number;
+  paid?: number;
+  due?: number;
+  discount?: number;
 };
 export type Product = {
   _id: string;
@@ -36,6 +39,20 @@ type InvoiceType = {
   products: Product[];
   created_at: Date | undefined;
   total_cost: CalculationShape;
+  transaction_data?: {
+    amount: number | null;
+    payment_description: string;
+    payment_method: string;
+  };
+};
+
+export type PaymentDataType = {
+  amount: number | null;
+  payment_description: string;
+};
+
+export type PaymentShape = PaymentDataType & {
+  payment_method: string;
 };
 
 export default function CreateInvoicePage() {
@@ -45,7 +62,15 @@ export default function CreateInvoicePage() {
     tax: 0,
     subtotal: 0,
     total: 0,
+    paid: 0,
   });
+  const [paymentData, setPaymentData] = useState<PaymentDataType>({
+    amount: null,
+    payment_description: "",
+  });
+
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+
   const breadcrumbList = [
     {
       name: "Invoices",
@@ -70,6 +95,7 @@ export default function CreateInvoicePage() {
   const { mutate } = useMutation({
     mutationFn: async (data: InvoiceType) => {
       try {
+        setLoading(true);
         const result = await api.post(
           `${process.env.NEXT_PUBLIC_API_URL}/create-invoice`,
           data
@@ -91,13 +117,23 @@ export default function CreateInvoicePage() {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    const transaction_data = {
+      amount: paymentData?.amount,
+      payment_description: paymentData?.payment_description,
+      payment_method: paymentMethod,
+    };
+    if (calculation.paid && calculation.paid > calculation?.total) {
+      return toast.error("Invalid amount. Due amount cannot be less than 0");
+    }
+    
     const data = {
       customer,
       products,
       created_at: invoiceDate,
       total_cost: calculation,
+      transaction_data,
     };
+    console.log("checking before submitting", data);
     mutate(data);
   };
 
@@ -146,6 +182,10 @@ export default function CreateInvoicePage() {
           <CalculationSection
             calculation={calculation}
             setCalculation={setCalculation}
+            paymentData={paymentData}
+            setPaymentData={setPaymentData}
+            setPaymentMethod={setPaymentMethod}
+            paymentMethod={paymentMethod}
           />
           <div className="mt-6 flex justify-end">
             <Button size="lg" type="submit" className="px-8" disabled={loading}>
