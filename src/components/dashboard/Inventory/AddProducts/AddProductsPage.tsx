@@ -81,6 +81,7 @@ const AddProductsPage = () => {
   const { mutate } = useMutation({
     mutationFn: async (data: InventoryDataType) => {
       try {
+        setLoading(true);
         const result = await api.post(
           `${process.env.NEXT_PUBLIC_API_URL}/add-items`,
           data
@@ -101,7 +102,9 @@ const AddProductsPage = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true);
+    if (calculation.paid && calculation.paid > calculation?.total) {
+      return toast.error("Invalid amount. Due amount cannot be less than 0");
+    }
     const cost_summary = Object.assign({}, calculation);
     delete cost_summary.due;
     const data = {
