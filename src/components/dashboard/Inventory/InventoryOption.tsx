@@ -1,8 +1,4 @@
-import {
-  Eye,
-  MoreHorizontal,
-  Trash2,
-} from "lucide-react";
+import { Eye, FilePenLine, MoreHorizontal, Trash2 } from "lucide-react";
 import { SidebarMenuAction, SidebarMenuItem } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -21,16 +17,20 @@ import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 import Link from "next/link";
 import { ItemType } from "./InventoryPage";
 
+import CreatePayment from "./Report/CreatePayment";
+
 type Props = {
   inventoryId: string;
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<ItemType[], Error>>;
+  due_amount: number;
 };
 
-const InventoryOption = ({ inventoryId, refetch }: Props) => {
+const InventoryOption = ({ inventoryId, refetch, due_amount }: Props) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [isPaymentModalOpen, setIsPaymentModalOpen] = useState<boolean>(false);
   const [selectedInventoryId, setSelectedInventoryId] = useState<string>("");
 
   const handleDeleteInventory = async (id: string) => {
@@ -70,22 +70,22 @@ const InventoryOption = ({ inventoryId, refetch }: Props) => {
             align={"start"}
           >
             <DropdownMenuItem>
-              <Link href={`/dashboard/inventory/reports/${inventoryId}`} className="flex gap-1 items-center">
+              <Link
+                href={`/dashboard/inventory/reports/${inventoryId}`}
+                className="flex gap-1 items-center"
+              >
                 <Eye className="text-muted-foreground w-4" />
-                <span>View Inventory</span>
+                <span>View Invoice</span>
               </Link>
             </DropdownMenuItem>
-
-            {/* <DropdownMenuItem
+            <DropdownMenuItem
               onClick={() => {
-                setIsEditModalOpen(true);
-                handleFetchInventoryData(inventoryId);
-                setSelectedInventoryId(inventoryId);
+                setIsPaymentModalOpen(true);
               }}
             >
               <FilePenLine className="text-muted-foreground" />
-              <span>Edit Inventory</span>
-            </DropdownMenuItem> */}
+              <span>Create Payment</span>
+            </DropdownMenuItem>
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -100,36 +100,21 @@ const InventoryOption = ({ inventoryId, refetch }: Props) => {
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>
-
-      {/* {isViewModalOpen && (
+      {isPaymentModalOpen && (
         <Modal
-          isOpen={isViewModalOpen}
-          onClose={() => setIsViewModalOpen(false)}
-          title="Inventory Information"
-          size="lg"
+          isOpen={isPaymentModalOpen}
+          onClose={() => setIsPaymentModalOpen(false)}
+          title="Add payment"
+          size="sm"
         >
-          <ViewInventory
-            inventoryData={selectedInventoryData}
-            isLoading={isLoading}
-          />
-        </Modal>
-      )} */}
-      {/* {isEditModalOpen && (
-        <Modal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          title="Update Inventory Information"
-          size="lg"
-        >
-          <UpdateInventory
-            inventoryData={selectedInventoryData}
-            isLoading={isLoading}
-            closeModal={() => setIsEditModalOpen(false)}
-            inventoryId={selectedInventoryId}
+          <CreatePayment
             refetch={refetch}
+            invoiceId={inventoryId}
+            due_amount={due_amount}
+            closeModal={() => setIsPaymentModalOpen(false)}
           />
         </Modal>
-      )} */}
+      )}
 
       {isDeleteModalOpen && (
         <Modal

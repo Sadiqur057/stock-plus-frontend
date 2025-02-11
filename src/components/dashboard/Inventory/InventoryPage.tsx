@@ -3,7 +3,7 @@ import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import api from "@/interceptors/api";
 import { Button } from "@/components/ui/button";
 // import ProductAction from "./ProductAction";
-import React, {  useState } from "react";
+import React, { useState } from "react";
 import {
   Table,
   TableBody,
@@ -41,7 +41,7 @@ import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
 import { Product } from "@/types/invoice.type";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCurrency } from "@/lib/utils";
 
 const InventoryPage = () => {
   // const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -105,7 +105,7 @@ const InventoryPage = () => {
     setInputKeyword("");
     refetch();
   };
-
+  const currency = getCurrency();
   const breadcrumbList = [
     {
       name: "Reports",
@@ -155,7 +155,7 @@ const InventoryPage = () => {
             </Link>
           </div>
         </div>
-
+        
         <div className="my-6 md:flex md:items-center md:justify-between gap-4 flex-col 2lg:flex-row">
           <div className="flex w-full flex-col md:flex-row justify-between flex-1 gap-4">
             <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg rtl:flex-row-reverse w-fit">
@@ -241,29 +241,58 @@ const InventoryPage = () => {
               <Table className="border">
                 <TableHeader>
                   <TableRow>
+                    <TableHead>#</TableHead>
                     <TableHead className="w-[200px]">Created By</TableHead>
-                    <TableHead>Time</TableHead>
-                    <TableHead>No of Items</TableHead>
                     <TableHead>
-                      Cost <span className="text-[10px]">(BDT)</span>
+                      Total{" "}
+                      <span className="text-[10px] text-muted-foreground">
+                        ({currency})
+                      </span>
                     </TableHead>
+                    <TableHead>
+                      Due{" "}
+                      <span className="text-[10px] text-muted-foreground">
+                        ({currency})
+                      </span>
+                    </TableHead>
+
+                    <TableHead>Created at</TableHead>
+                    <TableHead>Status</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inventoryData?.map((item: ItemType) => (
+                  {inventoryData?.map((item: ItemType, idx: number) => (
                     <TableRow key={item?._id}>
+                      <TableCell className="font-medium">
+                        {idx}
+                      </TableCell>
                       <TableCell className="font-medium">
                         {item?.created_by_name}
                       </TableCell>
-                      <TableCell>{item?.created_at && formatDate(item?.created_at)}</TableCell>
-                      <TableCell>{item?.products?.length}</TableCell>
                       <TableCell>{item?.total_cost?.total}</TableCell>
-                      <TableCell>{item?.purchasePrice}</TableCell>
+                      <TableCell>{item?.total_cost?.due}</TableCell>
+                      <TableCell>
+                        {item?.created_at && formatDate(item?.created_at)}
+                      </TableCell>
+                      <TableCell>
+                        {" "}
+                        <span
+                          className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                            item?.total_cost?.status === "paid"
+                              ? "bg-green-100 text-green-800"
+                              : "bg-yellow-100 text-yellow-800"
+                          }`}
+                        >
+                          {item?.total_cost?.status}
+                        </span>
+                      </TableCell>
+
                       <TableCell>
                         <InventoryOption
                           refetch={refetch}
                           inventoryId={item?._id}
+                          due_amount={item?.total_cost?.due || 0}
                         />
                       </TableCell>
                     </TableRow>
