@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -31,7 +31,12 @@ const TransactionTable = ({ transactions }: Props) => {
         <TableRow>
           <TableHead>Created by</TableHead>
           <TableHead>Date</TableHead>
-          <TableHead>Amount</TableHead>
+          <TableHead>
+            Amount
+            <span className="text-[10px] text-muted-foreground">
+              ({getCurrency()})
+            </span>
+          </TableHead>
           <TableHead>Type</TableHead>
           <TableHead></TableHead>
         </TableRow>
@@ -42,7 +47,7 @@ const TransactionTable = ({ transactions }: Props) => {
             <TableCell>{transaction?.created_by_name}</TableCell>
             <TableCell>{formatDate(transaction?.created_at)}</TableCell>
 
-            <TableCell>${transaction?.amount}</TableCell>
+            <TableCell>{transaction?.amount}</TableCell>
             <TableCell>
               <span
                 className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
