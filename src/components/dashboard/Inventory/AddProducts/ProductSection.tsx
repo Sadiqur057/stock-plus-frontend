@@ -182,7 +182,7 @@ const ProductSection = ({ products, setProducts, onTotalChange }: Props) => {
     }));
   }, [products, onTotalChange, calculateTotal]);
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mb-6 lg:mb-8">
       <div className="overflow-x-auto">
         <Table className="min-w-[1160px]">
           <TableHeader>
