@@ -153,7 +153,7 @@ export default function ViewInvoice({ id }: Props) {
                   </div>
                 )}
                 <div className="flex justify-between py-2">
-                  <span className="text-gray-600">Tax:</span>
+                  <span className="text-gray-600">Vat:</span>
                   <span className="font-medium">
                     {invoice.cost_summary.tax.toFixed(2)} BDT
                   </span>
