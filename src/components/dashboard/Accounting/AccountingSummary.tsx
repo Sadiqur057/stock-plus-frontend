@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import StatsCard from "../Home/StatsCard";
-import { getFormattedPrice } from "@/lib/utils";
+import { getCurrency, getFormattedPrice } from "@/lib/utils";
 import {
   Select,
   SelectContent,
@@ -17,13 +17,15 @@ import {
   HandCoins,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import api from "@/interceptors/api";
+import toast from "react-hot-toast";
+import { getCookie, setCookie } from "cookies-next";
 
-const currencies = [
-  { code: "BDT", name: "Bangladeshi Taka" },
-  { code: "USD", name: "US Dollar" },
-  { code: "EUR", name: "Euro" },
-  { code: "GBP", name: "British Pound" },
-];
+type TCurrency = {
+  code: string;
+  name: string;
+};
 
 type Props = {
   summary: {
@@ -38,19 +40,82 @@ type Props = {
 const AccountingSummary = ({ summary }: Props) => {
   const [newVatRate, setNewVatRate] = useState("");
   const [vatRate, setVatRate] = useState(10);
-  const [selectedCurrency, setSelectedCurrency] = useState(currencies[0]);
+  const { data: currencies } = useQuery({
+    queryKey: ["currencies"],
+    queryFn: async () => {
+      const result = await api.get("/currencies");
+      return result?.data?.data;
+    },
+  });
+
+  const accountCurrency = {
+    name: getCookie("currency_name") || "BDT",
+    code: getCookie("currency_code") || "Bangladeshi Taka",
+  };
+  const [selectedCurrency, setSelectedCurrency] = useState<TCurrency>({
+    code: accountCurrency?.code,
+    name: accountCurrency?.name,
+  });
+
+  const { mutate: updateVat } = useMutation({
+    mutationFn: async (data: { company_vat_rate: number }) => {
+      const result = await api.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/update-account`,
+        data
+      );
+      if (!result?.data?.success) {
+        return toast.error(
+          result?.data?.message ||
+            "Something Went Wrong. Please try again lated"
+        );
+      }
+      toast.success(result?.data?.message);
+    },
+  });
+  const { mutate: updateCurrency } = useMutation({
+    mutationFn: async (data: {
+      currency_code: string;
+      currency_name: string;
+    }) => {
+      const result = await api.patch(
+        `${process.env.NEXT_PUBLIC_API_URL}/update-account`,
+        data
+      );
+      if (!result?.data?.success) {
+        return toast.error(
+          result?.data?.message ||
+            "Something Went Wrong. Please try again lated"
+        );
+      }
+      toast.success(result?.data?.message);
+      setCookie("currency_name", data?.currency_name);
+      setCookie("currency_code", data?.currency_code);
+      setSelectedCurrency({
+        name: data?.currency_name || "Bangladeshi Taka",
+        code: data?.currency_code || "BDT",
+      });
+    },
+  });
 
   const handleCurrencyChange = (value: string) => {
-    const newCurrency = currencies.find((c) => c.code === value);
+    const newCurrency = currencies.find((c: TCurrency) => c.code === value);
+    console.log(newCurrency);
     if (newCurrency) {
-      setSelectedCurrency(newCurrency);
+      const data = {
+        currency_name: newCurrency?.name,
+        currency_code: newCurrency?.code,
+      };
+      updateCurrency(data);
     }
   };
 
   const updateVatRate = () => {
     if (newVatRate && !isNaN(Number.parseFloat(newVatRate))) {
-      setVatRate(Number.parseFloat(newVatRate));
+      const vat = Number.parseFloat(newVatRate);
+      setVatRate(vat);
       setNewVatRate("");
+      const data = { company_vat_rate: vat };
+      updateVat(data);
     }
   };
   return (
@@ -59,28 +124,36 @@ const AccountingSummary = ({ summary }: Props) => {
         <StatsCard
           title="Total Expense"
           Icon={CircleDollarSign}
-          value={`${getFormattedPrice(summary?.total_expense) || 0}  BDT.`}
+          value={`${
+            getFormattedPrice(summary?.total_expense) || 0
+          }  ${getCurrency()}`}
           comment={`From 34 transactions`}
           trend="up"
         />
         <StatsCard
           title="Total Sales"
           Icon={CircleDollarSign}
-          value={`${getFormattedPrice(summary?.total_sales) || 0}  BDT.`}
+          value={`${
+            getFormattedPrice(summary?.total_sales) || 0
+          }  ${getCurrency()}`}
           comment={`From 24 transactions`}
           trend="up"
         />
         <StatsCard
           title="Total Purchase"
           Icon={CircleDollarSign}
-          value={`${getFormattedPrice(summary?.total_purchase) || 0}  BDT.`}
+          value={`${
+            getFormattedPrice(summary?.total_purchase) || 0
+          }  ${getCurrency()}`}
           comment={`From 8 transactions`}
           trend="up"
         />
         <StatsCard
           title="Other Costs"
           Icon={CircleDollarSign}
-          value={`${getFormattedPrice(summary?.other_costs) || 0}  BDT.`}
+          value={`${
+            getFormattedPrice(summary?.other_costs) || 0
+          }  ${getCurrency()}`}
           comment={`120 invoice need to be cleared`}
           trend="up"
         />
@@ -107,7 +180,7 @@ const AccountingSummary = ({ summary }: Props) => {
             </div>
             <p className="mt-6">
               Total <span className="font-semibold">{summary?.profit}</span>{" "}
-              BDT.
+              {getCurrency()}
             </p>
             <p className="text-sm text-muted-foreground">
               Based on current sales and expenses
@@ -127,23 +200,23 @@ const AccountingSummary = ({ summary }: Props) => {
                 <p className="text-sm font-medium leading-none">
                   Current Currency
                 </p>
-                <p className="text-lg font-bold">{selectedCurrency.code}</p>
+                <p className="text-lg font-bold">{selectedCurrency?.code}</p>
               </div>
             </div>
             <div className="mt-6">
               <form className="flex bg-white shadow p-1 rounded-3xl w-full">
                 <Select
                   onValueChange={handleCurrencyChange}
-                  defaultValue={selectedCurrency.code}
+                  defaultValue={selectedCurrency?.code}
                 >
                   <SelectTrigger className="rounded-3xl border-none shadow-none w-full">
                     <SelectValue placeholder="Select a currency" />
                   </SelectTrigger>
                   <SelectContent>
-                    {currencies.map((currency) => (
-                      <SelectItem key={currency.code} value={currency.code}>
+                    {currencies?.map((currency: TCurrency) => (
+                      <SelectItem key={currency?.code} value={currency?.code}>
                         <div className="flex items-center">
-                          {currency.name} ({currency.code})
+                          {currency?.name} ({currency?.code})
                         </div>
                       </SelectItem>
                     ))}
