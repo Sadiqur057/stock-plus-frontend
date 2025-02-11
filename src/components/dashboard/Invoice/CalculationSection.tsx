@@ -8,6 +8,8 @@ import toast from "react-hot-toast";
 import { CalculationShape, PaymentDataType } from "./CreateInvoicePage";
 import { Modal } from "@/components/shared/Modal/Modal";
 import AddPayment from "./AddPayment";
+import { useQuery } from "@tanstack/react-query";
+import api from "@/interceptors/api";
 
 type setCalculation = (calculation: CalculationShape) => void;
 
@@ -33,9 +35,19 @@ export function CalculationSection({
   const [showPayment, setShowPayment] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const { data: vat } = useQuery({
+    queryKey: ["vat"],
+    queryFn: async () => {
+      const result = await api.get("/vat");
+      console.log("checking result", result?.data);
+      return result?.data?.vat_rate;
+    },
+  });
+
   const calculateTaxAndTotal = (subtotal: number, discountAmount: number) => {
     const subtotalAfterDiscount = subtotal - discountAmount;
-    let tax = subtotalAfterDiscount * 0.1;
+    const vat_percent = vat ? vat / 100 : 0;
+    let tax = subtotalAfterDiscount * vat_percent;
     tax = parseFloat(tax.toFixed(2));
     const total = subtotalAfterDiscount + tax;
     return { tax, total };
@@ -189,7 +201,7 @@ export function CalculationSection({
         )}
 
         <div className="flex justify-between items-center text-gray-600">
-          <span>Tax (10%):</span>
+          <span>Vat ({vat ? vat : 0}%):</span>
           <span className="font-medium">BDT. {calculation.tax.toFixed(2)}</span>
         </div>
         <div>
