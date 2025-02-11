@@ -19,6 +19,7 @@ export type CalculationShape = {
   paid?: number;
   due?: number;
   discount?: number;
+  status?: string
 };
 export type Product = {
   _id: string;
