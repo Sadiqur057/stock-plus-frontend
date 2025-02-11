@@ -3,26 +3,28 @@
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
 import { Input } from "@/components/ui/input";
 import axios from "axios";
-import { setCookie } from "cookies-next";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, useState } from "react";
 import toast from "react-hot-toast";
 
+type TFormData = {
+  name: string;
+  email: string;
+  password: string;
+};
+
 export default function RegisterForm() {
   const [loading, setLoading] = useState<boolean>(false);
-  type FormData = {
-    name: string;
-    email: string;
-    password: string;
-  };
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setTFormData] = useState<TFormData>({
     name: "",
     email: "",
     password: "",
   });
+  const router = useRouter();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
+    setTFormData((prevState) => ({
       ...prevState,
       [name]: value,
     }));
@@ -41,8 +43,7 @@ export default function RegisterForm() {
         return toast.error(result?.data?.message);
       }
       toast.success(result?.data?.message);
-      setCookie("stock_plus", result?.data?.token);
-      window.location.reload();
+      router.push("/login");
     } catch (err) {
       console.log(err);
       toast.error("Something Went wrong. Please try again later");
