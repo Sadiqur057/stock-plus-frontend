@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx";
+import { getCookie } from "cookies-next";
 import { format, parseISO } from "date-fns";
 import { twMerge } from "tailwind-merge";
 
@@ -21,4 +22,8 @@ export function getFormattedPrice(price: number) {
 
 export function beautifyDate(date: string) {
   return format(parseISO(date), "MMM d, yyyy 'at' hh:mm a");
+}
+export function getCurrency() {
+  const code = getCookie("currency_code");
+  return code;
 }
