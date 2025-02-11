@@ -183,8 +183,8 @@ const UpdateProduct = ({
   }
   return (
     <>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <div className="lg:grid space-y-4 lg:space-y-0 gap-6">
           <div className="space-y-1">
             <Label htmlFor="productName">Product Name</Label>
             <Input
@@ -203,18 +203,6 @@ const UpdateProduct = ({
               name="company"
               value={formData?.company}
               placeholder="Enter Company Name"
-              onChange={handleInputChange}
-              required
-            />
-          </div>
-          <div className="space-y-1">
-            <Label htmlFor="quantity">Quantity</Label>
-            <Input
-              id="quantity"
-              name="quantity"
-              type="number"
-              placeholder="Enter Product Quantity"
-              value={formData?.quantity}
               onChange={handleInputChange}
               required
             />
@@ -243,7 +231,7 @@ const UpdateProduct = ({
               onChange={handleInputChange}
             />
           </div>
-          <div className="space-y-1">
+          <div className="space-y-1 col-span-2">
             <Label htmlFor="remarks">Remarks</Label>
             <Input
               id="remarks"
