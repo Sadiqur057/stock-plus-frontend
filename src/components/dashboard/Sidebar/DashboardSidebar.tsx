@@ -43,6 +43,10 @@ const data = {
           title: "Accounting",
           url: "/dashboard/accounting",
         },
+        {
+          title: "Transactions",
+          url: "/dashboard/transactions",
+        },
       ],
     },
     {
@@ -78,10 +82,6 @@ const data = {
         {
           title: "Create Invoice",
           url: "/dashboard/create-invoice",
-        },
-        {
-          title: "Transactions",
-          url: "/dashboard/transactions",
         },
         {
           title: "Revenues",
