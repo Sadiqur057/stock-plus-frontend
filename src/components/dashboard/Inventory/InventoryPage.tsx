@@ -26,8 +26,7 @@ export type ItemType = {
 import { useQuery } from "@tanstack/react-query";
 import { CirclePlus, CloudDownload, ListRestart, Search } from "lucide-react";
 import Loader from "@/components/ui/Loader";
-// import { Modal } from "@/components/shared/Modal/Modal";
-// import AddNewProduct from "./AddNewProduct";
+
 import {
   SelectItem,
   Select,
@@ -42,15 +41,30 @@ import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
 import { Product } from "@/types/invoice.type";
 import { formatDate, getCurrency } from "@/lib/utils";
+import { Pagination } from "@/components/shared/pagination/Pagination";
 
 const InventoryPage = () => {
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
   const [filterProduct, setFilterProduct] = useState<string>("all");
   const [sortValue, setSortValue] = useState<string>("");
   // const [searchKeyword, setSearchKeyword] = useState<string>("");
   const [inputKeyword, setInputKeyword] = useState<string>("");
 
   // const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+
+  //pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  const totalItems = 1000;
+  const totalPages = Math.ceil(totalItems / limit);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setCurrentPage(1);
+  };
 
   const fetchInventoryData = async () => {
     const response = await api.get(
@@ -155,7 +169,7 @@ const InventoryPage = () => {
             </Link>
           </div>
         </div>
-        
+
         <div className="my-6 md:flex md:items-center md:justify-between gap-4 flex-col 2lg:flex-row">
           <div className="flex w-full flex-col md:flex-row justify-between flex-1 gap-4">
             <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg rtl:flex-row-reverse w-fit">
@@ -264,9 +278,7 @@ const InventoryPage = () => {
                 <TableBody>
                   {inventoryData?.map((item: ItemType, idx: number) => (
                     <TableRow key={item?._id}>
-                      <TableCell className="font-medium">
-                        {idx}
-                      </TableCell>
+                      <TableCell className="font-medium">{idx}</TableCell>
                       <TableCell className="font-medium">
                         {item?.created_by_name}
                       </TableCell>
@@ -300,60 +312,13 @@ const InventoryPage = () => {
                 </TableBody>
               </Table>
             </div>
-            <div className="mt-6 sm:flex sm:items-center sm:justify-between ">
-              <div className="text-sm text-gray-500 dark:text-gray-400">
-                Page{" "}
-                <span className="font-medium text-gray-700 dark:text-gray-100">
-                  1 of 10
-                </span>
-              </div>
-
-              <div className="flex items-center mt-4 gap-x-4 sm:mt-0">
-                <a
-                  href="#"
-                  className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-5 h-5 rtl:-scale-x-100"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-                    />
-                  </svg>
-
-                  <span>previous</span>
-                </a>
-
-                <a
-                  href="#"
-                  className="flex items-center justify-center w-1/2 px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-white border rounded-md sm:w-auto gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 dark:border-gray-700 dark:hover:bg-gray-800"
-                >
-                  <span>Next</span>
-
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth="1.5"
-                    stroke="currentColor"
-                    className="w-5 h-5 rtl:-scale-x-100"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-                    />
-                  </svg>
-                </a>
-              </div>
-            </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              limit={limit}
+              onLimitChange={handleLimitChange}
+            />
           </>
         )}
       </section>
