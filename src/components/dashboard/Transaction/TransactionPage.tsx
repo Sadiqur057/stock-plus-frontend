@@ -13,7 +13,11 @@ import {
 } from "@/components/ui/table";
 
 export type TransactionType = {
-  customer: {
+  customer?: {
+    name: string;
+    email: string;
+  };
+  supplier?: {
     name: string;
     email: string;
   };
@@ -137,7 +141,7 @@ const TransactionPage = () => {
                 <TableHeader>
                   <TableRow>
                     <TableHead>No.</TableHead>
-                    <TableHead>Payment By</TableHead>
+                    <TableHead>Created By</TableHead>
                     <TableHead>Payment method</TableHead>
                     <TableHead>
                       Amount <span className="text-[10px]">(BDT)</span>
@@ -154,7 +158,7 @@ const TransactionPage = () => {
                           {index + 1}.
                         </TableCell>
                         <TableCell className="font-medium">
-                          {transaction?.customer?.name}
+                          {transaction?.created_by_name}
                         </TableCell>
                         <TableCell>{transaction?.payment_method}</TableCell>
                         <TableCell>{transaction?.amount}</TableCell>
