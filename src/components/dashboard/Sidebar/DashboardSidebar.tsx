@@ -25,6 +25,7 @@ import { NavProjects } from "./NavProject";
 import { NavUser } from "./NavUser";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
+import { setCookie } from "cookies-next";
 
 const data = {
   navMain: [
@@ -135,7 +136,9 @@ export function DashboardSidebar({
     queryKey: ["user"],
     queryFn: async () => {
       const user = await api.get("/user");
-      console.log(user?.data?.data);
+      setCookie("currency_name", user?.data?.data?.currency_name);
+      setCookie("currency_code", user?.data?.data?.currency_code);
+      console.log("checking", user?.data?.data);
       return user?.data?.data;
     },
   });
