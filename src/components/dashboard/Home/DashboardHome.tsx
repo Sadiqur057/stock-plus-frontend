@@ -11,7 +11,7 @@ import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
-import { DashboardFilter } from "./DashboardFilter";
+// import { DashboardFilter } from "./DashboardFilter";
 import { RevenueOverview } from "./RevenueOverview";
 import RecentRevenue from "./RecentRevenue";
 
@@ -43,7 +43,7 @@ const DashboardHome = () => {
     <>
       <SidebarInset>
         <BreadCrumb breadcrumbList={breadcrumbList} />
-        <DashboardFilter />
+        {/* <DashboardFilter /> */}
         {isLoading ? (
           <ScreenLoader />
         ) : (
