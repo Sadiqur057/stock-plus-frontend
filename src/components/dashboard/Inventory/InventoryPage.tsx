@@ -36,7 +36,9 @@ import InvoiceSummary from "../Invoice/InvoiceSummary";
 import { DateRangePicker } from "@/components/shared/DatePicker/DateRangePicker";
 import { DateRange } from "react-day-picker";
 import { Input } from "@/components/ui/input";
-import CustomerDropdown, { Customer } from "@/components/shared/Dropdown/CustomerDropdown";
+import CustomerDropdown, {
+  Customer,
+} from "@/components/shared/Dropdown/CustomerDropdown";
 
 const InventoryPage = () => {
   const [, setSelectedCustomer] = useState<Customer>({
@@ -50,11 +52,10 @@ const InventoryPage = () => {
   const [date, setDate] = useState<DateRange | undefined>();
   const [searchQuery, setSearchQuery] = useState("");
 
-  //pagination
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -66,11 +67,15 @@ const InventoryPage = () => {
   };
 
   const fetchInventoryData = async () => {
-    const response = await api.get(
-      `${process.env.NEXT_PUBLIC_API_URL}/get-items`
-    );
-    console.log("api data", response.data);
-    return response.data.data;
+    const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/get-items`, {
+      params: {
+        page: currentPage,
+        limit: limit,
+      },
+    });
+    if (!res?.data?.success) return;
+    setTotalPages(res?.data?.data?.pagination?.totalPages);
+    return res?.data;
   };
 
   const {
@@ -78,7 +83,7 @@ const InventoryPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["items"],
+    queryKey: [currentPage, limit],
     queryFn: fetchInventoryData,
   });
 
@@ -98,11 +103,11 @@ const InventoryPage = () => {
           <div>
             <div className="flex items-center gap-x-3">
               <h2 className="text-lg font-medium text-gray-800 dark:text-white">
-                All Items
+                Inventory Invoices
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                {inventoryData?.products?.length} Product
+                {inventoryData?.data?.pagination?.totalDocuments} invoices
               </span>
             </div>
 
@@ -129,7 +134,7 @@ const InventoryPage = () => {
           </div>
         </div>
 
-        <InvoiceSummary summary={inventoryData?.invoice_summary} />
+        <InvoiceSummary summary={inventoryData?.data?.invoice_summary} />
 
         <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
           <div className="space-y-2">
@@ -187,7 +192,7 @@ const InventoryPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inventoryData?.invoices?.map(
+                  {inventoryData?.data?.invoices?.map(
                     (item: ItemType, idx: number) => (
                       <TableRow key={item?._id}>
                         <TableCell className="font-medium">{idx}</TableCell>
@@ -224,14 +229,14 @@ const InventoryPage = () => {
                   )}
                 </TableBody>
               </Table>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={handlePageChange}
+                limit={limit}
+                onLimitChange={handleLimitChange}
+              />
             </div>
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={handlePageChange}
-              limit={limit}
-              onLimitChange={handleLimitChange}
-            />
           </>
         )}
       </section>

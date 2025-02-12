@@ -16,6 +16,8 @@ import InvoiceSummary from "./InvoiceSummary";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Pagination } from "@/components/shared/pagination/Pagination";
+import toast from "react-hot-toast";
 
 type CustomerOption = {
   value: string;
@@ -34,18 +36,38 @@ export default function InvoicesPage() {
     useState<CustomerOption | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
+  // pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [limit, setLimit] = useState(20);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleLimitChange = (newLimit: number) => {
+    setLimit(newLimit);
+    setCurrentPage(1);
+  };
+
   const {
     data: invoiceData,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["invoices"],
+    queryKey: [currentPage, limit],
     queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/invoices`
-      );
-      console.log(result);
-      return result?.data?.data;
+      const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/invoices`, {
+        params: {
+          page: currentPage,
+          limit: limit,
+        },
+      });
+      if (!res?.data?.success) {
+        return toast.error(res?.data?.data?.message || "Something went wrong");
+      }
+      setTotalPages(res?.data?.data?.pagination?.totalPages);
+      return res?.data?.data;
     },
   });
 
@@ -122,6 +144,13 @@ export default function InvoicesPage() {
 
           <div className="overflow-x-auto">
             <InvoiceTable invoices={invoiceData?.invoices} refetch={refetch} />
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+              limit={limit}
+              onLimitChange={handleLimitChange}
+            />
           </div>
         </section>
       )}

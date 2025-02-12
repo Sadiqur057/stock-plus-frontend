@@ -69,11 +69,10 @@ const RevenuesPage = () => {
   //   phone: "",
   //   address: "",
   // });
-  //pagination
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -84,19 +83,26 @@ const RevenuesPage = () => {
     setCurrentPage(1);
   };
   const {
-    data: revenues,
+    data: revenuesData,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["revenues"],
+    queryKey: [currentPage, limit],
     queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/revenues`
+      const res = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/revenues`,
+        {
+          params: {
+            page: currentPage,
+            limit: limit,
+          },
+        }
       );
-      if (!result?.data?.success) {
-        return toast.error(result?.data?.message || "Something went wrong");
+      if (!res?.data?.success) {
+        return toast.error(res?.data?.message || "Something went wrong");
       }
-      return result?.data?.data;
+      setTotalPages(res?.data?.data?.pagination?.totalPages);
+      return res?.data?.data;
     },
   });
 
@@ -113,7 +119,7 @@ const RevenuesPage = () => {
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                12 Revenues
+                {revenuesData?.pagination?.countDocuments} Revenues
               </span>
             </div>
 
@@ -173,7 +179,7 @@ const RevenuesPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {revenues?.map((revenue: RevenueType, index: number) => (
+                  {revenuesData?.revenues?.map((revenue: RevenueType, index: number) => (
                     <TableRow key={revenue?._id}>
                       <TableCell className="font-medium">
                         {index + 1}.
