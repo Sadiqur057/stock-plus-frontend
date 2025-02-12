@@ -2,7 +2,6 @@
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import api from "@/interceptors/api";
 import { Button } from "@/components/ui/button";
-// import ProductAction from "./ProductAction";
 import React, { useState } from "react";
 import {
   Table,
@@ -27,29 +26,29 @@ import { useQuery } from "@tanstack/react-query";
 import { CirclePlus, CloudDownload, ListRestart, Search } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 
-import {
-  SelectItem,
-  Select,
-  SelectContent,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-  SelectGroup,
-} from "@/components/ui/select";
 import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
 import { Product } from "@/types/invoice.type";
 import { formatDate, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import InvoiceSummary from "../Invoice/InvoiceSummary";
+import { DateRangePicker } from "@/components/shared/DatePicker/DateRangePicker";
+import { DateRange } from "react-day-picker";
+import { Input } from "@/components/ui/input";
+import CustomerDropdown, { Customer } from "@/components/shared/Dropdown/CustomerDropdown";
 
 const InventoryPage = () => {
-  const [filterProduct, setFilterProduct] = useState<string>("all");
-  const [sortValue, setSortValue] = useState<string>("");
-  // const [searchKeyword, setSearchKeyword] = useState<string>("");
-  const [inputKeyword, setInputKeyword] = useState<string>("");
+  const [, setSelectedCustomer] = useState<Customer>({
+    _id: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+  });
 
-  // const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
+  const [date, setDate] = useState<DateRange | undefined>();
+  const [searchQuery, setSearchQuery] = useState("");
 
   //pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -69,13 +68,6 @@ const InventoryPage = () => {
   const fetchInventoryData = async () => {
     const response = await api.get(
       `${process.env.NEXT_PUBLIC_API_URL}/get-items`
-      // ,{
-      //   params: {
-      //     filter: filterProduct !== "all" ? filterProduct : null,
-      //     search: searchKeyword ? searchKeyword : null,
-      //     sort: sortValue ? sortValue : null,
-      //   },
-      // }
     );
     console.log("api data", response.data);
     return response.data.data;
@@ -87,38 +79,9 @@ const InventoryPage = () => {
     refetch,
   } = useQuery({
     queryKey: ["items"],
-    // queryKey: [filterProduct, searchKeyword, sortValue],
     queryFn: fetchInventoryData,
   });
 
-  const handleSort = (value: string) => {
-    setSortValue(value);
-  };
-
-  const handleFilter = (value: string) => {
-    setFilterProduct(value);
-  };
-
-  // const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = e.target.value;
-  //   setInputKeyword(value);
-
-  //   if (debounceTimeout.current) {
-  //     clearTimeout(debounceTimeout.current);
-  //   }
-
-  //   debounceTimeout.current = setTimeout(() => {
-  //     setSearchKeyword(value);
-  //   }, 300);
-  // };
-
-  const handleReset = () => {
-    setFilterProduct("all");
-    setSortValue("");
-    // setSearchKeyword("");
-    setInputKeyword("");
-    refetch();
-  };
   const currency = getCurrency();
   const breadcrumbList = [
     {
@@ -149,11 +112,7 @@ const InventoryPage = () => {
           </div>
 
           <div className="flex items-center mt-4 gap-x-2 lg:gap-x-3">
-            <Button
-              onClick={handleReset}
-              variant={"outline"}
-              className="py-3 px-2.5"
-            >
+            <Button variant={"outline"} className="py-3 px-2.5">
               <ListRestart />
             </Button>
             <Button variant={"outline"} className="py-3">
@@ -170,80 +129,32 @@ const InventoryPage = () => {
           </div>
         </div>
 
-        <div className="my-6 md:flex md:items-center md:justify-between gap-4 flex-col 2lg:flex-row">
-          <div className="flex w-full flex-col md:flex-row justify-between flex-1 gap-4">
-            <div className="inline-flex overflow-hidden bg-white border divide-x rounded-lg rtl:flex-row-reverse w-fit">
-              <button
-                onClick={() => handleFilter("all")}
-                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
-                  filterProduct === "all" && "bg-gray-600 text-white"
-                }`}
-              >
-                View all
-              </button>
+        <InvoiceSummary summary={inventoryData?.invoice_summary} />
 
-              <button
-                onClick={() => handleFilter("inStock")}
-                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
-                  filterProduct === "inStock" && "bg-gray-600 text-white"
-                }`}
-              >
-                In Stock
-              </button>
-
-              <button
-                onClick={() => handleFilter("stockOut")}
-                className={`px-5 py-2 text-xs font-medium text-gray-600 transition-colors duration-200  sm:text-sm  max-w-fit ${
-                  filterProduct === "stockOut" && "bg-gray-600 text-white"
-                }`}
-              >
-                Out of Stock
-              </button>
-            </div>
-            <div>
-              <Select value={sortValue} onValueChange={handleSort}>
-                <SelectTrigger className="!py-[18px] w-full md:min-w-[100px] md:max-w-[196px]">
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Sort By</SelectLabel>
-                    <SelectItem value="price-desc">
-                      Price(High to Low)
-                    </SelectItem>
-                    <SelectItem value="price-asc">
-                      Price(Low to high)
-                    </SelectItem>
-                    <SelectItem value="date-asc">
-                      Date(First to Last)
-                    </SelectItem>
-                    <SelectItem value="date-desc">
-                      Date(Last to First)
-                    </SelectItem>
-                    <SelectItem value="quantity-desc">
-                      Quantity(High to Low)
-                    </SelectItem>
-                    <SelectItem value="quantity-asc">
-                      Quantity(Low to high)
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
+              Date Range
+            </label>
+            <DateRangePicker date={date} setDate={setDate} />
           </div>
-
-          <div className="relative w-full 2lg:w-fit flex items-center mt-4 md:mt-0">
-            <span className="ml-3 absolute">
-              <Search size={16} />
-            </span>
-
-            <input
-              type="search"
-              placeholder="Search"
-              value={inputKeyword}
-              // onChange={handleSearch}
-              className="searchBox"
-            />
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">
+              Customer
+            </label>
+            <CustomerDropdown label={false} setCustomer={setSelectedCustomer} />
+          </div>
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-gray-700">Search</label>
+            <div className="relative">
+              <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-500" />
+              <Input
+                placeholder="Search invoices..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="pl-9"
+              />
+            </div>
           </div>
         </div>
 
@@ -276,39 +187,41 @@ const InventoryPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {inventoryData?.map((item: ItemType, idx: number) => (
-                    <TableRow key={item?._id}>
-                      <TableCell className="font-medium">{idx}</TableCell>
-                      <TableCell className="font-medium">
-                        {item?.created_by_name}
-                      </TableCell>
-                      <TableCell>{item?.total_cost?.total}</TableCell>
-                      <TableCell>{item?.total_cost?.due}</TableCell>
-                      <TableCell>
-                        {item?.created_at && formatDate(item?.created_at)}
-                      </TableCell>
-                      <TableCell>
-                        {" "}
-                        <span
-                          className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                            item?.total_cost?.status === "paid"
-                              ? "bg-green-100 text-green-800"
-                              : "bg-yellow-100 text-yellow-800"
-                          }`}
-                        >
-                          {item?.total_cost?.status}
-                        </span>
-                      </TableCell>
+                  {inventoryData?.invoices?.map(
+                    (item: ItemType, idx: number) => (
+                      <TableRow key={item?._id}>
+                        <TableCell className="font-medium">{idx}</TableCell>
+                        <TableCell className="font-medium">
+                          {item?.created_by_name}
+                        </TableCell>
+                        <TableCell>{item?.total_cost?.total}</TableCell>
+                        <TableCell>{item?.total_cost?.due}</TableCell>
+                        <TableCell>
+                          {item?.created_at && formatDate(item?.created_at)}
+                        </TableCell>
+                        <TableCell>
+                          {" "}
+                          <span
+                            className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
+                              item?.total_cost?.status === "paid"
+                                ? "bg-green-100 text-green-800"
+                                : "bg-yellow-100 text-yellow-800"
+                            }`}
+                          >
+                            {item?.total_cost?.status}
+                          </span>
+                        </TableCell>
 
-                      <TableCell>
-                        <InventoryOption
-                          refetch={refetch}
-                          inventoryId={item?._id}
-                          due_amount={item?.total_cost?.due || 0}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                        <TableCell>
+                          <InventoryOption
+                            refetch={refetch}
+                            inventoryId={item?._id}
+                            due_amount={item?.total_cost?.due || 0}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>

@@ -17,7 +17,7 @@ export type Customer = {
 };
 
 type Props = {
-  setCustomer: (customer: Customer) => void;
+  setCustomer: React.Dispatch<React.SetStateAction<Customer>>;
   label?: boolean;
 };
 const CustomerDropdown = ({ setCustomer, label = true }: Props) => {
