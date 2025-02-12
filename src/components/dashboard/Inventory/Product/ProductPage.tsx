@@ -58,8 +58,7 @@ const ProductPage = () => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -78,9 +77,12 @@ const ProductPage = () => {
           filter: filterProduct !== "all" ? filterProduct : null,
           search: searchKeyword ? searchKeyword : null,
           sort: sortValue ? sortValue : null,
+          limit: limit,
+          page: currentPage,
         },
       }
     );
+    setTotalPages(response?.data?.pagination?.totalPages);
     return response.data;
   };
 
@@ -89,7 +91,7 @@ const ProductPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [filterProduct, searchKeyword, sortValue],
+    queryKey: [filterProduct, searchKeyword, sortValue, currentPage, limit],
     queryFn: fetchProducts,
   });
 

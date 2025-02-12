@@ -49,8 +49,7 @@ const TransactionPage = () => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -62,19 +61,26 @@ const TransactionPage = () => {
   };
 
   const {
-    data: transactions,
+    data: transactionData,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["transactions"],
+    queryKey: [currentPage, limit],
     queryFn: async () => {
       const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/transactions`
+        `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
+        {
+          params: {
+            limit: limit,
+            page: currentPage,
+          },
+        }
       );
       if (!result?.data?.success) {
         return toast.error(result?.data?.message || "Something went wrong");
       }
-      return result?.data?.data;
+      setTotalPages(result?.data?.pagination?.totalPages);
+      return result?.data;
     },
   });
 
@@ -91,7 +97,7 @@ const TransactionPage = () => {
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                12 Transactions
+                {transactionData?.pagination?.totalDocuments} Transactions
               </span>
             </div>
 
@@ -166,7 +172,7 @@ const TransactionPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactions?.map(
+                  {transactionData?.data?.map(
                     (transaction: TransactionType, index: number) => (
                       <TableRow key={transaction._id}>
                         <TableCell className="font-medium">
