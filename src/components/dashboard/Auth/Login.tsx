@@ -7,7 +7,6 @@ import Link from "next/link";
 import { ChangeEvent, FormEvent, useState } from "react";
 import toast from "react-hot-toast";
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
-import { useRouter } from "next/navigation";
 
 type FormData = {
   email: string;
@@ -20,7 +19,6 @@ export default function LoginForm() {
     email: "sadiqur057@gmail.com",
     password: "123456",
   });
-  const router = useRouter();
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevState) => ({
@@ -46,7 +44,6 @@ export default function LoginForm() {
       setCookie("currency_name", result?.data?.currency?.name);
       setCookie("currency_code", result?.data?.currency?.code);
       window.location.reload();
-      router.push("/dashboard");
     } catch (err) {
       console.log(err);
       toast.error("Something Went wrong. Please try again later");
