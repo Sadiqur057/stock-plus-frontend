@@ -45,6 +45,7 @@ export default function LoginForm() {
       setCookie("stock_plus", result?.data?.token);
       setCookie("currency_name", result?.data?.currency?.name);
       setCookie("currency_code", result?.data?.currency?.code);
+      window.location.reload();
       router.push("/dashboard");
     } catch (err) {
       console.log(err);
