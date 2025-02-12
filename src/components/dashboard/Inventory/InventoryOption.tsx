@@ -37,7 +37,7 @@ const InventoryOption = ({ inventoryId, refetch, due_amount }: Props) => {
     try {
       setLoading(true);
       const result = await api.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/inventory/${id}`
+        `${process.env.NEXT_PUBLIC_API_URL}/delete-report/${id}`
       );
       if (!result.data?.success) {
         return toast.error(result?.data?.message || "Something went wrong!");
