@@ -19,7 +19,7 @@ const InvoiceSummary = ({ summary }: Props) => {
   } = summary || {};
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 my-4 lg:my-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6 my-4">
         <div className="space-y-2 p-4 border bg-gray-50 rounded-md">
           <p className="text-sm font-medium text-gray-500">Total Invoices</p>
           <p className="text-xl md:text-2xl font-semibold">{invoice_count}</p>
