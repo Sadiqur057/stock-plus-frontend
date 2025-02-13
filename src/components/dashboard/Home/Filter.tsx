@@ -48,7 +48,7 @@ type TProps = {
   duration: string;
 };
 
-export function DashboardFilter({
+export function Filter({
   setCustomer,
   setStartDate,
   setEndDate,
