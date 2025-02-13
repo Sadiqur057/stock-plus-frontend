@@ -23,37 +23,35 @@ export type ItemType = {
 };
 
 import { useQuery } from "@tanstack/react-query";
-import { CirclePlus, CloudDownload, ListRestart, Search } from "lucide-react";
+import { CirclePlus, CloudDownload, ListRestart } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 
 import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
-import { Customer, Product } from "@/types/invoice.type";
+import { Product } from "@/types/invoice.type";
 import { formatDate, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import InvoiceSummary from "../Invoice/InvoiceSummary";
-import { DateRangePicker } from "@/components/shared/DatePicker/DateRangePicker";
-import { DateRange } from "react-day-picker";
-import { Input } from "@/components/ui/input";
-import CustomerDropdown from "@/components/shared/Dropdown/CustomerDropdown";
+import { format } from "date-fns";
+import { DateFilter } from "../Filter/DateFilter";
+
+import StatusFilter from "../Filter/StatusFilter";
+
+
 
 const InventoryPage = () => {
-  const [customer, setCustomer] = useState<Customer | null>({
-    _id: "",
-    name: "",
-    email: "",
-    phone: "",
-    address: "",
-  });
-
-  const [date, setDate] = useState<DateRange | undefined>();
-  const [searchQuery, setSearchQuery] = useState("");
-
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [startDate, setStartDate] = useState<string | Date | undefined>();
+  const [endDate, setEndDate] = useState<string | Date | undefined>();
+
+  const [duration, setDuration] = useState<string>("");
+
+  const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -63,12 +61,15 @@ const InventoryPage = () => {
     setLimit(newLimit);
     setCurrentPage(1);
   };
-
   const fetchInventoryData = async () => {
     const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/get-items`, {
       params: {
         page: currentPage,
         limit: limit,
+        start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
+        end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
+        duration: duration,
+        status: selectedStatus,
       },
     });
     if (!res?.data?.success) return;
@@ -81,9 +82,29 @@ const InventoryPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [currentPage, limit],
+    queryKey: [currentPage, limit, selectedStatus],
     queryFn: fetchInventoryData,
   });
+
+  const handleReset = () => {
+    setStartDate("");
+    setEndDate("");
+    setDuration("");
+    setSelectedStatus("");
+    setTimeout(() => {
+      refetch();
+    }, 0);
+  };
+
+  const handleApplyFilter = async (event: React.FormEvent) => {
+    event.preventDefault();
+
+    try {
+      refetch();
+    } catch (error) {
+      console.error("Error fetching dashboard data:", error);
+    }
+  };
 
   const currency = getCurrency();
   const breadcrumbList = [
@@ -133,36 +154,21 @@ const InventoryPage = () => {
         </div>
 
         <InvoiceSummary summary={inventoryData?.data?.invoice_summary} />
-
-        <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Date Range
-            </label>
-            <DateRangePicker date={date} setDate={setDate} />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">
-              Customer
-            </label>
-            <CustomerDropdown
-              setCustomer={setCustomer}
-              label={false}
-              customer={customer}
-            />
-          </div>
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">Search</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search invoices..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-9"
-              />
-            </div>
-          </div>
+        <div className="flex gap-4 justify-between">
+          <StatusFilter
+            selectedStatus={selectedStatus}
+            setSelectedStatus={setSelectedStatus}
+          />
+          <DateFilter
+            endDate={endDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+            startDate={startDate}
+            setDuration={setDuration}
+            duration={duration}
+            handleSubmit={handleApplyFilter}
+            handleReset={handleReset}
+          />
         </div>
 
         {isLoading ? (
