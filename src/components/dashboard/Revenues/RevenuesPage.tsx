@@ -29,8 +29,7 @@ export type RevenueType = {
   company_email: string;
   created_by_name: string;
   created_by_email: string;
-  customer_email: string;
-  customer_name: string;
+  customer: Customer;
   products?: Product[];
 };
 
@@ -51,6 +50,7 @@ import RevenueOption from "./RevenuesOption/RevenuesOption";
 // } from "@/components/shared/Dropdown/CustomerDropdown";
 import DateRange from "@/components/shared/DatePicker/DateRange";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import { Customer } from "@/types/invoice.type";
 const breadcrumbList = [
   {
     name: "Products",
@@ -89,15 +89,12 @@ const RevenuesPage = () => {
   } = useQuery({
     queryKey: [currentPage, limit],
     queryFn: async () => {
-      const res = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/revenues`,
-        {
-          params: {
-            page: currentPage,
-            limit: limit,
-          },
-        }
-      );
+      const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/revenues`, {
+        params: {
+          page: currentPage,
+          limit: limit,
+        },
+      });
       if (!res?.data?.success) {
         return toast.error(res?.data?.message || "Something went wrong");
       }
@@ -179,43 +176,45 @@ const RevenuesPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {revenuesData?.revenues?.map((revenue: RevenueType, index: number) => (
-                    <TableRow key={revenue?._id}>
-                      <TableCell className="font-medium">
-                        {index + 1}.
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {revenue?.customer_name}
-                      </TableCell>
-                      <TableCell>{revenue?.revenue}</TableCell>
-                      <TableCell>
-                        {" "}
-                        {beautifyDate(revenue?.created_at)}
-                      </TableCell>
-                      <TableCell>
-                        <div
-                          className={`flex items-center ${
-                            revenue?.revenue_percentage >= 0
-                              ? "text-green-500"
-                              : "text-red-500"
-                          }`}
-                        >
-                          {revenue?.revenue_percentage >= 0 ? (
-                            <ArrowUpIcon className="mr-1 h-4 w-4" />
-                          ) : (
-                            <ArrowDownIcon className="mr-1 h-4 w-4" />
-                          )}
-                          {Math.abs(revenue?.revenue_percentage).toFixed(2)}%
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <RevenueOption
-                          refetch={refetch}
-                          revenueId={revenue?._id}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {revenuesData?.revenues?.map(
+                    (revenue: RevenueType, index: number) => (
+                      <TableRow key={revenue?._id}>
+                        <TableCell className="font-medium">
+                          {index + 1}.
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {revenue?.customer?.name}
+                        </TableCell>
+                        <TableCell>{revenue?.revenue}</TableCell>
+                        <TableCell>
+                          {" "}
+                          {beautifyDate(revenue?.created_at)}
+                        </TableCell>
+                        <TableCell>
+                          <div
+                            className={`flex items-center ${
+                              revenue?.revenue_percentage >= 0
+                                ? "text-green-500"
+                                : "text-red-500"
+                            }`}
+                          >
+                            {revenue?.revenue_percentage >= 0 ? (
+                              <ArrowUpIcon className="mr-1 h-4 w-4" />
+                            ) : (
+                              <ArrowDownIcon className="mr-1 h-4 w-4" />
+                            )}
+                            {Math.abs(revenue?.revenue_percentage).toFixed(2)}%
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <RevenueOption
+                            refetch={refetch}
+                            revenueId={revenue?._id}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>

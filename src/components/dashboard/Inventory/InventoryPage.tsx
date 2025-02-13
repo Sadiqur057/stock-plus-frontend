@@ -29,19 +29,17 @@ import Loader from "@/components/ui/Loader";
 import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
-import { Product } from "@/types/invoice.type";
+import { Customer, Product } from "@/types/invoice.type";
 import { formatDate, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import InvoiceSummary from "../Invoice/InvoiceSummary";
 import { DateRangePicker } from "@/components/shared/DatePicker/DateRangePicker";
 import { DateRange } from "react-day-picker";
 import { Input } from "@/components/ui/input";
-import CustomerDropdown, {
-  Customer,
-} from "@/components/shared/Dropdown/CustomerDropdown";
+import CustomerDropdown from "@/components/shared/Dropdown/CustomerDropdown";
 
 const InventoryPage = () => {
-  const [, setSelectedCustomer] = useState<Customer>({
+  const [customer, setCustomer] = useState<Customer | null>({
     _id: "",
     name: "",
     email: "",
@@ -147,7 +145,11 @@ const InventoryPage = () => {
             <label className="text-sm font-medium text-gray-700">
               Customer
             </label>
-            <CustomerDropdown label={false} setCustomer={setSelectedCustomer} />
+            <CustomerDropdown
+              setCustomer={setCustomer}
+              label={false}
+              customer={customer}
+            />
           </div>
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-700">Search</label>

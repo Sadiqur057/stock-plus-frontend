@@ -27,7 +27,6 @@ const RevenueOption = ({ revenueId, refetch }: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  // const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [selectedRevenueId, setSelectedRevenueId] = useState<string>("");
   const [selectedRevenueData, setSelectedRevenueData] = useState<RevenueType>({
     _id: "",
@@ -38,8 +37,13 @@ const RevenueOption = ({ revenueId, refetch }: Props) => {
     company_email: "",
     created_by_name: "",
     created_by_email: "",
-    customer_email: "",
-    customer_name: "",
+    customer: {
+      _id: "",
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+    },
   });
   const handleFetchRevenueData = async (id: string) => {
     setIsLoading(true);
@@ -98,17 +102,6 @@ const RevenueOption = ({ revenueId, refetch }: Props) => {
               <span>View Revenue</span>
             </DropdownMenuItem>
 
-            {/* <DropdownMenuItem
-              onClick={() => {
-                setIsEditModalOpen(true);
-                handleFetchRevenueData(revenueId);
-                setSelectedRevenueId(revenueId);
-              }}
-            >
-              <FilePenLine className="text-muted-foreground" />
-              <span>Edit Revenue</span>
-            </DropdownMenuItem> */}
-
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
@@ -136,22 +129,6 @@ const RevenueOption = ({ revenueId, refetch }: Props) => {
           />
         </Modal>
       )}
-      {/* {isEditModalOpen && (
-        <Modal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          title="Update Revenue Information"
-          size="lg"
-        >
-          <UpdateRevenue
-            revenueData={selectedRevenueData}
-            isLoading={isLoading}
-            closeModal={() => setIsEditModalOpen(false)}
-            revenueId={selectedRevenueId}
-            refetch={refetch}
-          />
-        </Modal>
-      )} */}
 
       {isDeleteModalOpen && (
         <Modal

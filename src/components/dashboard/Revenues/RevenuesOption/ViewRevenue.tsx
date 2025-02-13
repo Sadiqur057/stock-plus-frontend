@@ -35,7 +35,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
           <div className="space-y-1">
             <p className="text-sm font-medium">Customer</p>
             <p className="text-sm text-muted-foreground">
-              {data?.customer_name}
+              {data?.customer?.name}
             </p>
           </div>
           <div>
