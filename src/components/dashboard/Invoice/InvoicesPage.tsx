@@ -2,12 +2,6 @@
 
 import { useState } from "react";
 
-import { Search } from "lucide-react";
-import type { DateRange } from "react-day-picker";
-
-import Select from "react-select";
-import { Input } from "@/components/ui/input";
-import { DateRangePicker } from "@/components/shared/DatePicker/DateRangePicker";
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
 import InvoiceTable from "./InvoiceTable";
 import { useQuery } from "@tanstack/react-query";
@@ -18,28 +12,21 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import toast from "react-hot-toast";
-
-type CustomerOption = {
-  value: string;
-  label: string;
-};
-
-const customers = [
-  { id: "1", name: "John Doe" },
-  { id: "2", name: "Jane Smith" },
-  { id: "3", name: "Bob Wilson" },
-];
+import { Filter } from "../Home/Filter";
+import { Customer } from "@/types/invoice.type";
+import { format } from "date-fns";
 
 export default function InvoicesPage() {
-  const [date, setDate] = useState<DateRange | undefined>();
-  const [selectedCustomer, setSelectedCustomer] =
-    useState<CustomerOption | null>(null);
-  const [searchQuery, setSearchQuery] = useState("");
-
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
+
+  const [startDate, setStartDate] = useState<string | Date | undefined>();
+  const [endDate, setEndDate] = useState<string | Date | undefined>();
+
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [duration, setDuration] = useState<string>("");
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -61,6 +48,10 @@ export default function InvoicesPage() {
         params: {
           page: currentPage,
           limit: limit,
+          start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
+          end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
+          customer_phone: customer ? customer.phone : "",
+          duration: duration,
         },
       });
       if (!res?.data?.success) {
@@ -70,11 +61,6 @@ export default function InvoicesPage() {
       return res?.data?.data;
     },
   });
-
-  const customerOptions: CustomerOption[] = customers.map((customer) => ({
-    value: customer.id,
-    label: customer.name,
-  }));
 
   const breadcrumbList = [
     {
@@ -105,42 +91,17 @@ export default function InvoicesPage() {
           </div>
           <InvoiceSummary summary={invoiceData?.invoice_summary} />
 
-          <div className="mb-4 lg:mb-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                Date Range
-              </label>
-              <DateRangePicker date={date} setDate={setDate} />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                Customer
-              </label>
-              <Select
-                options={customerOptions}
-                value={selectedCustomer}
-                onChange={setSelectedCustomer}
-                placeholder="Select customer"
-                isClearable
-                className="react-select-container"
-                classNamePrefix="react-select"
-              />
-            </div>
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-700">
-                Search
-              </label>
-              <div className="relative">
-                <Search className="absolute left-3 top-3.5 h-4 w-4 text-gray-500" />
-                <Input
-                  placeholder="Search invoices..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-9"
-                />
-              </div>
-            </div>
-          </div>
+          <Filter
+            setCustomer={setCustomer}
+            endDate={endDate}
+            setEndDate={setEndDate}
+            setStartDate={setStartDate}
+            startDate={startDate}
+            refetch={refetch}
+            setDuration={setDuration}
+            duration={duration}
+            customer={customer}
+          />
 
           <div className="overflow-x-auto">
             <InvoiceTable invoices={invoiceData?.invoices} refetch={refetch} />
