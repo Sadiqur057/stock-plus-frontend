@@ -38,7 +38,7 @@ export type Invoice = {
   products: Product[];
   created_by: string;
   user_email: string;
-  cost_summary: CostSummary;
+  total_cost: CostSummary;
   created_at: string;
 };
 
