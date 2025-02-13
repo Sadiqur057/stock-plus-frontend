@@ -56,27 +56,27 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Manage Products",
-          url: "/dashboard/inventory/products",
+          title: "Purchase Invoices",
+          url: "/dashboard/inventory/reports",
         },
         {
           title: "Add Products",
           url: "/dashboard/inventory/add-products",
         },
         {
-          title: "Inventory Reports",
-          url: "/dashboard/inventory/reports",
+          title: "Manage Products",
+          url: "/dashboard/inventory/products",
         },
       ],
     },
     {
-      title: "Invoices",
+      title: "Sales",
       url: "#",
       isActive: false,
       icon: NotepadText,
       items: [
         {
-          title: "Manage Invoices",
+          title: "Sales Invoices",
           url: "/dashboard/invoices",
         },
         {
@@ -138,7 +138,6 @@ export function DashboardSidebar({
       const user = await api.get("/user");
       setCookie("currency_name", user?.data?.data?.currency_name);
       setCookie("currency_code", user?.data?.data?.currency_code);
-      console.log("checking", user?.data?.data);
       return user?.data?.data;
     },
   });
