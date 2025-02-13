@@ -23,8 +23,7 @@ export type ItemType = {
 };
 
 import { useQuery } from "@tanstack/react-query";
-import { CirclePlus, CloudDownload, ListRestart } from "lucide-react";
-import Loader from "@/components/ui/Loader";
+import { CalendarSearch, RotateCcw } from "lucide-react";
 
 import Link from "next/link";
 import InventoryOption from "./InventoryOption";
@@ -37,8 +36,9 @@ import { format } from "date-fns";
 import { DateFilter } from "../Filter/DateFilter";
 
 import StatusFilter from "../Filter/StatusFilter";
-
-
+import { Modal } from "@/components/shared/Modal/Modal";
+import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
+import EmptyMessage from "../Home/EmptyMessage";
 
 const InventoryPage = () => {
   // pagination
@@ -50,7 +50,7 @@ const InventoryPage = () => {
   const [endDate, setEndDate] = useState<string | Date | undefined>();
 
   const [duration, setDuration] = useState<string>("");
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState<string>("");
 
   const handlePageChange = (page: number) => {
@@ -86,6 +86,11 @@ const InventoryPage = () => {
     queryFn: fetchInventoryData,
   });
 
+  const handleApplyDateFilter = async () => {
+    refetch();
+    setIsModalOpen(false);
+  };
+
   const handleReset = () => {
     setStartDate("");
     setEndDate("");
@@ -94,16 +99,6 @@ const InventoryPage = () => {
     setTimeout(() => {
       refetch();
     }, 0);
-  };
-
-  const handleApplyFilter = async (event: React.FormEvent) => {
-    event.preventDefault();
-
-    try {
-      refetch();
-    } catch (error) {
-      console.error("Error fetching dashboard data:", error);
-    }
   };
 
   const currency = getCurrency();
@@ -116,70 +111,62 @@ const InventoryPage = () => {
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
-
-      <section>
-        <div className="sm:flex sm:items-center sm:justify-between">
-          <div>
-            <div className="flex items-center gap-x-3">
-              <h2 className="text-lg font-medium text-gray-800 dark:text-white">
-                Inventory Invoices
-              </h2>
-
-              <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                {inventoryData?.data?.pagination?.totalDocuments} invoices
-              </span>
-            </div>
-
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-300">
-              Browse all the items here.
-            </p>
-          </div>
-
-          <div className="flex items-center mt-4 gap-x-2 lg:gap-x-3">
-            <Button variant={"outline"} className="py-3 px-2.5">
-              <ListRestart />
-            </Button>
-            <Button variant={"outline"} className="py-3">
-              <CloudDownload />
-              <span>Import</span>
-            </Button>
-
-            <Link href={"/dashboard/inventory/add-products"}>
-              <Button className="py-3">
-                <CirclePlus />
-                <span>Add New Items</span>
-              </Button>
-            </Link>
-          </div>
+      <div className="mb-4 bg-gray-50 border p-4 lg:p-6 rounded-md flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-xl md:text-2xl font-semibold text-gray-900">
+            Purchase Invoices
+          </h1>
+          <p className="text-gray-500 mt-1 text-sm md:text-base">
+            Manage and track your purchase
+          </p>
         </div>
-
-        <InvoiceSummary summary={inventoryData?.data?.invoice_summary} />
-        <div className="flex gap-4 justify-between">
+        <Link href="/dashboard/inventory/add-products">
+          <Button size="sm">Create Purchase</Button>
+        </Link>
+      </div>
+      <section>
+        <div className="flex gap-4 justify-between flex-wrap mb-4">
           <StatusFilter
             selectedStatus={selectedStatus}
             setSelectedStatus={setSelectedStatus}
           />
-          <DateFilter
-            endDate={endDate}
-            setEndDate={setEndDate}
-            setStartDate={setStartDate}
-            startDate={startDate}
-            setDuration={setDuration}
-            duration={duration}
-            handleSubmit={handleApplyFilter}
-            handleReset={handleReset}
-          />
+          <div className="flex gap-4">
+            <Button onClick={() => setIsModalOpen(true)}>
+              <CalendarSearch />
+              Date Filter
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Update Date Filter"
+          >
+            <DateFilter
+              endDate={endDate}
+              setEndDate={setEndDate}
+              setStartDate={setStartDate}
+              startDate={startDate}
+              setDuration={setDuration}
+              duration={duration}
+              handleSubmit={handleApplyDateFilter}
+              handleReset={handleReset}
+            />
+          </Modal>
         </div>
 
         {isLoading ? (
-          <Loader />
-        ) : (
+          <ScreenLoader />
+        ) : inventoryData?.data?.invoices?.length ? (
           <>
+            <InvoiceSummary summary={inventoryData?.data?.invoice_summary} />
             <div>
               <Table className="border">
                 <TableHeader>
                   <TableRow>
-                    <TableHead>#</TableHead>
+                    <TableHead>No.</TableHead>
                     <TableHead className="w-[200px]">Created By</TableHead>
                     <TableHead>
                       Total{" "}
@@ -193,7 +180,6 @@ const InventoryPage = () => {
                         ({currency})
                       </span>
                     </TableHead>
-
                     <TableHead>Created at</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead></TableHead>
@@ -203,7 +189,7 @@ const InventoryPage = () => {
                   {inventoryData?.data?.invoices?.map(
                     (item: ItemType, idx: number) => (
                       <TableRow key={item?._id}>
-                        <TableCell className="font-medium">{idx}</TableCell>
+                        <TableCell className="font-medium">{idx + 1}</TableCell>
                         <TableCell className="font-medium">
                           {item?.created_by_name}
                         </TableCell>
@@ -246,6 +232,10 @@ const InventoryPage = () => {
               />
             </div>
           </>
+        ) : (
+          <div className="py-20">
+            <EmptyMessage />
+          </div>
         )}
       </section>
     </>
