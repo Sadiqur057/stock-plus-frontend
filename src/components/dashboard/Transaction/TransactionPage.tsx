@@ -172,29 +172,30 @@ const TransactionPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {transactionData?.data?.map(
-                    (transaction: TransactionType, index: number) => (
-                      <TableRow key={transaction._id}>
-                        <TableCell className="font-medium">
-                          {index + 1}.
-                        </TableCell>
-                        <TableCell className="font-medium">
-                          {transaction?.created_by_name}
-                        </TableCell>
-                        <TableCell>{transaction?.payment_method}</TableCell>
-                        <TableCell>{transaction?.amount}</TableCell>
-                        <TableCell>
-                          {formatDate(transaction?.created_at)}
-                        </TableCell>
-                        <TableCell>
-                          <TransactionOption
-                            refetch={refetch}
-                            transactionId={transaction?._id}
-                          />
-                        </TableCell>
-                      </TableRow>
-                    )
-                  )}
+                  {transactionData?.length &&
+                    transactionData?.data?.map(
+                      (transaction: TransactionType, index: number) => (
+                        <TableRow key={transaction._id}>
+                          <TableCell className="font-medium">
+                            {index + 1}.
+                          </TableCell>
+                          <TableCell className="font-medium">
+                            {transaction?.created_by_name}
+                          </TableCell>
+                          <TableCell>{transaction?.payment_method}</TableCell>
+                          <TableCell>{transaction?.amount}</TableCell>
+                          <TableCell>
+                            {formatDate(transaction?.created_at)}
+                          </TableCell>
+                          <TableCell>
+                            <TransactionOption
+                              refetch={refetch}
+                              transactionId={transaction?._id}
+                            />
+                          </TableCell>
+                        </TableRow>
+                      )
+                    )}
                 </TableBody>
               </Table>
             </div>
