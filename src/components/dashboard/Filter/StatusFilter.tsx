@@ -24,9 +24,9 @@ const StatusFilter = ({
   setSelectedStatus,
 }: TProps) => {
   return (
-    <div className="xl:w-[220px]">
+    <div className="xl:w-[210px]">
       <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-        <SelectTrigger className="py-[22px] min-w-[160px] xl:w-[220px]">
+        <SelectTrigger className="py-[22px] min-w-[160px] xl:w-[210px]">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
         <SelectContent>
