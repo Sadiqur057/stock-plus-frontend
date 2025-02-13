@@ -89,7 +89,7 @@ const CustomerDropdown = ({ setCustomer, label = true, customer }: Props) => {
   };
 
   return (
-    <div className="flex flex-col gap-2.5 flex-1 min-w-[220px]">
+    <div className="flex flex-col gap-2.5 min-w-[210px]">
       {label && <Label htmlFor="customer-select">Customer</Label>}
       <Select
         id="customer-select"
