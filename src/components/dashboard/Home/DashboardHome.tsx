@@ -11,7 +11,7 @@ import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
-import { DashboardFilter } from "./DashboardFilter";
+import { Filter } from "./Filter";
 import { RevenueOverview } from "./RevenueOverview";
 import RecentRevenue from "./RecentRevenue";
 import { format } from "date-fns";
@@ -85,7 +85,7 @@ const DashboardHome = () => {
     <>
       <SidebarInset>
         <BreadCrumb breadcrumbList={breadcrumbList} />
-        <DashboardFilter
+        <Filter
           setCustomer={setCustomer}
           endDate={endDate}
           setEndDate={setEndDate}
