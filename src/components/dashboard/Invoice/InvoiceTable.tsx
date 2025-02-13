@@ -2,6 +2,14 @@ import React from "react";
 import { format } from "date-fns";
 import { Invoice } from "@/types/invoice.type";
 import InvoiceOption from "./InvoiceOption/InvoiceOption";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 type InvoiceTableProps = {
   invoices: Invoice[];
@@ -11,57 +19,43 @@ type InvoiceTableProps = {
 };
 const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
   return (
-    <div className="rounded-md border min-w-max">
-      <table className="w-full">
-        <thead className="bg-gray-50">
-          <tr className="border-b">
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
-              #
-            </th>
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
-              Invoice To
-            </th>
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
+    <div className="min-w-max">
+      <Table className="border">
+        <TableHeader>
+          <TableRow>
+            <TableHead>No.</TableHead>
+            <TableHead>Invoice To</TableHead>
+            <TableHead>
               Total <span className="text-[10px]">(BDT)</span>
-            </th>
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
+            </TableHead>
+            <TableHead>
               Due <span className="text-[10px]">(BDT)</span>
-            </th>
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
-              Created At
-            </th>
-            <th className="py-4 px-6 text-left text-sm font-semibold text-gray-900">
-              Status
-            </th>
+            </TableHead>
+            <TableHead>Created At</TableHead>
+            <TableHead>Status</TableHead>
             <th className="py-4 px-6 text-right text-sm font-semibold text-gray-900">
               Actions
             </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-gray-200">
+          </TableRow>
+        </TableHeader>
+        <TableBody>
           {invoices?.map((invoice, index) => (
-            <tr key={index} className="hover:bg-gray-50">
-              <td className="py-4 px-6 text-sm text-gray-500">{index + 1}</td>
-              <td className="py-4 px-6">
-                <div>
-                  <div className="text-sm font-medium text-gray-900">
-                    {invoice?.customer.name}
-                  </div>
-                  <div className="text-sm text-gray-500">
-                    {invoice?.customer.email}
-                  </div>
-                </div>
-              </td>
-              <td className="py-4 px-6 text-sm text-gray-900">
-                {invoice?.total_cost?.total}
-              </td>
-              <td className="py-4 px-6 text-sm text-gray-900">
-              {invoice?.total_cost?.total_due}
-              </td>
-              <td className="py-4 px-6 text-sm text-gray-500">
+            <TableRow key={index} className="hover:bg-gray-50">
+              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell>
+                <p className="text-sm font-medium text-gray-900">
+                  {invoice?.customer.name}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {invoice?.customer.email}
+                </p>
+              </TableCell>
+              <TableCell>{invoice?.total_cost?.total}</TableCell>
+              <TableCell>{invoice?.total_cost?.total_due}</TableCell>
+              <TableCell>
                 {format(new Date(invoice?.created_at), "MMM dd, yyyy")}
-              </td>
-              <td className="py-4 px-6">
+              </TableCell>
+              <TableCell>
                 <span
                   className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
                     invoice?.total_cost?.status === "paid"
@@ -71,19 +65,18 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
                 >
                   {invoice?.total_cost?.status}
                 </span>
-              </td>
-              <td className="py-4 px-6 text-right">
+              </TableCell>
+              <TableCell>
                 <InvoiceOption
                   invoiceId={invoice?._id}
                   refetch={refetch}
                   due_amount={invoice?.total_cost?.total_due}
                 />
-
-              </td>
-            </tr>
+              </TableCell>
+            </TableRow>
           ))}
-        </tbody>
-      </table>
+        </TableBody>
+      </Table>
     </div>
   );
 };
