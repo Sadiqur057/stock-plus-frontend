@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { RecentSales } from "./RecentSales";
 import { InvoiceOverview } from "./InvoiceOverview";
 import { SidebarInset } from "@/components/ui/sidebar";
@@ -11,7 +11,6 @@ import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import { useQuery } from "@tanstack/react-query";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
-import { Filter } from "./Filter";
 import { RevenueOverview } from "./RevenueOverview";
 import RecentRevenue from "./RecentRevenue";
 import { format } from "date-fns";
@@ -22,6 +21,11 @@ import {
   TRevenueOverviewData,
 } from "@/types/dashboard.type";
 import { TransactionType } from "../Transaction/TransactionPage";
+import { Modal } from "@/components/shared/Modal/Modal";
+import { DateFilter } from "../Filter/DateFilter";
+import { Button } from "@/components/ui/button";
+import { CalendarSearch, RotateCcw } from "lucide-react";
+import CustomerDropdown from "@/components/shared/Dropdown/CustomerDropdown";
 
 export type TDashboardOverviewData = {
   invoices: Invoice[];
@@ -51,18 +55,18 @@ const DashboardHome = () => {
     },
   ];
 
-  const [startDate, setStartDate] = React.useState<string | Date | undefined>();
-  const [endDate, setEndDate] = React.useState<string | Date | undefined>();
+  const [startDate, setStartDate] = useState<string | Date | undefined>();
+  const [endDate, setEndDate] = useState<string | Date | undefined>();
 
-  const [customer, setCustomer] = React.useState<Customer | null>(null);
-  const [duration, setDuration] = React.useState<string>("");
-
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [duration, setDuration] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const {
     data: data,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["overview"],
+    queryKey: [customer],
     queryFn: async () => {
       const params = new URLSearchParams({
         start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
@@ -81,21 +85,58 @@ const DashboardHome = () => {
     },
   });
 
+  const handleApplyDateFilter = async () => {
+    refetch();
+    setIsModalOpen(false);
+  };
+
+  const handleReset = () => {
+    setStartDate("");
+    setEndDate("");
+    setDuration("");
+    setCustomer(null);
+    setTimeout(() => {
+      refetch();
+    }, 0);
+  };
+
   return (
     <>
       <SidebarInset>
         <BreadCrumb breadcrumbList={breadcrumbList} />
-        <Filter
-          setCustomer={setCustomer}
-          endDate={endDate}
-          setEndDate={setEndDate}
-          setStartDate={setStartDate}
-          startDate={startDate}
-          refetch={refetch}
-          setDuration={setDuration}
-          duration={duration}
-          customer={customer}
-        />
+        <div className="flex gap-4 justify-between mb-4">
+          <CustomerDropdown
+            setCustomer={setCustomer}
+            label={false}
+            customer={customer}
+          />
+          <div className="flex gap-4">
+            <Button onClick={() => setIsModalOpen(true)}>
+              <CalendarSearch />
+              Date Filter
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Update Date Filter"
+          >
+            <DateFilter
+              endDate={endDate}
+              setEndDate={setEndDate}
+              setStartDate={setStartDate}
+              startDate={startDate}
+              setDuration={setDuration}
+              duration={duration}
+              handleSubmit={handleApplyDateFilter}
+              handleReset={handleReset}
+            />
+          </Modal>
+        </div>
         {isLoading ? (
           <ScreenLoader />
         ) : (
