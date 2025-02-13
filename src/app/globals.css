@@ -20,7 +20,13 @@ body {
 }
 .react-select__placeholder,
 .react-select__single-value {
-  padding: 8px;
+  padding: 9px;
+  color: black !important;
+  font-size: 14px;
+}
+.react-select__control {
+  border-color: rgba(128, 128, 128, 0.204) !important;
+  border-radius: 6px !important;
 }
 @layer utilities {
   .text-balance {
