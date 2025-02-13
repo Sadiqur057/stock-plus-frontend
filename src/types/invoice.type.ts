@@ -8,6 +8,7 @@ export type Product = {
 };
 
 export type Customer = {
+  _id: string
   name: string;
   email: string;
   phone: string;
@@ -40,3 +41,14 @@ export type Invoice = {
   cost_summary: CostSummary;
   created_at: string;
 };
+
+
+export type TDate = {
+  startDate: string,
+  endDate: string
+}
+
+export type TDuration = {
+  label: string,
+  value: string
+}
