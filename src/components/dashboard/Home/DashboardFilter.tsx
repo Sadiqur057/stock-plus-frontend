@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { format } from "date-fns";
 import { CalendarIcon, RotateCcw } from "lucide-react";
 
@@ -19,59 +19,102 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import toast from "react-hot-toast";
+import CustomerDropdown from "@/components/shared/Dropdown/CustomerDropdown";
+import { Customer } from "@/types/invoice.type";
+import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { TDashboardOverviewData } from "./DashboardHome";
 
 const durations = [
-  { label: "Today", value: "today" },
-  { label: "Previous Day", value: "previous_day" },
-  { label: "7 Days", value: "7_days" },
-  { label: "30 Days", value: "30_days" },
-  { label: "6 Months", value: "6_months" },
-  { label: "1 Year", value: "1_year" },
+  { label: "Today", value: "D1" },
+  { label: "Previous Day", value: "D-1" },
+  { label: "Last 7 Days", value: "D7" },
+  { label: "Last 30 Days", value: "D30" },
+  { label: "Last 3 Months", value: "M3" },
+  { label: "Last 6 Months", value: "M6" },
+  { label: "Last 1 Year", value: "Y1" },
 ];
 
-export function DashboardFilter() {
-  const [startDate, setStartDate] = React.useState<Date>();
-  const [endDate, setEndDate] = React.useState<Date>();
-  const [customer, setCustomer] = React.useState<string>("");
-  const [product, setProduct] = React.useState<string>("");
-  const [duration, setDuration] = React.useState<string>("");
+type TProps = {
+  setCustomer: Dispatch<SetStateAction<Customer | null>>;
+  customer: Customer | null;
+  setStartDate: Dispatch<SetStateAction<string | Date | undefined>>;
+  setEndDate: Dispatch<SetStateAction<string | Date | undefined>>;
+  setDuration: Dispatch<SetStateAction<string>>;
+  refetch: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<TDashboardOverviewData, Error>>;
+  endDate: string | Date | undefined;
+  startDate: string | Date | undefined;
+  duration: string;
+};
+
+export function DashboardFilter({
+  setCustomer,
+  setStartDate,
+  setEndDate,
+  startDate,
+  endDate,
+  refetch,
+  setDuration,
+  duration,
+  customer,
+}: TProps) {
 
   const handleReset = () => {
-    setStartDate(undefined);
-    setEndDate(undefined);
-    setCustomer("");
-    setProduct("");
+    setStartDate("");
+    setEndDate("");
+    setCustomer(null);
     setDuration("");
+
+    setTimeout(() => {
+      refetch(); 
+    }, 0); 
   };
 
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleApplyFilter = async (event: React.FormEvent) => {
     event.preventDefault();
 
-    // const params = new URLSearchParams({
-    //   start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
-    //   end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
-    //   customer,
-    //   product,
-    //   duration,
-    // });
-
     try {
-      // const response = await fetch(`/api/dashboard?${params.toString()}`);
-      // const data = await response.json();
-      // console.log(data);
-      toast.error("Under maintenance. Will be added soon");
+      refetch();
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mb-4 lg:mb-6">
-      <div className="flex flex-wrap xl:flex-nowrap gap-4">
-        <div className="flex gap-4 w-fit">
+    <form onSubmit={handleApplyFilter} className="space-y-4 mb-4 lg:mb-6">
+      <div className="flex flex-wrap xl:flex-nowrap gap-4 justify-between w-full">
+        <div className="flex gap-4 flex-wrap">
+          <CustomerDropdown
+            setCustomer={setCustomer}
+            label={false}
+            customer={customer}
+          />
+          <div className="xl:w-[220px]">
+            <Select
+              value={duration}
+              onValueChange={(value) => {
+                setDuration(value);
+                setEndDate("");
+                setStartDate("");
+              }}
+            >
+              <SelectTrigger className="py-[22px] xl:w-[220px]">
+                <SelectValue placeholder="Select duration" />
+              </SelectTrigger>
+              <SelectContent>
+                {durations.map((d) => (
+                  <SelectItem key={d.value} value={d.value}>
+                    {d.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+        <div className="flex gap-4 w-fit flex-wrap">
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="min-w-[160px]">
               <Button
                 variant={"outline"}
                 className={cn(
@@ -90,15 +133,18 @@ export function DashboardFilter() {
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={startDate}
-                onSelect={setStartDate}
+                selected={startDate ? new Date(startDate) : undefined}
+                onSelect={(date) => {
+                  setStartDate(date ? date.toISOString() : "");
+                  setDuration("");
+                }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
 
           <Popover>
-            <PopoverTrigger asChild>
+            <PopoverTrigger asChild className="min-w-[160px]">
               <Button
                 variant={"outline"}
                 className={cn(
@@ -113,53 +159,21 @@ export function DashboardFilter() {
             <PopoverContent className="w-auto p-0" align="start">
               <Calendar
                 mode="single"
-                selected={endDate}
-                onSelect={setEndDate}
+                selected={endDate ? new Date(endDate) : undefined}
+                onSelect={(date) => {
+                  setEndDate(date ? date.toISOString() : "");
+                  setDuration("");
+                }}
                 initialFocus
               />
             </PopoverContent>
           </Popover>
-        </div>
-
-        <Select value={customer} onValueChange={setCustomer}>
-          <SelectTrigger className="flex-1 py-[22px]">
-            <SelectValue placeholder="Select customer" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="customer1">Customer 1</SelectItem>
-            <SelectItem value="customer2">Customer 2</SelectItem>
-            <SelectItem value="customer3">Customer 3</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={product} onValueChange={setProduct}>
-          <SelectTrigger className="flex-1 py-[22px]">
-            <SelectValue placeholder="Select product" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="product1">Product 1</SelectItem>
-            <SelectItem value="product2">Product 2</SelectItem>
-            <SelectItem value="product3">Product 3</SelectItem>
-          </SelectContent>
-        </Select>
-
-        <Select value={duration} onValueChange={setDuration}>
-          <SelectTrigger className="flex-1 py-[22px]">
-            <SelectValue placeholder="Select duration" />
-          </SelectTrigger>
-          <SelectContent>
-            {durations.map((d) => (
-              <SelectItem key={d.value} value={d.value}>
-                {d.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <div className="flex gap-4 items-center flex-1">
-          <Button type="submit">Apply Filters</Button>
-          <Button type="button" variant="outline" onClick={handleReset}>
-            <RotateCcw className="h-4 w-4" />
-          </Button>
+          <div className="flex gap-4 items-center">
+            <Button type="submit">Apply Filters</Button>
+            <Button type="button" variant="outline" onClick={handleReset}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
       </div>
     </form>
