@@ -2,7 +2,7 @@
 
 import React, { Dispatch, SetStateAction } from "react";
 import { format } from "date-fns";
-import { CalendarIcon, RotateCcw } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -34,7 +34,7 @@ type TProps = {
   setStartDate: Dispatch<SetStateAction<string | Date | undefined>>;
   setEndDate: Dispatch<SetStateAction<string | Date | undefined>>;
   setDuration: Dispatch<SetStateAction<string>>;
-  handleSubmit: (event: React.FormEvent) => Promise<void>;
+  handleSubmit: (event: React.MouseEvent) => Promise<void>;
   handleReset: () => void;
   endDate: string | Date | undefined;
   startDate: string | Date | undefined;
@@ -48,98 +48,95 @@ export function DateFilter({
   endDate,
   handleSubmit,
   setDuration,
-  handleReset,
   duration,
 }: TProps) {
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 mb-4 lg:mb-6">
-      <div className="flex flex-wrap xl:flex-nowrap gap-4 w-full">
-        <div className="xl:w-[220px]">
-          <Select
-            value={duration}
-            onValueChange={(value) => {
-              setDuration(value);
-              setEndDate("");
-              setStartDate("");
-            }}
-          >
-            <SelectTrigger className="py-[22px] xl:w-[220px]">
-              <SelectValue placeholder="Select duration" />
-            </SelectTrigger>
-            <SelectContent>
-              {durations.map((d) => (
-                <SelectItem key={d.value} value={d.value}>
-                  {d.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-
-        <div className="flex gap-4 w-fit flex-wrap">
-          <Popover>
-            <PopoverTrigger asChild className="min-w-[160px]">
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "justify-start text-left font-normal !text-black",
-                  !startDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {startDate ? (
-                  format(startDate, "LLL dd, y")
-                ) : (
-                  <span>Start date</span>
-                )}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={startDate ? new Date(startDate) : undefined}
-                onSelect={(date) => {
-                  setStartDate(date ? date.toISOString() : "");
-                  setDuration("");
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-
-          <Popover>
-            <PopoverTrigger asChild className="min-w-[160px]">
-              <Button
-                variant={"outline"}
-                className={cn(
-                  "justify-start text-left font-normal !text-black",
-                  !endDate && "text-muted-foreground"
-                )}
-              >
-                <CalendarIcon className="mr-2 h-4 w-4" />
-                {endDate ? format(endDate, "LLL dd, y") : <span>End date</span>}
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar
-                mode="single"
-                selected={endDate ? new Date(endDate) : undefined}
-                onSelect={(date) => {
-                  setEndDate(date ? date.toISOString() : "");
-                  setDuration("");
-                }}
-                initialFocus
-              />
-            </PopoverContent>
-          </Popover>
-          <div className="flex gap-4 items-center">
-            <Button type="submit">Apply Filters</Button>
-            <Button type="button" variant="outline" onClick={handleReset}>
-              <RotateCcw className="h-4 w-4" />
-            </Button>
-          </div>
-        </div>
+    <>
+      <div className="w-full">
+        <Select
+          value={duration}
+          onValueChange={(value) => {
+            setDuration(value);
+            setEndDate("");
+            setStartDate("");
+          }}
+        >
+          <SelectTrigger className="py-[22px] w-full">
+            <SelectValue placeholder="Select duration" />
+          </SelectTrigger>
+          <SelectContent>
+            {durations.map((d) => (
+              <SelectItem key={d.value} value={d.value}>
+                {d.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
-    </form>
+      <p className="text-center mt-4 text-muted-foreground">Or</p>
+      <div className="flex gap-4 w-full my-4">
+        <Popover modal={true}>
+          <PopoverTrigger asChild className="w-full">
+            <Button
+              variant={"outline"}
+              className={cn(
+                "justify-start text-left font-normal !text-black",
+                !startDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {startDate ? (
+                format(startDate, "LLL dd, y")
+              ) : (
+                <span>Start date</span>
+              )}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={startDate ? new Date(startDate) : undefined}
+              onSelect={(date) => {
+                setStartDate(date ? date.toISOString() : "");
+                setDuration("");
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+
+        <Popover modal={true}>
+          <PopoverTrigger asChild className="w-full">
+            <Button
+              variant={"outline"}
+              className={cn(
+                "justify-start text-left font-normal !text-black",
+                !endDate && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {endDate ? format(endDate, "LLL dd, y") : <span>End date</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0" align="start">
+            <Calendar
+              mode="single"
+              selected={endDate ? new Date(endDate) : undefined}
+              onSelect={(date) => {
+                setEndDate(date ? date.toISOString() : "");
+                setDuration("");
+              }}
+              initialFocus
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
+      <div className="flex justify-end">
+        <Button type="submit" onClick={handleSubmit}>
+          Apply
+        </Button>
+      </div>
+    </>
   );
 }
