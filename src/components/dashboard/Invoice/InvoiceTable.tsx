@@ -53,10 +53,10 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
                 </div>
               </td>
               <td className="py-4 px-6 text-sm text-gray-900">
-                {invoice?.cost_summary?.total}
+                {invoice?.total_cost?.total}
               </td>
               <td className="py-4 px-6 text-sm text-gray-900">
-              {invoice?.cost_summary?.total_due}
+              {invoice?.total_cost?.total_due}
               </td>
               <td className="py-4 px-6 text-sm text-gray-500">
                 {format(new Date(invoice?.created_at), "MMM dd, yyyy")}
@@ -64,19 +64,19 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
               <td className="py-4 px-6">
                 <span
                   className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
-                    invoice?.cost_summary?.status === "paid"
+                    invoice?.total_cost?.status === "paid"
                       ? "bg-green-100 text-green-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >
-                  {invoice?.cost_summary?.status}
+                  {invoice?.total_cost?.status}
                 </span>
               </td>
               <td className="py-4 px-6 text-right">
                 <InvoiceOption
                   invoiceId={invoice?._id}
                   refetch={refetch}
-                  due_amount={invoice?.cost_summary?.total_due}
+                  due_amount={invoice?.total_cost?.total_due}
                 />
 
               </td>

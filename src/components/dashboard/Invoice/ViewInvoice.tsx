@@ -141,41 +141,41 @@ export default function ViewInvoice({ id }: Props) {
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Sub Total:</span>
                   <span className="font-medium">
-                    {invoice.cost_summary.subtotal.toFixed(2)} BDT
+                    {invoice.total_cost.subtotal.toFixed(2)} BDT
                   </span>
                 </div>
-                {invoice?.cost_summary?.discount > 0 && (
+                {invoice?.total_cost?.discount > 0 && (
                   <div className="flex justify-between py-2">
                     <span className="text-gray-600">Discount:</span>
                     <span className="font-medium">
-                      {invoice.cost_summary.discount.toFixed(2)} BDT
+                      {invoice.total_cost.discount.toFixed(2)} BDT
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Vat:</span>
                   <span className="font-medium">
-                    {invoice.cost_summary.tax.toFixed(2)} BDT
+                    {invoice.total_cost.tax.toFixed(2)} BDT
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
-                    {invoice.cost_summary.total.toFixed(2)} BDT
+                    {invoice.total_cost.total.toFixed(2)} BDT
                   </span>
                 </div>
-                {invoice?.cost_summary?.status !== "unpaid" && (
+                {invoice?.total_cost?.status !== "unpaid" && (
                   <>
                     <div className="flex justify-between py-2">
                       <span className="text-gray-600">Paid:</span>
                       <span className="font-medium">
-                        {invoice.cost_summary.total_paid} BDT
+                        {invoice.total_cost.total_paid} BDT
                       </span>
                     </div>
                     <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
                       <span>Due:</span>
                       <span>
-                        {invoice.cost_summary.total_due.toFixed(2)} BDT
+                        {invoice.total_cost.total_due.toFixed(2)} BDT
                       </span>
                     </div>
                   </>

@@ -105,12 +105,12 @@ const AddProductsPage = () => {
     if (calculation.paid && calculation.paid > calculation?.total) {
       return toast.error("Invalid amount. Due amount cannot be less than 0");
     }
-    const cost_summary = Object.assign({}, calculation);
-    delete cost_summary.due;
+    const total_cost = Object.assign({}, calculation);
+    delete total_cost.due;
     const data = {
       supplier,
       products,
-      total_cost: cost_summary,
+      total_cost: total_cost,
       created_at: invoiceDate,
       transaction_data: {
         payment_method: paymentMethod,

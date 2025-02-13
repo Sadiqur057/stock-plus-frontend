@@ -44,28 +44,28 @@ export function RecentSales({ invoices }: Props) {
                   className="group hover:bg-primary/10"
                 >
                   <TableCell>{invoice?.customer?.name}</TableCell>
-                  <TableCell>{invoice?.cost_summary?.total}</TableCell>
+                  <TableCell>{invoice?.total_cost?.total}</TableCell>
                   <TableCell>
                     {invoice?.created_at &&
                       formatDate(invoice?.created_at)}
                   </TableCell>
-                  <TableCell>{invoice?.cost_summary?.total_due}</TableCell>
+                  <TableCell>{invoice?.total_cost?.total_due}</TableCell>
                   <TableCell>
                     <Badge
                       variant="secondary"
                       className={
-                        invoice?.cost_summary?.status === "paid"
+                        invoice?.total_cost?.status === "paid"
                           ? "bg-green-100 text-green-800 hover:bg-green-100"
-                          : invoice?.cost_summary?.status === "partially paid"
+                          : invoice?.total_cost?.status === "partially paid"
                           ? "bg-orange-100 text-blue-800 hover:bg-blue-100"
-                          : invoice?.cost_summary?.status === "unpaid"
+                          : invoice?.total_cost?.status === "unpaid"
                           ? "bg-red-100 text-red-800 hover:bg-red-100"
                           : "bg-gray-100 text-gray-800 hover:bg-gray-100"
                       }
                     >
-                      {invoice?.cost_summary?.status === "partially paid"
+                      {invoice?.total_cost?.status === "partially paid"
                         ? "due"
-                        : invoice?.cost_summary?.status}
+                        : invoice?.total_cost?.status}
                     </Badge>
                   </TableCell>
                 </TableRow>

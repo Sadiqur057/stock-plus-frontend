@@ -45,21 +45,21 @@ export default function RecentRevenue({ revenues }: Props) {
               <TableRow key={item?._id}>
                 <TableCell>{item?.customer?.name}</TableCell>
                 <TableCell>{formatDate(item?.created_at)}</TableCell>
-                <TableCell>{item?.cost_summary?.revenue}</TableCell>
+                <TableCell>{item?.total_cost?.revenue}</TableCell>
                 <TableCell>
                   <div
                     className={`flex items-center ${
-                      item?.cost_summary?.revenue_percentage >= 0
+                      item?.total_cost?.revenue_percentage >= 0
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
                   >
-                    {item?.cost_summary?.revenue_percentage >= 0 ? (
+                    {item?.total_cost?.revenue_percentage >= 0 ? (
                       <ArrowUpIcon className="mr-1 h-4 w-4" />
                     ) : (
                       <ArrowDownIcon className="mr-1 h-4 w-4" />
                     )}
-                    {Math.abs(item?.cost_summary?.revenue_percentage).toFixed(
+                    {Math.abs(item?.total_cost?.revenue_percentage).toFixed(
                       2
                     )}
                     %
