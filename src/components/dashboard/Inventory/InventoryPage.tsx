@@ -28,7 +28,7 @@ import { CalendarSearch, RotateCcw } from "lucide-react";
 import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
-import { Product } from "@/types/invoice.type";
+import { Customer, Product } from "@/types/invoice.type";
 import { formatDate, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import InvoiceSummary from "../Invoice/InvoiceSummary";
@@ -39,13 +39,14 @@ import StatusFilter from "../Filter/StatusFilter";
 import { Modal } from "@/components/shared/Modal/Modal";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import EmptyMessage from "../Home/EmptyMessage";
+import SupplierDropdown from "@/components/shared/Dropdown/SupplierDropdown";
 
 const InventoryPage = () => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-
+  const [supplier, setSupplier] = useState<Customer | null>(null);
   const [startDate, setStartDate] = useState<string | Date | undefined>();
   const [endDate, setEndDate] = useState<string | Date | undefined>();
 
@@ -70,6 +71,7 @@ const InventoryPage = () => {
         end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
         duration: duration,
         status: selectedStatus,
+        supplier_phone: supplier ? supplier?.phone : "",
       },
     });
     if (!res?.data?.success) return;
@@ -82,7 +84,7 @@ const InventoryPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [currentPage, limit, selectedStatus],
+    queryKey: [currentPage, limit, selectedStatus, supplier],
     queryFn: fetchInventoryData,
   });
 
@@ -96,6 +98,7 @@ const InventoryPage = () => {
     setEndDate("");
     setDuration("");
     setSelectedStatus("");
+    setSupplier(null);
     setTimeout(() => {
       refetch();
     }, 0);
@@ -126,10 +129,17 @@ const InventoryPage = () => {
       </div>
       <section>
         <div className="flex gap-4 justify-between flex-wrap mb-4">
-          <StatusFilter
-            selectedStatus={selectedStatus}
-            setSelectedStatus={setSelectedStatus}
-          />
+          <div className="flex gap-4 flex-wrap">
+            <StatusFilter
+              selectedStatus={selectedStatus}
+              setSelectedStatus={setSelectedStatus}
+            />
+            <SupplierDropdown
+              setSupplier={setSupplier}
+              label={false}
+              supplier={supplier}
+            />
+          </div>
           <div className="flex gap-4">
             <Button onClick={() => setIsModalOpen(true)}>
               <CalendarSearch />
