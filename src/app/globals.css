@@ -27,7 +27,6 @@ body {
 .react-select__control {
   border-color: rgba(128, 128, 128, 0.204) !important;
   border-radius: 6px !important;
-  width: 210px;
 }
 @layer utilities {
   .text-balance {
