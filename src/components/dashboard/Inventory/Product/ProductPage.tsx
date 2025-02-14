@@ -143,7 +143,7 @@ const ProductPage = () => {
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                240 Product
+                {products?.pagination?.totalDocuments || 0} Product
               </span>
             </div>
 
