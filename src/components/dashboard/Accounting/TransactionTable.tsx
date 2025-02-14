@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, getCurrency } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
@@ -45,7 +45,7 @@ const TransactionTable = ({ transactions }: Props) => {
         {transactions?.map((transaction, index) => (
           <TableRow key={index}>
             <TableCell>{transaction?.created_by_name}</TableCell>
-            <TableCell>{formatDate(transaction?.created_at)}</TableCell>
+            <TableCell>{formatDateShort(transaction?.created_at)}</TableCell>
 
             <TableCell>{transaction?.amount}</TableCell>
             <TableCell>

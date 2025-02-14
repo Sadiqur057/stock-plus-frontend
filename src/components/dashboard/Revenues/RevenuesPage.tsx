@@ -43,11 +43,8 @@ import {
 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
-import { beautifyDate } from "@/lib/utils";
+import { formatDateShort } from "@/lib/utils";
 import RevenueOption from "./RevenuesOption/RevenuesOption";
-// import CustomerDropdown, {
-//   Customer,
-// } from "@/components/shared/Dropdown/CustomerDropdown";
 import DateRange from "@/components/shared/DatePicker/DateRange";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { Customer } from "@/types/invoice.type";
@@ -59,16 +56,9 @@ const breadcrumbList = [
 ];
 
 const RevenuesPage = () => {
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
   const [startDate, setStartDate] = React.useState<Date>();
   const [endDate, setEndDate] = React.useState<Date>();
-  // const [customer, setCustomer] = useState<Customer>({
-  //   _id: "",
-  //   name: "",
-  //   email: "",
-  //   phone: "",
-  //   address: "",
-  // });
+
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
@@ -146,7 +136,6 @@ const RevenuesPage = () => {
               endDate={endDate}
               setEndDate={setEndDate}
             />
-            {/* <CustomerDropdown setCustomer={setCustomer} label={false} /> */}
           </div>
           <div className="relative flex items-center mt-4 md:mt-0">
             <span className="absolute">
@@ -188,7 +177,7 @@ const RevenuesPage = () => {
                         <TableCell>{revenue?.revenue}</TableCell>
                         <TableCell>
                           {" "}
-                          {beautifyDate(revenue?.created_at)}
+                          {formatDateShort(revenue?.created_at)}
                         </TableCell>
                         <TableCell>
                           <div

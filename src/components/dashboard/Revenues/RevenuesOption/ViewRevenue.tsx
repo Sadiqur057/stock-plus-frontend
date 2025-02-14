@@ -2,7 +2,7 @@ import {
   CalendarClock,
 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
-import { beautifyDate, getFormattedPrice } from "@/lib/utils";
+import { formatDate, getFormattedPrice } from "@/lib/utils";
 import { RevenueType } from "../RevenuesPage";
 import { Separator } from "@/components/ui/separator";
 
@@ -27,7 +27,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
           </p>
           <div className="sm:text-right">
             <p className="text-sm text-muted-foreground flex gap-2 items-center">
-              <CalendarClock size="16" /> {beautifyDate(data?.created_at)}
+              <CalendarClock size="16" /> {formatDate(data?.created_at)}
             </p>
           </div>
         </div>

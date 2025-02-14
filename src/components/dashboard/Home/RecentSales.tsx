@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate } from "@/lib/utils";
+import { formatDateShort } from "@/lib/utils";
 import { Invoice } from "@/types/invoice.type";
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
@@ -20,7 +20,7 @@ export function RecentSales({ invoices }: Props) {
       <SectionHeader
         buttonText="View All"
         header="Recent Invoices"
-        text={`You have created ${invoices?.length} invoices.`}
+        text={`Invoice from recent sales`}
         url="/dashboard/invoices"
       />
       {invoices?.length ? (
@@ -47,7 +47,7 @@ export function RecentSales({ invoices }: Props) {
                   <TableCell>{invoice?.total_cost?.total}</TableCell>
                   <TableCell>
                     {invoice?.created_at &&
-                      formatDate(invoice?.created_at)}
+                      formatDateShort(invoice?.created_at)}
                   </TableCell>
                   <TableCell>{invoice?.total_cost?.total_due}</TableCell>
                   <TableCell>

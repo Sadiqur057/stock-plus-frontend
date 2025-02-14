@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import SectionHeader from "./SectionHeader";
 import { Invoice } from "@/types/invoice.type";
-import { formatDate } from "@/lib/utils";
+import { formatDateShort } from "@/lib/utils";
 import EmptyMessage from "./EmptyMessage";
 
 type Props = {
@@ -24,7 +24,7 @@ export default function RecentRevenue({ revenues }: Props) {
       <SectionHeader
         buttonText="View All"
         header="Recent Revenues"
-        text={`All the revenue generated from invoices`}
+        text={`Recent revenue from invoices`}
         url="/dashboard/revenues"
       />
 
@@ -44,7 +44,7 @@ export default function RecentRevenue({ revenues }: Props) {
             {revenues?.slice(0, 5)?.map((item) => (
               <TableRow key={item?._id}>
                 <TableCell>{item?.customer?.name}</TableCell>
-                <TableCell>{formatDate(item?.created_at)}</TableCell>
+                <TableCell>{formatDateShort(item?.created_at)}</TableCell>
                 <TableCell>{item?.total_cost?.revenue}</TableCell>
                 <TableCell>
                   <div

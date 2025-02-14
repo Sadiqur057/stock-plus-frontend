@@ -38,7 +38,7 @@ import { CloudDownload, FolderUp } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
 import TransactionOption from "./TransactionOption/TransactionOption";
-import { formatDate } from "@/lib/utils";
+import { formatDateShort } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 const breadcrumbList = [
   {
@@ -189,7 +189,7 @@ const TransactionPage = () => {
                           </span>
                         </TableCell>
                         <TableCell>
-                          {formatDate(transaction?.created_at)}
+                          {formatDateShort(transaction?.created_at)}
                         </TableCell>
                         <TableCell>
                           <TransactionOption

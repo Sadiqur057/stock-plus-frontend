@@ -1,5 +1,5 @@
 import { Wallet } from "lucide-react";
-import { getFormattedDate, getFormattedPrice } from "@/lib/utils";
+import { formatDateShort, getFormattedPrice } from "@/lib/utils";
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
 
@@ -26,7 +26,7 @@ export function RecentTransactions({ transactions }: Props) {
       <SectionHeader
         buttonText="View All"
         header="Recent Transaction"
-        text={`You got ${transactions?.length} Transaction this month.`}
+        text={`Transaction for recent payments`}
         url="/dashboard/transactions"
       />
 
@@ -44,7 +44,7 @@ export function RecentTransactions({ transactions }: Props) {
                       {transaction?.customer?.name}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {getFormattedDate(transaction?.created_at)}
+                      {formatDateShort(transaction?.created_at)}
                     </p>
                   </div>
                 </div>

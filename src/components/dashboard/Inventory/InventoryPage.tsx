@@ -29,7 +29,7 @@ import Link from "next/link";
 import InventoryOption from "./InventoryOption";
 import { CalculationShape } from "../Invoice/CreateInvoicePage";
 import { Customer, Product } from "@/types/invoice.type";
-import { formatDate, getCurrency } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import InvoiceSummary from "../Invoice/InvoiceSummary";
 import { format } from "date-fns";
@@ -206,7 +206,7 @@ const InventoryPage = () => {
                         <TableCell>{item?.total_cost?.total}</TableCell>
                         <TableCell>{item?.total_cost?.due}</TableCell>
                         <TableCell>
-                          {item?.created_at && formatDate(item?.created_at)}
+                          {item?.created_at && formatDateShort(item?.created_at)}
                         </TableCell>
                         <TableCell>
                           {" "}
