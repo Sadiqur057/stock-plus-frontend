@@ -23,11 +23,14 @@ export type TransactionType = {
   };
   payment_method: string;
   payment_description: string;
+  transaction_desc: string;
   _id: string;
   created_by_email: string;
   created_by_name: string;
+  invoice_id: string;
   created_at: string;
   amount: number;
+  transaction_type: string;
 };
 
 import { useQuery } from "@tanstack/react-query";
@@ -117,17 +120,6 @@ const TransactionPage = () => {
               <FolderUp />
               <span>Export</span>
             </Button>
-            {/* <Modal
-              isOpen={isOpen}
-              size="sm"
-              onClose={() => setIsOpen(false)}
-              title="Add New Transaction"
-            >
-              <AddTransaction
-                refetch={refetch}
-                closeModal={() => setIsOpen(false)}
-              />
-            </Modal> */}
           </div>
         </div>
 
@@ -168,6 +160,7 @@ const TransactionPage = () => {
                     <TableHead>
                       Amount <span className="text-[10px]">(BDT)</span>
                     </TableHead>
+                    <TableHead>Type</TableHead>
                     <TableHead>Time</TableHead>
                     <TableHead></TableHead>
                   </TableRow>
@@ -185,11 +178,24 @@ const TransactionPage = () => {
                         <TableCell>{transaction?.payment_method}</TableCell>
                         <TableCell>{transaction?.amount}</TableCell>
                         <TableCell>
+                          <span
+                            className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
+                              transaction?.transaction_type === "in"
+                                ? "bg-green-100 text-green-700"
+                                : "bg-red-100 text-red-700"
+                            }`}
+                          >
+                            {transaction?.transaction_desc}
+                          </span>
+                        </TableCell>
+                        <TableCell>
                           {formatDate(transaction?.created_at)}
                         </TableCell>
                         <TableCell>
                           <TransactionOption
                             refetch={refetch}
+                            invoiceId={transaction?.invoice_id}
+                            transactionDesc={transaction?.transaction_desc}
                             transactionId={transaction?._id}
                           />
                         </TableCell>
