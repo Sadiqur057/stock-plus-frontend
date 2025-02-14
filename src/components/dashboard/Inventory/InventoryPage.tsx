@@ -143,7 +143,7 @@ const InventoryPage = () => {
           <div className="flex gap-4">
             <Button onClick={() => setIsModalOpen(true)}>
               <CalendarSearch />
-              Date Filter
+              <span className="hidden md:block">Date </span>Filter
             </Button>
             <Button type="button" variant="outline" onClick={handleReset}>
               <RotateCcw className="h-4 w-4" />
