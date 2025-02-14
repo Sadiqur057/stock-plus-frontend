@@ -56,7 +56,7 @@ const data = {
       isActive: true,
       items: [
         {
-          title: "Purchase Invoices",
+          title: "Invoices",
           url: "/dashboard/inventory/reports",
         },
         {
@@ -76,7 +76,7 @@ const data = {
       icon: NotepadText,
       items: [
         {
-          title: "Sales Invoices",
+          title: "Invoices",
           url: "/dashboard/invoices",
         },
         {
