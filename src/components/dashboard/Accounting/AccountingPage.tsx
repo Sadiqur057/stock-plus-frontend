@@ -11,7 +11,8 @@ import { format } from "date-fns";
 import { Modal } from "@/components/shared/Modal/Modal";
 import { DateFilter } from "../Filter/DateFilter";
 import { Button } from "@/components/ui/button";
-import { CalendarSearch, RotateCcw } from "lucide-react";
+import { CalendarSearch, RotateCcw, Wallet } from "lucide-react";
+import AddExpense from "./AddExpense";
 
 const breadcrumbList = [
   {
@@ -21,7 +22,8 @@ const breadcrumbList = [
 ];
 
 export default function AccountingPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isTransactionModalOpen, setIsTransactionModalOpen] = useState(false);
   const [startDate, setStartDate] = useState<string | Date | undefined>();
   const [endDate, setEndDate] = useState<string | Date | undefined>();
   const [duration, setDuration] = useState<string>("");
@@ -47,7 +49,7 @@ export default function AccountingPage() {
 
   const handleApplyDateFilter = async () => {
     refetch();
-    setIsModalOpen(false);
+    setIsFilterModalOpen(false);
   };
   const handleReset = () => {
     setStartDate("");
@@ -67,19 +69,29 @@ export default function AccountingPage() {
       ) : (
         <>
           <div className="flex gap-4 flex-wrap mb-4 justify-between items-center">
-            <p className="font-medium">Customize Accounting</p>
+            <Button onClick={() => setIsTransactionModalOpen(true)} className="">
+              <Wallet />
+              Add Expense
+            </Button>
             <div className="flex gap-4">
-              <Button onClick={() => setIsModalOpen(true)}>
+              <Button onClick={() => setIsFilterModalOpen(true)} className="">
                 <CalendarSearch />
-                Date Filter
+                <span className="hidden md:block">Date </span>Filter
               </Button>
               <Button type="button" variant="outline" onClick={handleReset}>
                 <RotateCcw className="h-4 w-4" />
               </Button>
             </div>
             <Modal
-              isOpen={isModalOpen}
-              onClose={() => setIsModalOpen(false)}
+              isOpen={isTransactionModalOpen}
+              onClose={() => setIsTransactionModalOpen(false)}
+              title="Update Date Filter"
+            >
+              <AddExpense closeModal={() => setIsTransactionModalOpen(false)} />
+            </Modal>
+            <Modal
+              isOpen={isFilterModalOpen}
+              onClose={() => setIsFilterModalOpen(false)}
               title="Update Date Filter"
             >
               <DateFilter
