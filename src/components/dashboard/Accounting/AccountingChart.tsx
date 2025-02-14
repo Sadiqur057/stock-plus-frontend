@@ -14,6 +14,7 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CustomTooltip } from "../Home/CustomToolTip";
+import EmptyMessage from "../Home/EmptyMessage";
 
 const chartConfig = {
   expense: {
@@ -59,39 +60,43 @@ export function AccountingChart({ chartData }: TProps) {
           </Link>
         </div>
       </div>
-      <ResponsiveContainer width="100%" height={350}>
-        <ChartContainer config={chartConfig}>
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="name"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <ChartTooltip
-              cursor={false}
-              content={
-                <CustomTooltip
-                  labels={{
-                    month: "Month",
-                    sales: "Sales:BDT",
-                    expense: "Expense:BDT",
-                  }}
-                />
-              }
-            />
-            <Bar dataKey="expense" className="fill-[#2563ea]" radius={4} />
-            <Bar
-              dataKey="sales"
-              className="fill-[#5fa9f8]"
-              fill="var(--color-sales)"
-              radius={4}
-            />
-          </BarChart>
-        </ChartContainer>
-      </ResponsiveContainer>
+      {chartData?.length ? (
+        <ResponsiveContainer width="100%" height={350}>
+          <ChartContainer config={chartConfig}>
+            <BarChart accessibilityLayer data={chartData}>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="name"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
+              <ChartTooltip
+                cursor={false}
+                content={
+                  <CustomTooltip
+                    labels={{
+                      month: "Month",
+                      sales: "Sales:BDT",
+                      expense: "Expense:BDT",
+                    }}
+                  />
+                }
+              />
+              <Bar dataKey="expense" className="fill-[#2563ea]" radius={4} />
+              <Bar
+                dataKey="sales"
+                className="fill-[#5fa9f8]"
+                fill="var(--color-sales)"
+                radius={4}
+              />
+            </BarChart>
+          </ChartContainer>
+        </ResponsiveContainer>
+      ) : (
+        <EmptyMessage />
+      )}
     </div>
   );
 }
