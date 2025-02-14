@@ -1,4 +1,4 @@
-import { Eye, MoreHorizontal, Trash2 } from "lucide-react";
+import { Eye, FileText, MoreHorizontal, Trash2 } from "lucide-react";
 import { SidebarMenuAction, SidebarMenuItem } from "@/components/ui/sidebar";
 import {
   DropdownMenu,
@@ -15,19 +15,26 @@ import api from "@/interceptors/api";
 import ViewTransaction from "./ViewTransaction";
 import toast from "react-hot-toast";
 import { TransactionType } from "../TransactionPage";
+import Link from "next/link";
 
 type Props = {
   transactionId: string;
+  transactionDesc: string;
+  invoiceId: string;
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<TransactionType[], Error>>;
 };
 
-const TransactionOption = ({ transactionId, refetch }: Props) => {
+const TransactionOption = ({
+  transactionId,
+  refetch,
+  transactionDesc,
+  invoiceId,
+}: Props) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
-  // const [isEditModalOpen, setIsEditModalOpen] = useState<boolean>(false);
   const [selectedTransactionId, setSelectedTransactionId] =
     useState<string>("");
   const [selectedTransactionData, setSelectedTransactionData] =
@@ -37,12 +44,15 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
         email: "",
       },
       payment_method: "",
+      invoice_id: "",
       payment_description: "",
+      transaction_desc: "",
       _id: "",
       created_by_email: "",
       created_by_name: "",
       created_at: "",
       amount: 0,
+      transaction_type: ""
     });
 
   const handleFetchTransactionData = async (id: string) => {
@@ -52,7 +62,6 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
       const result = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/transaction/${id}`
       );
-      console.log("transaction result", result);
       setSelectedTransactionData(result?.data?.data);
     } finally {
       setIsLoading(false);
@@ -92,6 +101,20 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
             side={"left"}
             align={"start"}
           >
+            <DropdownMenuItem>
+              <Link
+                href={`/dashboard/${
+                  transactionDesc === "purchases"
+                    ? "inventory/reports/"
+                    : "invoices/"
+                }/${invoiceId}`}
+                className="flex gap-2 items-center"
+              >
+                <FileText className="text-muted-foreground w-4" />
+                <span>View Invoice</span>
+              </Link>
+            </DropdownMenuItem>
+
             <DropdownMenuItem
               onClick={() => {
                 setIsViewModalOpen(true);
@@ -101,17 +124,6 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
               <Eye className="text-muted-foreground" />
               <span>View Transaction</span>
             </DropdownMenuItem>
-
-            {/* <DropdownMenuItem
-              onClick={() => {
-                setIsEditModalOpen(true);
-                handleFetchTransactionData(transactionId);
-                setSelectedTransactionId(transactionId);
-              }}
-            >
-              <FilePenLine className="text-muted-foreground" />
-              <span>Edit Transaction</span>
-            </DropdownMenuItem> */}
 
             <DropdownMenuSeparator />
             <DropdownMenuItem
@@ -140,22 +152,6 @@ const TransactionOption = ({ transactionId, refetch }: Props) => {
           />
         </Modal>
       )}
-      {/* {isEditModalOpen && (
-        <Modal
-          isOpen={isEditModalOpen}
-          onClose={() => setIsEditModalOpen(false)}
-          title="Update Transaction Information"
-          size="lg"
-        >
-          <UpdateTransaction
-            transactionData={selectedTransactionData}
-            isLoading={isLoading}
-            closeModal={() => setIsEditModalOpen(false)}
-            transactionId={selectedTransactionId}
-            refetch={refetch}
-          />
-        </Modal>
-      )} */}
 
       {isDeleteModalOpen && (
         <Modal
