@@ -39,12 +39,20 @@ type Props = {
 };
 const AccountingSummary = ({ summary }: Props) => {
   const [newVatRate, setNewVatRate] = useState("");
-  const [vatRate, setVatRate] = useState(10);
+
   const { data: currencies } = useQuery({
     queryKey: ["currencies"],
     queryFn: async () => {
       const result = await api.get("/currencies");
       return result?.data?.data;
+    },
+  });
+
+  const { data: vat, refetch } = useQuery({
+    queryKey: ["vat"],
+    queryFn: async () => {
+      const result = await api.get("/vat");
+      return result?.data?.vat_rate;
     },
   });
 
@@ -70,6 +78,7 @@ const AccountingSummary = ({ summary }: Props) => {
         );
       }
       toast.success(result?.data?.message);
+      refetch();
     },
   });
   const { mutate: updateCurrency } = useMutation({
@@ -112,7 +121,6 @@ const AccountingSummary = ({ summary }: Props) => {
   const updateVatRate = () => {
     if (newVatRate && !isNaN(Number.parseFloat(newVatRate))) {
       const vat = Number.parseFloat(newVatRate);
-      setVatRate(vat);
       setNewVatRate("");
       const data = { company_vat_rate: vat };
       updateVat(data);
@@ -239,7 +247,7 @@ const AccountingSummary = ({ summary }: Props) => {
                 <p className="text-sm font-medium leading-none">
                   Current VAT Rate
                 </p>
-                <p className="text-lg font-bold">{vatRate}%</p>
+                <p className="text-lg font-bold">{vat}%</p>
               </div>
             </div>
             <div className="flex mt-6 shadow rounded-3xl items-center pr-1 bg-white">
