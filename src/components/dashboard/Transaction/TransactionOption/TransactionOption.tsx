@@ -52,7 +52,7 @@ const TransactionOption = ({
       created_by_name: "",
       created_at: "",
       amount: 0,
-      transaction_type: ""
+      transaction_type: "",
     });
 
   const handleFetchTransactionData = async (id: string) => {
@@ -101,19 +101,23 @@ const TransactionOption = ({
             side={"left"}
             align={"start"}
           >
-            <DropdownMenuItem>
-              <Link
-                href={`/dashboard/${
-                  transactionDesc === "purchases"
-                    ? "inventory/reports/"
-                    : "invoices/"
-                }/${invoiceId}`}
-                className="flex gap-2 items-center"
-              >
-                <FileText className="text-muted-foreground w-4" />
-                <span>View Invoice</span>
-              </Link>
-            </DropdownMenuItem>
+            {invoiceId ? (
+              <DropdownMenuItem>
+                <Link
+                  href={`/dashboard/${
+                    transactionDesc === "purchases"
+                      ? "inventory/reports/"
+                      : "invoices/"
+                  }/${invoiceId}`}
+                  className="flex gap-2 items-center"
+                >
+                  <FileText className="text-muted-foreground w-4" />
+                  <span>View Invoice</span>
+                </Link>
+              </DropdownMenuItem>
+            ) : (
+              ""
+            )}
 
             <DropdownMenuItem
               onClick={() => {

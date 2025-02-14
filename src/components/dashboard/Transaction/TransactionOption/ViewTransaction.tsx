@@ -29,31 +29,36 @@ const ViewTransaction = ({ transactionData, isLoading }: TransactionProps) => {
       <div className="space-y-6">
         <div className="grid gap-6 md:grid-cols-2">
           <div className="space-y-6">
-            <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                {transactionData?.customer
-                  ? "Customer Information"
-                  : "Supplier Information"}
-              </h3>
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-gray-600" />
-                  <span>
-                    {transactionData?.customer
-                      ? transactionData?.customer?.name
-                      : transactionData?.supplier?.name}
-                  </span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4 text-gray-600" />
-                  <span>
-                    {transactionData?.customer
-                      ? transactionData?.customer?.email
-                      : transactionData?.supplier?.email}
-                  </span>
+            {transactionData?.invoice_id ? (
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                  {transactionData?.customer
+                    ? "Customer Information"
+                    : "Supplier Information"}
+                </h3>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <User className="h-4 w-4 text-gray-600" />
+                    <span>
+                      {transactionData?.customer
+                        ? transactionData?.customer?.name
+                        : transactionData?.supplier?.name}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Mail className="h-4 w-4 text-gray-600" />
+                    <span>
+                      {transactionData?.customer
+                        ? transactionData?.customer?.email
+                        : transactionData?.supplier?.email}
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
+
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-2">
                 Created By
