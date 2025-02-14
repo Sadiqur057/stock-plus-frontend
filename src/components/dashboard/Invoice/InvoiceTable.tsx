@@ -60,6 +60,8 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
                   className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
                     invoice?.total_cost?.status === "paid"
                       ? "bg-green-100 text-green-800"
+                      : invoice?.total_cost?.status === "unpaid"
+                      ? "bg-red-100 text-red-800"
                       : "bg-yellow-100 text-yellow-800"
                   }`}
                 >

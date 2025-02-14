@@ -152,11 +152,10 @@ export default function InvoicesPage() {
         <ScreenLoader />
       ) : (
         <section>
-          {invoiceData?.invoices?.length ? (
+          {invoiceData?.invoices?.length>0 ? (
             <>
               <InvoiceSummary summary={invoiceData?.invoice_summary} />
               <div className="overflow-x-auto">
-                length{invoiceData?.invoices.length}
                 <InvoiceTable
                   invoices={invoiceData?.invoices}
                   refetch={refetch}
