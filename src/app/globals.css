@@ -20,7 +20,7 @@ body {
 }
 .react-select__placeholder,
 .react-select__single-value {
-  padding: 10px 6px;
+  padding: 8.5px 6px;
   color: black !important;
   font-size: 14px;
 }
@@ -143,5 +143,10 @@ body {
 @media screen and (max-width: 1024px) {
   .react-select__control {
     width: fit-content;
+  }
+}
+@media screen and (max-width: 640px) {
+  .react-select__control {
+   max-width: 186px;
   }
 }
