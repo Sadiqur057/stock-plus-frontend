@@ -61,7 +61,7 @@ export function DateFilter({
             setStartDate("");
           }}
         >
-          <SelectTrigger className="py-[22px] w-full">
+          <SelectTrigger className="py-[21px] w-full">
             <SelectValue placeholder="Select duration" />
           </SelectTrigger>
           <SelectContent>

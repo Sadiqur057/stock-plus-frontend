@@ -26,7 +26,7 @@ const StatusFilter = ({
   return (
     <div className="xl:w-[210px]">
       <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-        <SelectTrigger className="py-[22px] min-w-[160px] xl:w-[210px]">
+        <SelectTrigger className="py-[21px] min-w-[160px] xl:w-[210px]">
           <SelectValue placeholder="Select status" />
         </SelectTrigger>
         <SelectContent>
