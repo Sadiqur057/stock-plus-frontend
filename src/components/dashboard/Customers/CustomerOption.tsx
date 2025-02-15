@@ -42,7 +42,6 @@ const CustomerOption = ({ customerId, refetch }: Props) => {
 
   const handleFetchCustomerData = async (id: string) => {
     setIsLoading(true);
-    console.log("id", id);
     try {
       const result = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/customer/${id}`
@@ -64,7 +63,7 @@ const CustomerOption = ({ customerId, refetch }: Props) => {
       toast.success(result?.data?.message);
       refetch();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -136,7 +135,7 @@ const CustomerOption = ({ customerId, refetch }: Props) => {
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           title="Update Customer Information"
-          size="lg"
+          size="sm"
         >
           <UpdateCustomer
             customerData={selectedCustomerData}

@@ -18,17 +18,17 @@ export type SupplierType = {
   phone: string;
   address: string;
   _id: string;
-  added_by: string
+  added_by: string;
 };
 
 import { useQuery } from "@tanstack/react-query";
-import { CirclePlus, CloudDownload } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { Modal } from "@/components/shared/Modal/Modal";
 import AddSupplier from "./AddSupplier";
-import toast from "react-hot-toast";
 import SupplierOption from "./SupplierOption";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import EmptyMessage from "../Home/EmptyMessage";
 
 const breadcrumbList = [
   {
@@ -38,12 +38,11 @@ const breadcrumbList = [
 ];
 const SuppliersPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  
-  //pagination
+
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -53,20 +52,22 @@ const SuppliersPage = () => {
     setLimit(newLimit);
     setCurrentPage(1);
   };
+
   const {
-    data: suppliers,
+    data: supplierData,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["suppliers"],
+    queryKey: [currentPage, limit],
     queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/suppliers`
+      const res = await api.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/suppliers`,
+        {
+          params: { limit: limit, page: currentPage },
+        }
       );
-      if (!result?.data?.success) {
-        return toast.error(result?.data?.message || "Something went wrong");
-      }
-      return result?.data?.data;
+      setTotalPages(res?.data?.data?.pagination?.totalPages);
+      return res?.data?.data;
     },
   });
 
@@ -75,7 +76,7 @@ const SuppliersPage = () => {
       <BreadCrumb breadcrumbList={breadcrumbList} />
 
       <section>
-        <div className="sm:flex sm:items-center sm:justify-between">
+        <div className="sm:flex sm:items-center sm:justify-between mb-6">
           <div>
             <div className="flex items-center gap-x-3">
               <h2 className="text-lg font-medium text-gray-800 dark:text-white">
@@ -83,7 +84,7 @@ const SuppliersPage = () => {
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                12 Suppliers
+                {supplierData?.pagination?.totalDocuments || 0} Suppliers
               </span>
             </div>
 
@@ -93,11 +94,6 @@ const SuppliersPage = () => {
           </div>
 
           <div className="flex items-center mt-4 gap-x-3">
-            <Button variant={"outline"} className="py-3">
-              <CloudDownload />
-              <span>Import</span>
-            </Button>
-
             <Button className="py-3" onClick={() => setIsOpen(true)}>
               <CirclePlus />
               <span>Add Supplier</span>
@@ -116,32 +112,9 @@ const SuppliersPage = () => {
           </div>
         </div>
 
-        <div className="my-6 md:flex md:items-center md:justify-between">
-          <div className="relative flex items-center mt-4 md:mt-0">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 mx-3 text-gray-400 dark:text-gray-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </span>
-
-            <input type="text" placeholder="Search" className="searchBox" />
-          </div>
-        </div>
-
         {isLoading ? (
           <Loader />
-        ) : (
+        ) : supplierData?.suppliers?.length ? (
           <>
             <div>
               <Table className="border">
@@ -156,25 +129,27 @@ const SuppliersPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {suppliers?.map((supplier: SupplierType, index:number) => (
-                    <TableRow key={supplier._id}>
-                      <TableCell className="font-medium">
-                        {index+1}.
-                      </TableCell>
-                      <TableCell className="font-medium">
-                        {supplier?.name}
-                      </TableCell>
-                      <TableCell>{supplier?.email}</TableCell>
-                      <TableCell>{supplier?.phone}</TableCell>
-                      <TableCell>{supplier?.address}</TableCell>
-                      <TableCell>
-                        <SupplierOption
-                          refetch={refetch}
-                          supplierId={supplier?._id}
-                        />
-                      </TableCell>
-                    </TableRow>
-                  ))}
+                  {supplierData?.suppliers?.map(
+                    (supplier: SupplierType, index: number) => (
+                      <TableRow key={supplier._id}>
+                        <TableCell className="font-medium">
+                          {(currentPage - 1) * limit + (index + 1)}.
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {supplier?.name}
+                        </TableCell>
+                        <TableCell>{supplier?.email}</TableCell>
+                        <TableCell>{supplier?.phone}</TableCell>
+                        <TableCell>{supplier?.address}</TableCell>
+                        <TableCell>
+                          <SupplierOption
+                            refetch={refetch}
+                            supplierId={supplier?._id}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -186,6 +161,10 @@ const SuppliersPage = () => {
               onLimitChange={handleLimitChange}
             />
           </>
+        ) : (
+          <div className="py-20">
+            <EmptyMessage />
+          </div>
         )}
       </section>
     </>

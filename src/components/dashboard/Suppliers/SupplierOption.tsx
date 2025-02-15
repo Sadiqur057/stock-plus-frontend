@@ -42,7 +42,6 @@ const SupplierOption = ({ supplierId, refetch }: Props) => {
 
   const handleFetchSupplierData = async (id: string) => {
     setIsLoading(true);
-    console.log("id", id);
     try {
       const result = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/supplier/${id}`
@@ -55,16 +54,14 @@ const SupplierOption = ({ supplierId, refetch }: Props) => {
 
   const handleDeleteSupplier = async (id: string) => {
     try {
-      const result = await api.delete(
-        `${process.env.NEXT_PUBLIC_API_URL}/delete-supplier/${id}`
-      );
+      const result = await api.delete(`/delete-supplier/${id}`);
       if (!result.data?.success) {
         return toast.error(result?.data?.message || "Something went wrong!");
       }
       toast.success(result?.data?.message);
       refetch();
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   };
 
@@ -73,7 +70,10 @@ const SupplierOption = ({ supplierId, refetch }: Props) => {
       <SidebarMenuItem className="list-none border h-8 border-none">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <SidebarMenuAction className="bg-gray-100 border w-6 rounded-full" showOnHover>
+            <SidebarMenuAction
+              className="bg-gray-100 border w-6 rounded-full"
+              showOnHover
+            >
               <MoreHorizontal />
               <span className="sr-only">More</span>
             </SidebarMenuAction>
@@ -136,7 +136,7 @@ const SupplierOption = ({ supplierId, refetch }: Props) => {
           isOpen={isEditModalOpen}
           onClose={() => setIsEditModalOpen(false)}
           title="Update Supplier Information"
-          size="lg"
+          size="sm"
         >
           <UpdateSupplier
             supplierData={selectedSupplierData}

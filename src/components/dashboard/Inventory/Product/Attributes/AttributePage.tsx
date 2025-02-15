@@ -23,9 +23,9 @@ import { CirclePlus, CloudDownload } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { Modal } from "@/components/shared/Modal/Modal";
 import AddAttribute from "./AddAttribute";
-import toast from "react-hot-toast";
 import AttributeOption from "./AttributeOption";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import EmptyMessage from "@/components/dashboard/Home/EmptyMessage";
 
 const breadcrumbList = [
   {
@@ -36,11 +36,10 @@ const breadcrumbList = [
 const AttributesPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  //pagination
+  // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const totalItems = 1000;
-  const totalPages = Math.ceil(totalItems / limit);
+  const [totalPages, setTotalPages] = useState(1);
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -52,19 +51,17 @@ const AttributesPage = () => {
   };
 
   const {
-    data: attributes,
+    data: attributeData,
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: ["attributes"],
+    queryKey: [currentPage, limit],
     queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/attributes`
-      );
-      if (!result?.data?.success) {
-        return toast.error(result?.data?.message || "Something went wrong");
-      }
-      return result?.data?.data;
+      const res = await api.get(`/attributes`, {
+        params: { limit: limit, page: currentPage },
+      });
+      setTotalPages(res?.data?.data?.pagination?.totalPages);
+      return res?.data?.data;
     },
   });
 
@@ -73,7 +70,7 @@ const AttributesPage = () => {
       <BreadCrumb breadcrumbList={breadcrumbList} />
 
       <section>
-        <div className="sm:flex sm:items-center sm:justify-between mb-4 lg:mb-6">
+        <div className="sm:flex sm:items-center sm:justify-between mb-6">
           <div>
             <div className="flex items-center gap-x-3">
               <h2 className="text-lg font-medium text-gray-800 dark:text-white">
@@ -81,7 +78,7 @@ const AttributesPage = () => {
               </h2>
 
               <span className="px-3 py-1 text-xs text-blue-800 bg-blue-50 rounded-md dark:bg-gray-800 dark:text-blue-400">
-                12 Attributes
+                {attributeData?.pagination?.totalDocuments || 0} Attributes
               </span>
             </div>
 
@@ -116,7 +113,7 @@ const AttributesPage = () => {
 
         {isLoading ? (
           <Loader />
-        ) : (
+        ) : attributeData?.attributes?.length ? (
           <>
             <div>
               <Table className="border">
@@ -129,27 +126,25 @@ const AttributesPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {Array.isArray(attributes)
-                    ? attributes.map(
-                        (attribute: AttributeType, index: number) => (
-                          <TableRow key={attribute._id}>
-                            <TableCell className="font-medium">
-                              {index + 1}.
-                            </TableCell>
-                            <TableCell className="font-medium">
-                              {attribute?.name}
-                            </TableCell>
-                            <TableCell>{attribute?.description}</TableCell>
-                            <TableCell>
-                              <AttributeOption
-                                refetch={refetch}
-                                attributeId={attribute?._id}
-                              />
-                            </TableCell>
-                          </TableRow>
-                        )
-                      )
-                    : null}
+                  {attributeData?.attributes.map(
+                    (attribute: AttributeType, index: number) => (
+                      <TableRow key={attribute._id}>
+                        <TableCell className="font-medium">
+                          {(currentPage - 1) * limit + (index + 1)}.
+                        </TableCell>
+                        <TableCell className="font-medium">
+                          {attribute?.name}
+                        </TableCell>
+                        <TableCell>{attribute?.description}</TableCell>
+                        <TableCell>
+                          <AttributeOption
+                            refetch={refetch}
+                            attributeId={attribute?._id}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    )
+                  )}
                 </TableBody>
               </Table>
             </div>
@@ -161,6 +156,10 @@ const AttributesPage = () => {
               onLimitChange={handleLimitChange}
             />
           </>
+        ) : (
+          <div className="py-20">
+            <EmptyMessage />
+          </div>
         )}
       </section>
     </>
