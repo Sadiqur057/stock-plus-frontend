@@ -11,6 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
+import { getCurrency } from "@/lib/utils";
 type InvoiceTableProps = {
   invoices: Invoice[];
   currentPage: number;
@@ -25,6 +26,7 @@ const InvoiceTable = ({
   currentPage,
   limit,
 }: InvoiceTableProps) => {
+  const currency = getCurrency();
   return (
     <div className="min-w-max">
       <Table className="border">
@@ -33,10 +35,10 @@ const InvoiceTable = ({
             <TableHead>No.</TableHead>
             <TableHead>Invoice To</TableHead>
             <TableHead>
-              Total <span className="text-[10px]">(BDT)</span>
+              Total <span className="text-[10px]">({currency})</span>
             </TableHead>
             <TableHead>
-              Due <span className="text-[10px]">(BDT)</span>
+              Due <span className="text-[10px]">({currency})</span>
             </TableHead>
             <TableHead>Created At</TableHead>
             <TableHead>Status</TableHead>

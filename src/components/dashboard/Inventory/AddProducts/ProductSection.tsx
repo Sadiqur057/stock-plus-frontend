@@ -17,6 +17,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getCurrency } from "@/lib/utils";
 
 interface Props {
   onTotalChange: React.Dispatch<React.SetStateAction<CalculationShape>>;
@@ -181,6 +182,7 @@ const ProductSection = ({ products, setProducts, onTotalChange }: Props) => {
       subtotal,
     }));
   }, [products, onTotalChange, calculateTotal]);
+  const currency = getCurrency();
   return (
     <div className="space-y-6 mb-6 lg:mb-8">
       <div className="overflow-x-auto">
@@ -195,7 +197,7 @@ const ProductSection = ({ products, setProducts, onTotalChange }: Props) => {
               <TableHead className="">Quantity</TableHead>
               <TableHead className="">Mark as</TableHead>
               <TableHead className="">
-                Total <span className="text-[10px]">(BDT)</span>
+                Total <span className="text-[10px]">({currency})</span>
               </TableHead>
               <TableHead className=""></TableHead>
             </TableRow>

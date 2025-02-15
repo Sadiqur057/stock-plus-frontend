@@ -2,7 +2,7 @@ import {
   CalendarClock,
 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
-import { formatDate, getFormattedPrice } from "@/lib/utils";
+import { formatDate, getCurrency, getFormattedPrice } from "@/lib/utils";
 import { RevenueType } from "../RevenuesPage";
 import { Separator } from "@/components/ui/separator";
 
@@ -18,6 +18,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
       </div>
     );
   }
+  const currency = getCurrency();
   return (
     <>
       <>
@@ -52,7 +53,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
                 Total Cost
               </p>
               <p className="text-xl md:text-2xl font-semibold">
-                BDT. {getFormattedPrice(data?.total_cost)}
+                {currency}. {getFormattedPrice(data?.total_cost)}
               </p>
             </div>
             <div className="space-y-1">
@@ -60,7 +61,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
                 Revenue
               </p>
               <p className="text-xl md:text-2xl font-semibold text-green-600">
-                BDT. {getFormattedPrice(data?.revenue)}
+                {currency}. {getFormattedPrice(data?.revenue)}
               </p>
             </div>
             <div className="space-y-1">
@@ -98,7 +99,7 @@ const ViewRevenue = ({ revenueData: data, isLoading }: RevenueProps) => {
                         Number(
                           (product.salePrice * product.quantity).toFixed(2)
                         )
-                      ) }  BDT.
+                      ) }  {currency}.
                     </p>
                   </div>
                 </li>

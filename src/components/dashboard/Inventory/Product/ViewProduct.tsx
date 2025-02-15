@@ -9,10 +9,17 @@ import {
 } from "@/components/ui/table";
 import { CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Package, DollarSign, Tag, Info, CalendarDays } from "lucide-react";
+import {
+  Building2,
+  Package,
+  DollarSign,
+  Tag,
+  Info,
+  CalendarDays,
+} from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { ProductShape } from "@/types/product.type";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCurrency } from "@/lib/utils";
 
 type productProps = {
   productData: ProductShape;
@@ -20,6 +27,7 @@ type productProps = {
 };
 
 const ViewProduct = ({ productData, isLoading }: productProps) => {
+  const currency = getCurrency();
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
@@ -46,7 +54,9 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
           <div className="sm:text-right gap-4 lg:gap-2 flex flex-col items-start lg:items-end">
             <div className="flex gap-2 text-muted-foreground text-sm lg:order-2">
               <CalendarDays className="h-4 w-4 mr-1" />
-              <span>{productData?.created_at && formatDate(productData?.created_at)}</span>
+              <span>
+                {productData?.created_at && formatDate(productData?.created_at)}
+              </span>
             </div>
             <Badge variant="secondary" className="h-fit lg:order-1">
               <Tag className="h-3 w-3 mr-1" />
@@ -68,7 +78,7 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
             <DollarSign className="h-5 w-5 text-primary" />
             <div>
               <p className="text-sm text-muted-foreground">Purchase Price</p>
-              <p className="font-medium">BDT. {productData?.purchasePrice}</p>
+              <p className="font-medium">{currency}. {productData?.purchasePrice}</p>
             </div>
           </div>
 
@@ -76,7 +86,7 @@ const ViewProduct = ({ productData, isLoading }: productProps) => {
             <Tag className="h-5 w-5 text-primary" />
             <div>
               <p className="text-sm text-muted-foreground">Sale Price</p>
-              <p className="font-medium">BDT. {productData?.salePrice}</p>
+              <p className="font-medium">{currency}. {productData?.salePrice}</p>
             </div>
           </div>
         </div>

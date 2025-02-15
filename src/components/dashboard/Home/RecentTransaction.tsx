@@ -1,5 +1,5 @@
 import { Wallet } from "lucide-react";
-import { formatDateShort, getFormattedPrice } from "@/lib/utils";
+import { formatDateShort, getCurrency, getFormattedPrice } from "@/lib/utils";
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
 
@@ -21,6 +21,7 @@ type Props = {
   transactions: Transaction[];
 };
 export function RecentTransactions({ transactions }: Props) {
+  const currency = getCurrency();
   return (
     <>
       <SectionHeader
@@ -50,7 +51,7 @@ export function RecentTransactions({ transactions }: Props) {
                 </div>
                 <div className="flex justify-end flex-col">
                   <p className="px-2.5 py-0.5 rounded-full text-sm font-semibold text-end">
-                    +{getFormattedPrice(transaction?.amount)} BDT
+                    +{getFormattedPrice(transaction?.amount)} {currency}
                   </p>
                   <p className="text-xs text-muted-foreground leading-none">
                     {transaction?.payment_method}

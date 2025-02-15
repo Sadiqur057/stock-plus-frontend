@@ -45,6 +45,7 @@ import {
   SelectGroup,
 } from "@/components/ui/select";
 import { Pagination } from "@/components/shared/pagination/Pagination";
+import { getCurrency } from "@/lib/utils";
 
 const ProductPage = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -130,6 +131,7 @@ const ProductPage = () => {
       link: "/dashboard/products",
     },
   ];
+  const currency = getCurrency();
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -273,7 +275,7 @@ const ProductPage = () => {
                     <TableHead>Company</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>
-                      Price <span className="text-[10px]">(BDT)</span>
+                      Price <span className="text-[10px]">({currency})</span>
                     </TableHead>
                     <TableHead>Attributes</TableHead>
                     <TableHead></TableHead>

@@ -10,6 +10,7 @@ import { Modal } from "@/components/shared/Modal/Modal";
 import AddPayment from "./AddPayment";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
+import { getCurrency } from "@/lib/utils";
 
 type setCalculation = (calculation: CalculationShape) => void;
 
@@ -39,7 +40,6 @@ export function CalculationSection({
     queryKey: ["vat"],
     queryFn: async () => {
       const result = await api.get("/vat");
-      console.log("checking result", result?.data);
       return result?.data?.vat_rate;
     },
   });
@@ -134,14 +134,14 @@ export function CalculationSection({
       payment_description: "",
     }),
   ];
-
+  const currency = getCurrency();
   return (
     <div className="space-y-4 flex gap-10">
       <div className="w-full max-w-md ml-auto space-y-3">
         <div className="flex justify-between items-center text-gray-600">
           <span>Subtotal:</span>
           <span className="font-medium">
-            BDT. {calculation.subtotal.toFixed(2)}
+            {currency}. {calculation.subtotal.toFixed(2)}
           </span>
         </div>
 
@@ -193,7 +193,7 @@ export function CalculationSection({
           <div className="flex justify-between items-center text-gray-600">
             <span>Discount:</span>
             <span className="font-medium">
-              BDT. {calculation.discount.toFixed(2)}
+              {currency}. {calculation.discount.toFixed(2)}
             </span>
           </div>
         ) : (
@@ -202,7 +202,9 @@ export function CalculationSection({
 
         <div className="flex justify-between items-center text-gray-600">
           <span>Vat ({vat ? vat : 0}%):</span>
-          <span className="font-medium">BDT. {calculation.tax.toFixed(2)}</span>
+          <span className="font-medium">
+            {currency}. {calculation.tax.toFixed(2)}
+          </span>
         </div>
         <div>
           <div className="flex justify-between items-center text-gray-600">
@@ -259,21 +261,23 @@ export function CalculationSection({
         <div className="h-px bg-gray-200 my-2" />
         <div className="flex justify-between items-center text-lg font-semibold">
           <span>Total:</span>
-          <span>BDT. {calculation.total.toFixed(2)}</span>
+          <span>
+            {currency}. {calculation.total.toFixed(2)}
+          </span>
         </div>
         {calculation.paid ? (
           <>
             <div className="flex justify-between items-center text-gray-600">
               <span>Paid:</span>
               <span className="font-medium">
-                BDT. {calculation.paid.toFixed(2)}
+                {currency}. {calculation.paid.toFixed(2)}
               </span>
             </div>
             <div className="h-px bg-gray-200 my-2" />
             <div className="flex justify-between items-center text-gray-600">
               <span>Due:</span>
               <span className="font-medium">
-                BDT. {(calculation.total - calculation.paid).toFixed(2)}
+                {currency}. {(calculation.total - calculation.paid).toFixed(2)}
               </span>
             </div>
           </>

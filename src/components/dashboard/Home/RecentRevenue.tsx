@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import SectionHeader from "./SectionHeader";
 import { Invoice } from "@/types/invoice.type";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import EmptyMessage from "./EmptyMessage";
 
 type Props = {
@@ -19,6 +19,7 @@ type Props = {
 };
 
 export default function RecentRevenue({ revenues }: Props) {
+  const currency = getCurrency();
   return (
     <div className="w-full max-w-3xl">
       <SectionHeader
@@ -35,7 +36,7 @@ export default function RecentRevenue({ revenues }: Props) {
               <TableHead>Name</TableHead>
               <TableHead>Time</TableHead>
               <TableHead>
-                Amount <span className="text-[10px]">(BDT)</span>
+                Amount <span className="text-[10px]">({currency})</span>
               </TableHead>
               <TableHead>Change</TableHead>
             </TableRow>
@@ -59,10 +60,7 @@ export default function RecentRevenue({ revenues }: Props) {
                     ) : (
                       <ArrowDownIcon className="mr-1 h-4 w-4" />
                     )}
-                    {Math.abs(item?.total_cost?.revenue_percentage).toFixed(
-                      2
-                    )}
-                    %
+                    {Math.abs(item?.total_cost?.revenue_percentage).toFixed(2)}%
                   </div>
                 </TableCell>
               </TableRow>

@@ -2,12 +2,13 @@ import { Separator } from "@/components/ui/separator";
 import { Clock, CreditCard, User, Mail, DollarSign } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import { TransactionType } from "../TransactionPage";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCurrency } from "@/lib/utils";
 type TransactionProps = {
   transactionData: TransactionType;
   isLoading: boolean;
 };
 const ViewTransaction = ({ transactionData, isLoading }: TransactionProps) => {
+  const currency = getCurrency();
   if (isLoading) {
     return (
       <div className="min-h-[50vh] flex items-center justify-center">
@@ -90,7 +91,7 @@ const ViewTransaction = ({ transactionData, isLoading }: TransactionProps) => {
                 <div className="flex items-center gap-2">
                   <DollarSign className="h-4 w-4 text-gray-600" />
                   <span className="font-semibold">
-                    {transactionData?.amount} BDT.
+                    {transactionData?.amount} {currency}.
                   </span>
                 </div>
               </div>

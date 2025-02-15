@@ -1,6 +1,6 @@
 import { CircleDollarSign, FileText, HandCoins, Wallet } from "lucide-react";
 import StatsCard from "./StatsCard";
-import { getFormattedPrice } from "@/lib/utils";
+import { getCurrency, getFormattedPrice } from "@/lib/utils";
 
 type Props = {
   summary: {
@@ -16,6 +16,7 @@ type Props = {
 };
 
 export function InvoiceStats({ summary }: Props) {
+  const currency = getCurrency()
   return (
     <section className="grid grid-cols-1 md:grid-col-2 xl:grid-cols-4 gap-4 lg:gap-6">
       <StatsCard
@@ -24,27 +25,27 @@ export function InvoiceStats({ summary }: Props) {
         value={summary?.invoice_count || "0"}
         comment={`Total sell is ${
           getFormattedPrice(summary?.total_sell) || 0
-        } BDT.`}
+        } ${currency}.`}
         trend="up"
       />
       <StatsCard
         title="Total Paid"
         Icon={HandCoins}
-        value={`${getFormattedPrice(summary?.total_payment) || 0}  BDT.`}
+        value={`${getFormattedPrice(summary?.total_payment) || 0}  ${currency}.`}
         comment={`${summary?.transaction_count} transactions so far`}
         trend="up"
       />
       <StatsCard
         title="Total Due"
         Icon={CircleDollarSign}
-        value={`${getFormattedPrice(summary?.due_invoice_amount) || 0}  BDT.`}
+        value={`${getFormattedPrice(summary?.due_invoice_amount) || 0}  ${currency}.`}
         comment={`${summary?.due_invoice_count} invoice need to be cleared`}
         trend="up"
       />
       <StatsCard
         title="Total Revenue"
         Icon={Wallet}
-        value={`${getFormattedPrice(summary?.total_revenue_amount) || 0}  BDT.`}
+        value={`${getFormattedPrice(summary?.total_revenue_amount) || 0}  ${currency}.`}
         comment={`From ${summary?.invoice_count || 0} invoices`}
         trend="up"
       />
@@ -54,7 +55,7 @@ export function InvoiceStats({ summary }: Props) {
         value={summary?.customer_count}
         comment={`${
           getFormattedPrice(summary?.total_sell) || 0
-        } BDT. purchased so far`}
+        } ${currency}. purchased so far`}
         trend="up"
       /> */}
     </section>

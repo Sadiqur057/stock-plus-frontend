@@ -17,6 +17,7 @@ import {
 import SectionHeader from "./SectionHeader";
 import { CustomTooltip } from "./CustomToolTip";
 import EmptyMessage from "./EmptyMessage";
+import { getCurrency } from "@/lib/utils";
 
 const chartConfig = {
   cost: {
@@ -40,7 +41,7 @@ type Props = {
 };
 
 export function RevenueOverview({ chartData }: Props) {
-  console.log("trying to see the data", chartData);
+  const currency = getCurrency();
   return (
     <div>
       <SectionHeader
@@ -67,8 +68,8 @@ export function RevenueOverview({ chartData }: Props) {
                   <CustomTooltip
                     labels={{
                       month: "Month",
-                      cost: "Total Cost:(BDT)",
-                      revenue: "Total Revenue:(BDT)",
+                      cost: `Total Cost:(${currency})`,
+                      revenue: `Total Revenue:(${currency})`,
                     }}
                   />
                 }

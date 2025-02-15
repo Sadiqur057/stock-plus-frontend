@@ -23,6 +23,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
+import { getCurrency } from "@/lib/utils";
 
 type Props = {
   closeModal: () => void;
@@ -117,12 +118,12 @@ const CreateTransaction = ({
     };
     mutate(data);
   };
-
+const currency = getCurrency();
   return (
     <div>
       <div className="flex justify-between mb-4">
         <p className="font-medium">Due Amount: </p>
-        <p>{due_amount} BDT.</p>
+        <p>{due_amount} {currency}.</p>
       </div>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-4 lg:space-y-6">

@@ -16,7 +16,7 @@ import { CalendarSearch, FolderUp, RotateCcw } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
 import TransactionOption from "./TransactionOption/TransactionOption";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import {
   Select,
@@ -117,7 +117,6 @@ const TransactionPage = () => {
       if (!result?.data?.success) {
         return toast.error(result?.data?.message || "Something went wrong");
       }
-      console.log(result?.data);
       setTotalPages(result?.data?.data?.pagination?.totalPages);
       return result?.data?.data;
     },
@@ -138,7 +137,7 @@ const TransactionPage = () => {
       refetch();
     }, 0);
   };
-
+  const currency = getCurrency();
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -239,7 +238,7 @@ const TransactionPage = () => {
                     <TableHead>Created By</TableHead>
                     <TableHead>Payment method</TableHead>
                     <TableHead>
-                      Amount <span className="text-[10px]">(BDT)</span>
+                      Amount <span className="text-[10px]">({currency})</span>
                     </TableHead>
                     <TableHead>Type</TableHead>
                     <TableHead>Time</TableHead>

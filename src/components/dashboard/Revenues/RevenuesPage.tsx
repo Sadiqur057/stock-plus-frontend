@@ -42,7 +42,7 @@ import {
 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import RevenueOption from "./RevenuesOption/RevenuesOption";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { Customer } from "@/types/invoice.type";
@@ -116,7 +116,7 @@ const RevenuesPage = () => {
       refetch();
     }, 0);
   };
-
+  const currency = getCurrency();
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -186,7 +186,7 @@ const RevenuesPage = () => {
                     <TableHead>No.</TableHead>
                     <TableHead>Customer Name</TableHead>
                     <TableHead>
-                      Amount <span className="text-[10px]">(BDT)</span>
+                      Amount <span className="text-[10px]">({currency})</span>
                     </TableHead>
                     <TableHead>Time</TableHead>
                     <TableHead>Percentage</TableHead>

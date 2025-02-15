@@ -9,6 +9,7 @@ import { CalculationShape, Product } from "./CreateInvoicePage";
 import api from "@/interceptors/api";
 import { useQuery } from "@tanstack/react-query";
 import toast from "react-hot-toast";
+import { getCurrency } from "@/lib/utils";
 // import toast from "react-hot-toast";
 
 interface ProductSectionProps {
@@ -132,7 +133,7 @@ export function ProductSection({
       subtotal,
     }));
   }, [products, onTotalChange, calculateTotal]);
-
+    const currency = getCurrency();
   return (
     <div className="space-y-6">
       <div className="overflow-x-auto">
@@ -144,7 +145,7 @@ export function ProductSection({
             <div className="col-span-2">Price</div>
             <div className="col-span-2">Quantity</div>
             <div className="col-span-1">
-              Total <span className="text-[10px]">(BDT)</span>
+              Total <span className="text-[10px]">({currency})</span>
             </div>
             <div className="col-span-1"></div>
           </div>

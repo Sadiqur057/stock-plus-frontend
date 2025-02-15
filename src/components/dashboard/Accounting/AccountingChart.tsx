@@ -15,6 +15,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { CustomTooltip } from "../Home/CustomToolTip";
 import EmptyMessage from "../Home/EmptyMessage";
+import { getCurrency } from "@/lib/utils";
 
 const chartConfig = {
   expense: {
@@ -34,6 +35,7 @@ type TProps = {
     expense: number;
   }[];
 };
+const currency = getCurrency();
 
 export function AccountingChart({ chartData }: TProps) {
   return (
@@ -78,8 +80,8 @@ export function AccountingChart({ chartData }: TProps) {
                   <CustomTooltip
                     labels={{
                       month: "Month",
-                      sales: "Sales:BDT",
-                      expense: "Expense:BDT",
+                      sales: `Sales:${currency}`,
+                      expense: `Expense:${currency}`,
                     }}
                   />
                 }

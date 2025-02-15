@@ -8,6 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import { Product } from "@/types/invoice.type";
+import { getCurrency } from "@/lib/utils";
 
 type Props = {
   id: string;
@@ -37,8 +38,7 @@ export default function ViewInvoice({ id }: Props) {
       return result?.data?.data;
     },
   });
-  console.log("checkiing result", invoice);
-
+  const currency = getCurrency();
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -119,14 +119,14 @@ export default function ViewInvoice({ id }: Props) {
                             {product?.company}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">
-                            {product?.salePrice?.toFixed(2)} BDT
+                            {product?.salePrice?.toFixed(2)} {currency}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-left">
                             {product?.quantity}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-right">
                             {(product.salePrice * product.quantity).toFixed(2)}{" "}
-                            BDT
+                            {currency}
                           </td>
                         </tr>
                       )
@@ -141,27 +141,27 @@ export default function ViewInvoice({ id }: Props) {
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Sub Total:</span>
                   <span className="font-medium">
-                    {invoice.total_cost.subtotal.toFixed(2)} BDT
+                    {invoice.total_cost.subtotal.toFixed(2)} {currency}
                   </span>
                 </div>
                 {invoice?.total_cost?.discount > 0 && (
                   <div className="flex justify-between py-2">
                     <span className="text-gray-600">Discount:</span>
                     <span className="font-medium">
-                      {invoice.total_cost.discount.toFixed(2)} BDT
+                      {invoice.total_cost.discount.toFixed(2)} {currency}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Vat:</span>
                   <span className="font-medium">
-                    {invoice.total_cost.tax.toFixed(2)} BDT
+                    {invoice.total_cost.tax.toFixed(2)} {currency}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
-                    {invoice.total_cost.total.toFixed(2)} BDT
+                    {invoice.total_cost.total.toFixed(2)} {currency}
                   </span>
                 </div>
                 {invoice?.total_cost?.status !== "unpaid" && (
@@ -169,14 +169,12 @@ export default function ViewInvoice({ id }: Props) {
                     <div className="flex justify-between py-2">
                       <span className="text-gray-600">Paid:</span>
                       <span className="font-medium">
-                        {invoice.total_cost.total_paid} BDT
+                        {invoice.total_cost.total_paid} {currency}
                       </span>
                     </div>
                     <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
                       <span>Due:</span>
-                      <span>
-                        {invoice.total_cost.total_due.toFixed(2)} BDT
-                      </span>
+                      <span>{invoice.total_cost.total_due.toFixed(2)} {currency}</span>
                     </div>
                   </>
                 )}

@@ -7,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDateShort } from "@/lib/utils";
+import { formatDateShort, getCurrency } from "@/lib/utils";
 import { Invoice } from "@/types/invoice.type";
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
@@ -15,6 +15,7 @@ type Props = {
   invoices: Invoice[];
 };
 export function RecentSales({ invoices }: Props) {
+  const currency = getCurrency();
   return (
     <>
       <SectionHeader
@@ -30,7 +31,7 @@ export function RecentSales({ invoices }: Props) {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>
-                  Amount <span className="text-[10px]">(BDT)</span>
+                  Amount <span className="text-[10px]">({currency})</span>
                 </TableHead>
                 <TableHead>Time</TableHead>
                 <TableHead>Due</TableHead>

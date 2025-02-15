@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import { Product } from "@/types/invoice.type";
-import { formatDate } from "@/lib/utils";
+import { formatDate, getCurrency } from "@/lib/utils";
 
 type Props = {
   id: string;
@@ -38,8 +38,7 @@ const InventoryReport = ({ id }: Props) => {
       return result?.data?.data;
     },
   });
-  console.log("checkiing result", inventory);
-
+  const currency = getCurrency();
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
@@ -121,7 +120,7 @@ const InventoryReport = ({ id }: Props) => {
                             {product?.company}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900">
-                            {product?.purchasePrice} BDT
+                            {product?.purchasePrice} {currency}
                           </td>
                           <td className="px-6 py-4 text-sm text-gray-900 text-left">
                             {product?.quantity}
@@ -131,7 +130,7 @@ const InventoryReport = ({ id }: Props) => {
                               (
                                 product.purchasePrice * product.quantity
                               ).toFixed(2)}{" "}
-                            BDT
+                            {currency}
                           </td>
                         </tr>
                       )
@@ -146,27 +145,27 @@ const InventoryReport = ({ id }: Props) => {
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Sub Total:</span>
                   <span className="font-medium">
-                    {inventory?.total_cost?.subtotal} BDT
+                    {inventory?.total_cost?.subtotal} {currency}
                   </span>
                 </div>
                 {inventory?.total_cost?.discount > 0 && (
                   <div className="flex justify-between py-2">
                     <span className="text-gray-600">Discount:</span>
                     <span className="font-medium">
-                      {inventory?.total_cost?.discount} BDT
+                      {inventory?.total_cost?.discount} {currency}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Tax:</span>
                   <span className="font-medium">
-                    {inventory?.total_cost?.tax} BDT
+                    {inventory?.total_cost?.tax} {currency}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
-                    {inventory?.total_cost?.total} BDT
+                    {inventory?.total_cost?.total} {currency}
                   </span>
                 </div>
                 {inventory?.total_cost?.status !== "unpaid" && (
@@ -174,12 +173,12 @@ const InventoryReport = ({ id }: Props) => {
                     <div className="flex justify-between py-2">
                       <span className="text-gray-600">Paid:</span>
                       <span className="font-medium">
-                        {inventory?.total_cost?.paid} BDT
+                        {inventory?.total_cost?.paid} {currency}
                       </span>
                     </div>
                     <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
                       <span>Due:</span>
-                      <span>{inventory?.total_cost?.due} BDT</span>
+                      <span>{inventory?.total_cost?.due} {currency}</span>
                     </div>
                   </>
                 )}

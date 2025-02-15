@@ -15,6 +15,7 @@ import {
 import SectionHeader from "./SectionHeader";
 import EmptyMessage from "./EmptyMessage";
 import { CustomTooltip } from "./CustomToolTip";
+import { getCurrency } from "@/lib/utils";
 
 const chartConfig = {
   paid_amount: {
@@ -38,6 +39,7 @@ type Props = {
 };
 
 export function PaymentOverview({ chartData }: Props) {
+  const currency = getCurrency();
   return (
     <div className="flex flex-col justify-between h-full">
       <SectionHeader
@@ -72,8 +74,8 @@ export function PaymentOverview({ chartData }: Props) {
                     <CustomTooltip
                       labels={{
                         month: "Month",
-                        paid_amount: "Paid:BDT",
-                        due_amount: "Due:BDT",
+                        paid_amount: `Paid:${currency}`,
+                        due_amount: `Due:${currency}`,
                       }}
                     />
                   }

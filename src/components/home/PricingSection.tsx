@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Check } from "lucide-react";
 import SectionHeading from "./SectionHeading";
 import toast from "react-hot-toast";
+import { getCurrency } from "@/lib/utils";
 
 type BillingInterval = "monthly" | "annual";
 type PlanTier = "starter" | "growth" | "premium";
@@ -86,7 +87,7 @@ const plans: Record<PlanTier, PricingPlan> = {
 
 export function PricingSection() {
   const [interval, setInterval] = useState<BillingInterval>("monthly");
-
+  const currency = getCurrency();
   const handlePlanSelection = async () => {
     try {
       toast.error("Under maintenance. Will be added soon");
@@ -150,7 +151,7 @@ export function PricingSection() {
               >
                 <div className="mb-6">
                   <h3
-                    className={`text-xl font-semibold BDT. {plan.titleColor}`}
+                    className={`text-xl font-semibold ${currency}. {plan.titleColor}`}
                   >
                     {plan.name}
                   </h3>
@@ -162,7 +163,7 @@ export function PricingSection() {
                 <div className="mb-6">
                   <div className="flex items-baseline">
                     <span className="text-3xl font-bold text-gray-900">
-                      BDT. &nbsp;
+                      {currency}. &nbsp;
                       {interval === "monthly"
                         ? plan.price.monthly
                         : plan.price.annual}
