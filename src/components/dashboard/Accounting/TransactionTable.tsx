@@ -51,9 +51,11 @@ const TransactionTable = ({ transactions }: Props) => {
             <TableCell>
               <span
                 className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                  transaction?.transaction_type === "in"
+                  transaction?.transaction_desc === "sales"
                     ? "bg-green-100 text-green-700"
-                    : "bg-red-100 text-red-700"
+                    : transaction?.transaction_desc === "purchase"
+                    ? "bg-red-100 text-red-700"
+                    : "bg-yellow-100 text-yellow-700"
                 }`}
               >
                 {transaction?.transaction_desc}
