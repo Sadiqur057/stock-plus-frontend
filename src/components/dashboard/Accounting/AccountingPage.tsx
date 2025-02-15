@@ -13,6 +13,7 @@ import { DateFilter } from "../Filter/DateFilter";
 import { Button } from "@/components/ui/button";
 import { CalendarSearch, RotateCcw, Wallet } from "lucide-react";
 import AddExpense from "./AddExpense";
+import SalesPurchaseSummary from "./SalesPurchaseSummary";
 
 const breadcrumbList = [
   {
@@ -69,7 +70,10 @@ export default function AccountingPage() {
       ) : (
         <>
           <div className="flex gap-4 flex-wrap mb-4 justify-between items-center">
-            <Button onClick={() => setIsTransactionModalOpen(true)} className="">
+            <Button
+              onClick={() => setIsTransactionModalOpen(true)}
+              className=""
+            >
               <Wallet />
               Add Expense
             </Button>
@@ -107,6 +111,9 @@ export default function AccountingPage() {
             </Modal>
           </div>
           <AccountingSummary summary={transactionData?.data?.summary} />
+          <SalesPurchaseSummary
+            summary={transactionData?.data?.sales_purchase_summary}
+          />
           <div className="my-6">
             <AccountingChart chartData={transactionData?.data?.chartData} />
           </div>
