@@ -50,7 +50,7 @@ export default function InvoicesPage() {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [currentPage, limit, selectedStatus, selectedStatus, customer],
+    queryKey: [currentPage, limit, selectedStatus, customer],
     queryFn: async () => {
       const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/invoices`, {
         params: {
