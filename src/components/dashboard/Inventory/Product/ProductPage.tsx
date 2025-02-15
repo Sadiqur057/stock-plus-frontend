@@ -268,7 +268,8 @@ const ProductPage = () => {
               <Table className="border">
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="w-[200px]">Name</TableHead>
+                    <TableHead>No.</TableHead>
+                    <TableHead>Name</TableHead>
                     <TableHead>Company</TableHead>
                     <TableHead>Quantity</TableHead>
                     <TableHead>
@@ -279,8 +280,11 @@ const ProductPage = () => {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {products?.data.map((product: ProductType) => (
+                  {products?.data.map((product: ProductType, index: number) => (
                     <TableRow key={product._id}>
+                      <TableCell className="font-medium">
+                        {(currentPage - 1) * limit + (index + 1)}.
+                      </TableCell>
                       <TableCell className="font-medium">
                         {product.productName}
                       </TableCell>

@@ -152,13 +152,15 @@ export default function InvoicesPage() {
         <ScreenLoader />
       ) : (
         <section>
-          {invoiceData?.invoices?.length>0 ? (
+          {invoiceData?.invoices?.length > 0 ? (
             <>
               <InvoiceSummary summary={invoiceData?.invoice_summary} />
               <div className="overflow-x-auto">
                 <InvoiceTable
                   invoices={invoiceData?.invoices}
                   refetch={refetch}
+                  limit={limit}
+                  currentPage={currentPage}
                 />
                 <Pagination
                   currentPage={currentPage}

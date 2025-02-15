@@ -169,7 +169,7 @@ const RevenuesPage = () => {
                     (revenue: RevenueType, index: number) => (
                       <TableRow key={revenue?._id}>
                         <TableCell className="font-medium">
-                          {index + 1}.
+                          {(currentPage - 1) * limit + (index + 1)}.
                         </TableCell>
                         <TableCell className="font-medium">
                           {revenue?.customer?.name}

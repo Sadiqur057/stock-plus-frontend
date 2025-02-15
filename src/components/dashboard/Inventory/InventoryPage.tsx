@@ -197,16 +197,19 @@ const InventoryPage = () => {
                 </TableHeader>
                 <TableBody>
                   {inventoryData?.data?.invoices?.map(
-                    (item: ItemType, idx: number) => (
+                    (item: ItemType, index: number) => (
                       <TableRow key={item?._id}>
-                        <TableCell className="font-medium">{idx + 1}</TableCell>
+                        <TableCell className="font-medium">
+                          {(currentPage - 1) * limit + (index + 1)}.
+                        </TableCell>
                         <TableCell className="font-medium">
                           {item?.created_by_name}
                         </TableCell>
                         <TableCell>{item?.total_cost?.total}</TableCell>
                         <TableCell>{item?.total_cost?.due}</TableCell>
                         <TableCell>
-                          {item?.created_at && formatDateShort(item?.created_at)}
+                          {item?.created_at &&
+                            formatDateShort(item?.created_at)}
                         </TableCell>
                         <TableCell>
                           {" "}

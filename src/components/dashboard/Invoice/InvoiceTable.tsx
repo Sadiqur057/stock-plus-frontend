@@ -13,11 +13,18 @@ import {
 import { QueryObserverResult, RefetchOptions } from "@tanstack/react-query";
 type InvoiceTableProps = {
   invoices: Invoice[];
+  currentPage: number;
+  limit: number;
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<Invoice[], Error>>;
 };
-const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
+const InvoiceTable = ({
+  invoices,
+  refetch,
+  currentPage,
+  limit,
+}: InvoiceTableProps) => {
   return (
     <div className="min-w-max">
       <Table className="border">
@@ -41,7 +48,9 @@ const InvoiceTable = ({ invoices, refetch }: InvoiceTableProps) => {
         <TableBody>
           {invoices?.map((invoice, index) => (
             <TableRow key={index} className="hover:bg-gray-50">
-              <TableCell className="font-medium">{index + 1}</TableCell>
+              <TableCell className="font-medium">
+                {(currentPage - 1) * limit + (index + 1)}.
+              </TableCell>
               <TableCell>
                 <p className="text-sm font-medium text-gray-900">
                   {invoice?.customer.name}

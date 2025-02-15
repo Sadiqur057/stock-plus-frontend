@@ -170,7 +170,7 @@ const TransactionPage = () => {
                     (transaction: TransactionType, index: number) => (
                       <TableRow key={transaction._id}>
                         <TableCell className="font-medium">
-                          {index + 1}.
+                          {(currentPage - 1) * limit + (index + 1)}.
                         </TableCell>
                         <TableCell className="font-medium">
                           {transaction?.created_by_name}
