@@ -11,6 +11,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useQuery } from "@tanstack/react-query";
+import { CalendarSearch, FolderUp, RotateCcw } from "lucide-react";
+import Loader from "@/components/ui/Loader";
+import toast from "react-hot-toast";
+import TransactionOption from "./TransactionOption/TransactionOption";
+import { formatDateShort } from "@/lib/utils";
+import { Pagination } from "@/components/shared/pagination/Pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Modal } from "@/components/shared/Modal/Modal";
+import { DateFilter } from "../Filter/DateFilter";
+import { format } from "date-fns";
+import EmptyMessage from "../Home/EmptyMessage";
 
 export type TransactionType = {
   customer?: {
@@ -33,13 +51,20 @@ export type TransactionType = {
   transaction_type: string;
 };
 
-import { useQuery } from "@tanstack/react-query";
-import { CloudDownload, FolderUp } from "lucide-react";
-import Loader from "@/components/ui/Loader";
-import toast from "react-hot-toast";
-import TransactionOption from "./TransactionOption/TransactionOption";
-import { formatDateShort } from "@/lib/utils";
-import { Pagination } from "@/components/shared/pagination/Pagination";
+const paymentMethods = [
+  { label: "All", value: "all" },
+  { label: "Cash Payment", value: "Cash Payment" },
+  { label: "Online Payment", value: "Online Payment" },
+  { label: "Cheque Payment", value: "Cheque Payment" },
+];
+
+const paymentTypes = [
+  { label: "All", value: "all" },
+  { label: "sales", value: "sales" },
+  { label: "Purchases", value: "purchases" },
+  { label: "other", value: "other" },
+];
+
 const breadcrumbList = [
   {
     name: "Products",
@@ -48,8 +73,13 @@ const breadcrumbList = [
 ];
 
 const TransactionPage = () => {
-  // const [isOpen, setIsOpen] = useState<boolean>(false);
-  // pagination
+  const [startDate, setStartDate] = useState<string | Date | undefined>();
+  const [endDate, setEndDate] = useState<string | Date | undefined>();
+  const [duration, setDuration] = useState<string>("");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [paymentType, setPaymentType] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [currentPage, setCurrentPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
@@ -68,7 +98,7 @@ const TransactionPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [currentPage, limit],
+    queryKey: [currentPage, limit, paymentMethod, paymentType],
     queryFn: async () => {
       const result = await api.get(
         `${process.env.NEXT_PUBLIC_API_URL}/transactions`,
@@ -76,6 +106,11 @@ const TransactionPage = () => {
           params: {
             limit: limit,
             page: currentPage,
+            payment_method: paymentMethod,
+            payment_type: paymentType,
+            start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
+            end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
+            duration: duration,
           },
         }
       );
@@ -87,6 +122,22 @@ const TransactionPage = () => {
       return result?.data?.data;
     },
   });
+
+  const handleApplyDateFilter = async () => {
+    refetch();
+    setIsModalOpen(false);
+  };
+
+  const handleReset = () => {
+    setStartDate("");
+    setEndDate("");
+    setDuration("");
+    setPaymentMethod("");
+    setPaymentType("");
+    setTimeout(() => {
+      refetch();
+    }, 0);
+  };
 
   return (
     <>
@@ -111,11 +162,6 @@ const TransactionPage = () => {
           </div>
 
           <div className="flex items-center mt-4 gap-x-3">
-            <Button variant={"outline"} className="py-3">
-              <CloudDownload />
-              <span>Import</span>
-            </Button>
-
             <Button className="py-3">
               <FolderUp />
               <span>Export</span>
@@ -123,32 +169,67 @@ const TransactionPage = () => {
           </div>
         </div>
 
-        <div className="my-6 md:flex md:items-center md:justify-between">
-          <div className="relative flex items-center mt-4 md:mt-0">
-            <span className="absolute">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-                stroke="currentColor"
-                className="w-5 h-5 mx-3 text-gray-400 dark:text-gray-600"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"
-                />
-              </svg>
-            </span>
-
-            <input type="text" placeholder="Search" className="searchBox" />
+        <div className="my-6 flex items-center justify-between gap-4 flex-wrap">
+          <div className="flex gap-4 flex-wrap">
+            <div className="xl:w-[210px]">
+              <Select value={paymentMethod} onValueChange={setPaymentMethod}>
+                <SelectTrigger className="py-[21px] min-w-[160px] xl:w-[210px]">
+                  <SelectValue placeholder="Payment method" />
+                </SelectTrigger>
+                <SelectContent>
+                  {paymentMethods?.map((m) => (
+                    <SelectItem key={m.value} value={m.value}>
+                      {m.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="xl:w-[210px]">
+              <Select value={paymentType} onValueChange={setPaymentType}>
+                <SelectTrigger className="py-[21px] min-w-[160px] xl:w-[210px]">
+                  <SelectValue placeholder="Payment type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {paymentTypes?.map((t) => (
+                    <SelectItem key={t.value} value={t.value}>
+                      {t.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
+          <div className="flex gap-4">
+            <Button onClick={() => setIsModalOpen(true)}>
+              <CalendarSearch />
+              <span className="hidden md:block">Date </span>Filter
+            </Button>
+            <Button type="button" variant="outline" onClick={handleReset}>
+              <RotateCcw className="h-4 w-4" />
+            </Button>
+          </div>
+          <Modal
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            title="Update Date Filter"
+          >
+            <DateFilter
+              endDate={endDate}
+              setEndDate={setEndDate}
+              setStartDate={setStartDate}
+              startDate={startDate}
+              setDuration={setDuration}
+              duration={duration}
+              handleSubmit={handleApplyDateFilter}
+              handleReset={handleReset}
+            />
+          </Modal>
         </div>
 
         {isLoading ? (
           <Loader />
-        ) : (
+        ) : transactionData?.transactions.length ? (
           <>
             <div>
               <Table className="border">
@@ -180,9 +261,11 @@ const TransactionPage = () => {
                         <TableCell>
                           <span
                             className={`inline-flex items-center rounded-full px-2 py-1 text-xs font-medium ${
-                              transaction?.transaction_type === "in"
+                              transaction?.transaction_desc === "sales"
                                 ? "bg-green-100 text-green-700"
-                                : "bg-red-100 text-red-700"
+                                : transaction?.transaction_desc === "purchases"
+                                ? "bg-red-100 text-red-700"
+                                : "bg-yellow-100 text-yellow-700"
                             }`}
                           >
                             {transaction?.transaction_desc}
@@ -214,6 +297,10 @@ const TransactionPage = () => {
               onLimitChange={handleLimitChange}
             />
           </>
+        ) : (
+          <div className="py-24">
+            <EmptyMessage />
+          </div>
         )}
       </section>
     </>

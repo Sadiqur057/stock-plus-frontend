@@ -37,17 +37,19 @@ import { useQuery } from "@tanstack/react-query";
 import {
   ArrowDownIcon,
   ArrowUpIcon,
-  CloudDownload,
-  FolderUp,
-  Search,
+  CalendarSearch,
+  RotateCcw,
 } from "lucide-react";
 import Loader from "@/components/ui/Loader";
 import toast from "react-hot-toast";
 import { formatDateShort } from "@/lib/utils";
 import RevenueOption from "./RevenuesOption/RevenuesOption";
-import DateRange from "@/components/shared/DatePicker/DateRange";
 import { Pagination } from "@/components/shared/pagination/Pagination";
 import { Customer } from "@/types/invoice.type";
+import { format } from "date-fns";
+import { DateFilter } from "../Filter/DateFilter";
+import { Modal } from "@/components/shared/Modal/Modal";
+import CustomerDropdown from "@/components/shared/Dropdown/CustomerDropdown";
 const breadcrumbList = [
   {
     name: "Products",
@@ -56,8 +58,11 @@ const breadcrumbList = [
 ];
 
 const RevenuesPage = () => {
-  const [startDate, setStartDate] = React.useState<Date>();
-  const [endDate, setEndDate] = React.useState<Date>();
+  const [startDate, setStartDate] = useState<string | Date | undefined>();
+  const [endDate, setEndDate] = useState<string | Date | undefined>();
+  const [customer, setCustomer] = useState<Customer | null>(null);
+  const [duration, setDuration] = useState<string>("");
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
@@ -77,12 +82,16 @@ const RevenuesPage = () => {
     isLoading,
     refetch,
   } = useQuery({
-    queryKey: [currentPage, limit],
+    queryKey: [currentPage, limit, customer],
     queryFn: async () => {
       const res = await api.get(`${process.env.NEXT_PUBLIC_API_URL}/revenues`, {
         params: {
           page: currentPage,
           limit: limit,
+          start_date: startDate ? format(startDate, "yyyy-MM-dd") : "",
+          end_date: endDate ? format(endDate, "yyyy-MM-dd") : "",
+          customer_phone: customer ? customer.phone : "",
+          duration: duration,
         },
       });
       if (!res?.data?.success) {
@@ -93,12 +102,27 @@ const RevenuesPage = () => {
     },
   });
 
+  const handleApplyDateFilter = async () => {
+    refetch();
+    setIsModalOpen(false);
+  };
+
+  const handleReset = () => {
+    setStartDate("");
+    setEndDate("");
+    setDuration("");
+    setCustomer(null);
+    setTimeout(() => {
+      refetch();
+    }, 0);
+  };
+
   return (
     <>
       <BreadCrumb breadcrumbList={breadcrumbList} />
 
       <section>
-        <div className="sm:flex sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center justify-between mb-4 gap-4">
           <div>
             <div className="flex items-center gap-x-3">
               <h2 className="text-lg font-medium text-gray-800 dark:text-white">
@@ -115,34 +139,39 @@ const RevenuesPage = () => {
             </p>
           </div>
 
-          <div className="flex items-center mt-4 gap-x-3">
-            <Button variant={"outline"} className="py-3">
-              <CloudDownload />
-              <span>Import</span>
-            </Button>
-
-            <Button className="py-3">
-              <FolderUp />
-              <span>Export</span>
-            </Button>
-          </div>
-        </div>
-
-        <div className="my-6 md:flex md:items-center md:justify-between flex-wrap gap-4">
-          <div className="flex gap-4 items-center flex-wrap">
-            <DateRange
-              startDate={startDate}
-              setStartDate={setStartDate}
-              endDate={endDate}
-              setEndDate={setEndDate}
-            />
-          </div>
-          <div className="relative flex items-center mt-4 md:mt-0">
-            <span className="absolute">
-              <Search className="text-muted-foreground ml-3" size="16" />
-            </span>
-
-            <input type="text" placeholder="Search" className="searchBox" />
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex gap-4 flex-wrap">
+              <CustomerDropdown
+                setCustomer={setCustomer}
+                label={false}
+                customer={customer}
+              />
+            </div>
+            <div className="flex gap-4">
+              <Button onClick={() => setIsModalOpen(true)}>
+                <CalendarSearch />
+                <span className="hidden md:block">Date </span>Filter
+              </Button>
+              <Button type="button" variant="outline" onClick={handleReset}>
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </div>
+            <Modal
+              isOpen={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+              title="Update Date Filter"
+            >
+              <DateFilter
+                endDate={endDate}
+                setEndDate={setEndDate}
+                setStartDate={setStartDate}
+                startDate={startDate}
+                setDuration={setDuration}
+                duration={duration}
+                handleSubmit={handleApplyDateFilter}
+                handleReset={handleReset}
+              />
+            </Modal>
           </div>
         </div>
 
