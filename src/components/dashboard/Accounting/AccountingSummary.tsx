@@ -15,6 +15,7 @@ import {
   CircleDollarSign,
   DollarSign,
   HandCoins,
+  Percent,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -167,7 +168,7 @@ const AccountingSummary = ({ summary }: Props) => {
         />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-4 lg:my-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 my-6">
         <div className="bg-gray-50 border rounded-md">
           <CardHeader>
             <CardTitle>Profit Margin</CardTitle>
@@ -241,7 +242,7 @@ const AccountingSummary = ({ summary }: Props) => {
           <CardContent>
             <div className="flex items-center space-x-4">
               <div className="flex items-center justify-center w-11 h-11 rounded-full bg-primary/10">
-                <DollarSign className="h-6 w-6 text-primary" />
+                <Percent className="h-6 w-6 text-primary" />
               </div>
               <div className="space-y-1">
                 <p className="text-sm font-medium leading-none">
