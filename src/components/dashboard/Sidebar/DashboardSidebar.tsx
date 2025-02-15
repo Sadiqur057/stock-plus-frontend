@@ -53,14 +53,14 @@ const data = {
       title: "Inventory",
       url: "#",
       icon: SquareTerminal,
-      isActive: true,
+      isActive: false,
       items: [
         {
-          title: "Invoices",
+          title: "Purchase Invoices",
           url: "/dashboard/inventory/reports",
         },
         {
-          title: "Add Products",
+          title: "Add Purchase",
           url: "/dashboard/inventory/add-products",
         },
         {
@@ -76,15 +76,15 @@ const data = {
       icon: NotepadText,
       items: [
         {
-          title: "Invoices",
+          title: "Sales Invoices",
           url: "/dashboard/invoices",
         },
         {
-          title: "Create Invoice",
+          title: "Add Sales",
           url: "/dashboard/create-invoice",
         },
         {
-          title: "Revenues",
+          title: "Sales Revenues",
           url: "/dashboard/revenues",
         },
       ],
