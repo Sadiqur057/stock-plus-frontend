@@ -104,7 +104,7 @@ const DashboardHome = () => {
     <>
       <SidebarInset>
         <BreadCrumb breadcrumbList={breadcrumbList} />
-        <div className="flex gap-4 justify-between mb-4">
+        <div className="flex gap-4 flex-wrap justify-between mb-4">
           <CustomerDropdown
             setCustomer={setCustomer}
             label={false}
