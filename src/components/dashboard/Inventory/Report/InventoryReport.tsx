@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
 import ScreenLoader from "@/components/shared/Loader/ScreenLoader";
 import { Product } from "@/types/invoice.type";
-import { formatDate, getCurrency } from "@/lib/utils";
+import { formatDate, getCurrency, getFormattedDate } from "@/lib/utils";
 
 type Props = {
   id: string;
@@ -29,7 +29,7 @@ const InventoryReport = ({ id }: Props) => {
     window.print();
   };
 
-  const { data: inventory, isLoading } = useQuery({
+  const { data: inventoryData, isLoading } = useQuery({
     queryKey: ["inventory"],
     queryFn: async () => {
       const result = await api.get(
@@ -50,11 +50,11 @@ const InventoryReport = ({ id }: Props) => {
             <div className="flex justify-between items-start mb-8">
               <div className="flex items-center space-x-2">
                 <span className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-                  {inventory?.company?.name}
+                  {inventoryData?.invoice?.company?.name}
                 </span>
               </div>
               <h1 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-900">
-                Inventory
+                Invoice
               </h1>
             </div>
 
@@ -62,28 +62,47 @@ const InventoryReport = ({ id }: Props) => {
               <div>
                 <p className="text-gray-600">
                   Date:{" "}
-                  {inventory.created_at && formatDate(inventory?.created_at)}
+                  {inventoryData?.invoice?.created_at &&
+                    formatDate(inventoryData?.invoice?.created_at)}
                 </p>
               </div>
               <div>
-                <p className="text-gray-600">Id: {inventory?._id}</p>
+                <p className="text-gray-600">
+                  Id: {inventoryData?.invoice?._id}
+                </p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8 justify-between">
               <div>
                 <h2 className="text-gray-600 mb-2">Invoice To:</h2>
-                <p className="font-medium">{inventory?.company?.name}</p>
-                <p className="text-gray-600">{inventory?.company?.location}</p>
-                <p className="text-gray-600">{inventory?.company?.phone}</p>
-                <p className="text-gray-600">{inventory?.company?.email}</p>
+                <p className="font-medium">
+                  {inventoryData?.invoice?.company?.name}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.company?.location}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.company?.phone}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.company?.email}
+                </p>
               </div>
               <div className="text-right">
                 <h2 className="text-gray-600 mb-2">Pay To:</h2>
-                <p className="font-medium">{inventory?.supplier?.name}</p>
-                <p className="text-gray-600">{inventory?.supplier?.address}</p>
-                <p className="text-gray-600">{inventory?.supplier?.phone}</p>
-                <p className="text-gray-600">{inventory?.supplier?.email}</p>
+                <p className="font-medium">
+                  {inventoryData?.invoice?.supplier?.name}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.supplier?.address}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.supplier?.phone}
+                </p>
+                <p className="text-gray-600">
+                  {inventoryData?.invoice?.supplier?.email}
+                </p>
               </div>
             </div>
 
@@ -110,7 +129,7 @@ const InventoryReport = ({ id }: Props) => {
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200">
-                    {inventory?.products?.map(
+                    {inventoryData?.invoice?.products?.map(
                       (product: Product, index: number) => (
                         <tr key={index}>
                           <td className="px-6 py-4 text-sm text-gray-900">
@@ -145,55 +164,73 @@ const InventoryReport = ({ id }: Props) => {
                 <div className="flex justify-between py-2">
                   <span className="text-gray-600">Sub Total:</span>
                   <span className="font-medium">
-                    {inventory?.total_cost?.subtotal} {currency}
+                    {inventoryData?.invoice?.total_cost?.subtotal} {currency}
                   </span>
                 </div>
-                {inventory?.total_cost?.discount > 0 && (
+                {inventoryData?.invoice?.total_cost?.discount > 0 && (
                   <div className="flex justify-between py-2">
                     <span className="text-gray-600">Discount:</span>
                     <span className="font-medium">
-                      {inventory?.total_cost?.discount} {currency}
+                      {inventoryData?.invoice?.total_cost?.discount} {currency}
                     </span>
                   </div>
                 )}
                 <div className="flex justify-between py-2">
-                  <span className="text-gray-600">Tax:</span>
+                  <span className="text-gray-600">Vat:</span>
                   <span className="font-medium">
-                    {inventory?.total_cost?.tax} {currency}
+                    + {inventoryData?.invoice?.total_cost?.tax} {currency}
                   </span>
                 </div>
                 <div className="flex justify-between py-2 border-t border-gray-200">
                   <span className="font-semibold">Total:</span>
                   <span className="font-semibold">
-                    {inventory?.total_cost?.total} {currency}
+                    {inventoryData?.invoice?.total_cost?.total} {currency}
                   </span>
                 </div>
-                {inventory?.total_cost?.status !== "unpaid" && (
+                {inventoryData?.invoice?.total_cost?.status !== "unpaid" && (
                   <>
-                    <div className="flex justify-between py-2">
-                      <span className="text-gray-600">Paid:</span>
-                      <span className="font-medium">
-                        {inventory?.total_cost?.paid} {currency}
-                      </span>
-                    </div>
+                    {inventoryData?.transactions?.map(
+                      (transaction: {
+                        created_at: string;
+                        amount: string;
+                        _id: string;
+                        payment_method: string;
+                      }) => (
+                        <div
+                          key={transaction?._id}
+                          className="flex justify-between py-2"
+                        >
+                          <span className="text-gray-600">
+                            {getFormattedDate(transaction?.created_at)}{" "}
+                            <small>
+                              ({transaction?.payment_method?.split(" ")[0]})
+                            </small>
+                          </span>
+                          <span className="font-medium">
+                            - {transaction?.amount} {currency}
+                          </span>
+                        </div>
+                      )
+                    )}
                     <div className="flex justify-between py-2 font-semibold border-t border-gray-200">
                       <span>Due:</span>
-                      <span>{inventory?.total_cost?.due} {currency}</span>
+                      <span>
+                        {inventoryData?.invoice?.total_cost?.due} {currency}
+                      </span>
                     </div>
                   </>
                 )}
               </div>
             </div>
 
-            <div className="text-sm text-gray-500 mb-8 text-left">
-              <p>NOTE: This is a computer-generated receipt.</p>
+            <div className="text-sm font-medium mb-8 max-w-48 border-t border-gray-400 text-center py-2">
+              <p>Signature</p>
             </div>
           </div>
 
-          <div className="print:hidden flex justify-center">
+          <div className="print:hidden flex justify-center mb-6">
             <Button
               onClick={handlePrint}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
             >
               <Printer className="w-4 h-4 mr-2" />
               Print & Download
