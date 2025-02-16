@@ -118,7 +118,6 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
           `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
           data
         );
-        console.log("checking result", data);
         if (result?.data?.success) {
           toast.success(result?.data?.message);
           refetch?.();
@@ -151,7 +150,6 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
     const processedAttributes = attributes.map((attr) =>
       attr.key === "new" ? { key: attr.newKey || "", value: attr.value } : attr
     );
-    console.log(formData);
     mutate({ ...formData, attributes: processedAttributes });
   };
 
@@ -243,14 +241,11 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="new">Add New</SelectItem>
-                  {attributeList?.length &&
-                    attributeList?.map(
-                      (attr: { _id: string; name: string }) => (
-                        <SelectItem key={attr._id} value={attr.name}>
-                          {attr.name}
-                        </SelectItem>
-                      )
-                    )}
+                  {attributeList?.map((attr: { _id: string; name: string }) => (
+                    <SelectItem key={attr._id} value={attr.name}>
+                      {attr.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
               {attr.key === "new" && (
