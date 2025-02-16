@@ -8,9 +8,10 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getFormattedDate(dateString: string) {
-  const date = new Date(dateString);
-  return format(date, "MMM do, yyyy");
+  const date = format(new Date(dateString), "MM/dd/yyyy");
+  return date;
 }
+
 export function formatDate(dateString: string) {
   const date = new Date(dateString);
   return format(date, "MMM do, yyyy 'at' hh:mm a");
