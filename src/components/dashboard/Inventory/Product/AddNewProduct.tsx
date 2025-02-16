@@ -65,14 +65,12 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
   const { data: attributeList = [] } = useQuery({
     queryKey: ["attributes"],
     queryFn: async () => {
-      const result = await api.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/attributes`
-      );
+      const result = await api.get(`/attributes`);
       if (!result?.data?.success) {
         toast.error(result?.data?.message || "Something went wrong");
         return [];
       }
-      return result?.data?.data;
+      return result?.data?.data?.attributes;
     },
   });
 
@@ -120,7 +118,7 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
           `${process.env.NEXT_PUBLIC_API_URL}/add-product`,
           data
         );
-        console.log("checking result",data);
+        console.log("checking result", data);
         if (result?.data?.success) {
           toast.success(result?.data?.message);
           refetch?.();
@@ -245,11 +243,14 @@ const AddNewProduct = ({ refetch, closeModal }: Props) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="new">Add New</SelectItem>
-                  {attributeList.map((attr: { _id: string; name: string }) => (
-                    <SelectItem key={attr._id} value={attr.name}>
-                      {attr.name}
-                    </SelectItem>
-                  ))}
+                  {attributeList?.length &&
+                    attributeList?.map(
+                      (attr: { _id: string; name: string }) => (
+                        <SelectItem key={attr._id} value={attr.name}>
+                          {attr.name}
+                        </SelectItem>
+                      )
+                    )}
                 </SelectContent>
               </Select>
               {attr.key === "new" && (
