@@ -39,7 +39,7 @@ const SupplierDropdown = ({ setSupplier, label = true, supplier }: Props) => {
         return;
       }
 
-      const suppliers = result?.data?.data;
+      const suppliers = result?.data?.data?.suppliers;
       if (Array.isArray(suppliers)) {
         const formattedOptions = suppliers.map((supplier: Customer) => ({
           value: supplier._id,

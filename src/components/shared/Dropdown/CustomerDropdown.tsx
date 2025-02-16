@@ -39,7 +39,7 @@ const CustomerDropdown = ({ setCustomer, label = true, customer }: Props) => {
         return;
       }
 
-      const customers = result?.data?.data;
+      const customers = result?.data?.data?.customers;
       if (Array.isArray(customers)) {
         const formattedOptions = customers.map((customer: Customer) => ({
           value: customer._id,

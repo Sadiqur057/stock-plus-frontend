@@ -48,7 +48,7 @@ export function SupplierSection({
         toast.error(result?.data?.message || "Something went wrong");
         return [];
       }
-      const suppliers = result?.data?.data;
+      const suppliers = result?.data?.data?.suppliers;
       if (suppliers && Array.isArray(suppliers)) {
         const formattedOptions = suppliers.map((supplier: Supplier) => ({
           value: supplier._id,
@@ -60,7 +60,7 @@ export function SupplierSection({
           ...formattedOptions,
         ]);
       }
-      return result?.data?.data;
+      return result?.data?.data?.suppliers;
     },
   });
 

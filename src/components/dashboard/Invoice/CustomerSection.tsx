@@ -69,7 +69,7 @@ export function CustomerSection({
         toast.error(result?.data?.message || "Something went wrong");
         return [];
       }
-      const customers = result?.data?.data;
+      const customers = result?.data?.data?.customers;
       if (customers && Array.isArray(customers)) {
         const formattedOptions = customers.map((customer: Customer) => ({
           value: customer._id,
@@ -81,7 +81,7 @@ export function CustomerSection({
           ...formattedOptions,
         ]);
       }
-      return result?.data?.data;
+      return result?.data?.data?.customers;
     },
   });
 
