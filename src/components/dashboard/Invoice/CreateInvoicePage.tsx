@@ -11,6 +11,7 @@ import api from "@/interceptors/api";
 import toast from "react-hot-toast";
 import Link from "next/link";
 import ButtonLoader from "@/components/shared/Loader/ButtonLoader";
+import { useRouter } from "next/navigation";
 
 export type CalculationShape = {
   subtotal: number;
@@ -57,6 +58,7 @@ export type PaymentShape = PaymentDataType & {
 };
 
 export default function CreateInvoicePage() {
+  const router = useRouter()
   const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(new Date());
   const [loading, setLoading] = useState<boolean>(false);
   const [calculation, setCalculation] = useState<CalculationShape>({
@@ -101,12 +103,12 @@ export default function CreateInvoicePage() {
           `${process.env.NEXT_PUBLIC_API_URL}/create-invoice`,
           data
         );
-
         if (!result?.data?.success) {
           toast.error(result?.data?.message || "Something went wrong.");
           return;
         }
         toast.success(result?.data?.message);
+        router.push("/dashboard/invoices")
       } catch (error) {
         toast.error("An unexpected error occurred.");
         console.error(error);

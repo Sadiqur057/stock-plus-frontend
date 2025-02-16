@@ -15,6 +15,7 @@ import ProductSection from "./ProductSection";
 import { CalculationSection } from "../../Invoice/CalculationSection";
 import { SupplierSection } from "./SupplierSection";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 const breadcrumbList = [
   {
@@ -57,6 +58,7 @@ type InventoryDataType = {
 };
 
 const AddProductsPage = () => {
+  const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>([]);
   const [invoiceDate, setInvoiceDate] = useState<Date | undefined>(new Date());
@@ -91,6 +93,7 @@ const AddProductsPage = () => {
           return;
         }
         toast.success(result?.data?.message);
+        router.push("/dashboard/inventory/reports")
       } catch (error) {
         toast.error("An unexpected error occurred.");
         console.error(error);
