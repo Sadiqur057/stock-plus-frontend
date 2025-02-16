@@ -22,25 +22,25 @@ const SummarySection: React.FC<{
   const metrics = [
     {
       label: "Invoices",
-      value: data.invoice_count,
+      value: data?.invoice_count || 0,
       icon: FileText,
       isCurrency: false,
     },
     {
       label: "Total Amount",
-      value: data.total_invoice_amount,
+      value: data?.total_invoice_amount || 0,
       icon: DollarSign,
       isCurrency: true,
     },
     {
       label: "Paid Amount",
-      value: data.total_paid_amount,
+      value: data?.total_paid_amount || 0,
       icon: CreditCard,
       isCurrency: true,
     },
     {
       label: "Due Amount",
-      value: data.total_due_amount,
+      value: data?.total_due_amount || 0,
       icon: AlertCircle,
       isCurrency: true,
     },
@@ -51,12 +51,12 @@ const SummarySection: React.FC<{
       <CardTitle>{title}</CardTitle>
       <div className="grid sm:grid-cols-2 gap-4 lg:gap-6 mt-4">
         {metrics.map((metric, index) => {
-          const Icon = metric.icon;
+          const Icon = metric?.icon;
           return (
             <div key={index} className="flex items-center gap-4">
               <Icon className="w-5 h-5" />
               <div className="flex-1">
-                <p className="text-gray-500 text-sm mb-0.5">{metric.label}</p>
+                <p className="text-gray-500 text-sm mb-0.5">{metric?.label}</p>
                 <p className="text-lg font-semibold">
                   {getFormattedPrice(metric?.value)}{" "}
                   {metric?.label !== "Invoices" ? `${currency}` : ""}
@@ -77,11 +77,11 @@ const SalesPurchaseSummary: React.FC<{ summary: SummaryData }> = ({
     <div className="grid lg:grid-cols-2 gap-6 mt-6">
       <SummarySection
         title="Sales Summary"
-        data={summary.sales_invoice_summary}
+        data={summary?.sales_invoice_summary}
       />
       <SummarySection
         title="Purchase Summary"
-        data={summary.purchase_invoice_summary}
+        data={summary?.purchase_invoice_summary}
       />
     </div>
   );

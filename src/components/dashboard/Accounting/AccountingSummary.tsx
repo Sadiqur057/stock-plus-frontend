@@ -183,12 +183,13 @@ const AccountingSummary = ({ summary }: Props) => {
                   Current Profit Rate
                 </p>
                 <p className="text-lg font-bold">
-                  {summary?.profit_percentage}%
+                  {summary?.profit_percentage || 0}%
                 </p>
               </div>
             </div>
             <p className="mt-6">
-              Total <span className="font-semibold">{summary?.profit}</span>{" "}
+              Total{" "}
+              <span className="font-semibold">{summary?.profit || 0}</span>{" "}
               {getCurrency()}
             </p>
             <p className="text-sm text-muted-foreground">
