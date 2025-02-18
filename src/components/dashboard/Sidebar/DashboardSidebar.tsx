@@ -10,6 +10,7 @@ import {
   Users,
   LayoutDashboard,
   ContactRound,
+  FileBox,
 } from "lucide-react";
 
 import { NavMain } from "./NavMain";
@@ -111,6 +112,11 @@ const data = {
     //   url: "/dashboard/employees",
     //   icon: BookUser,
     // },
+    {
+      name: "Products",
+      url: "/dashboard/inventory/products",
+      icon: FileBox,
+    },
     {
       name: "Customers",
       url: "/dashboard/customers",
