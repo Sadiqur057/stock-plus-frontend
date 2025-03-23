@@ -1,10 +1,10 @@
 import { ArrowRight, BarChart3, Clock, TrendingUp } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import lineChartImage from "@/assets/images/line-chart-2.png";
-import barChartImage from "@/assets/images/bar-chart-2.png";
-import statImage1 from "@/assets/images/stat-card-1.png";
-import statImage2 from "@/assets/images/stat-card-2.png";
+// import lineChartImage from "@/assets/images/line-chart-2.png";
+// import barChartImage from "@/assets/images/bar-chart-2.png";
+// import statImage1 from "@/assets/images/stat-card-1.png";
+// import statImage2 from "@/assets/images/stat-card-2.png";
 import SectionHeading from "./SectionHeading";
 
 const features = [
@@ -104,12 +104,12 @@ export function Specialties() {
                     <div className="grid gap-4">
                       <div className="">
                         <Image
-                          src={statImage1}
+                          src="https://i.postimg.cc/KYG5ypH3/stat-card-1.png"
                           alt="Statistical card showing inventory insights about invoices and incomes"
                           className="rounded-md"
                         />
                         <Image
-                          src={statImage2}
+                          src="https://i.postimg.cc/9MztDRVW/stat-card-2.png"
                           alt="Statistical card showing inventory insights about due payments and number of customers"
                           className="rounded-md"
                         />
@@ -117,14 +117,14 @@ export function Specialties() {
                       <div className="flex gap-4">
                         <div className="flex-1">
                           <Image
-                            src={barChartImage}
+                            src="https://i.postimg.cc/9MSMQs88/bar-chart-2.png"
                             alt="Bar chart visualizing business sales"
                           />
                         </div>
                         <div className="flex-1">
                           <Image
                             alt="Line chart displaying due and paid amount over time"
-                            src={lineChartImage}
+                            src="https://i.postimg.cc/KvTf7MTj/line-chart-2.png"
                           />
                         </div>
                       </div>

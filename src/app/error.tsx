@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardFooter } from "@/components/ui/card";
-import errorImage from "@/assets/images/error.png";
+// import errorImage from "@/assets/images/error.png";
 import Image from "next/image";
 
 export default function Error() {
@@ -11,7 +11,7 @@ export default function Error() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div>
-        <Image src={errorImage} alt="Not found 404" width={220} height={100} />
+        <Image src="https://i.postimg.cc/yxZNgn2V/error.png" alt="Not found 404" width={220} height={100} />
       </div>
       <div className="w-full max-w-md mt-10">
         <CardContent className="text-center">

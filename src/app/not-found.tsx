@@ -4,14 +4,14 @@ import {
   CardContent,
   CardFooter,
 } from "@/components/ui/card";
-import notFoundImg from "@/assets/images/notfound.png";
+// import notFoundImg from "@/assets/images/notfound.png";
 import Image from "next/image";
 
 export default function NotFound() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-background">
       <div>
-        <Image src={notFoundImg} alt="Not found 404" width={420} height={120} />
+        <Image src="https://i.postimg.cc/CKcsMC3P/notfound.png" alt="Not found 404" width={420} height={120} />
       </div>
       <div className="w-full max-w-md">
         <CardContent className="text-center">

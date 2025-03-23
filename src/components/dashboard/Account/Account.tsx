@@ -19,7 +19,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import BreadCrumb from "@/components/shared/dashboard/BreadCrumb";
-import userAvatar from "@/assets/images/user.png";
+// import userAvatar from "@/assets/images/user.png";
 import PackageContent from "./PackageContent";
 import { useQuery } from "@tanstack/react-query";
 import api from "@/interceptors/api";
@@ -70,7 +70,7 @@ export default function Account() {
               <div className="flex flex-col md:flex-row items-center justify-center md:justify-between gap-2">
                 <div className="flex gap-2 flex-col md:flex-row text-center md:text-left items-center space-x-4">
                   <Image
-                    src={userAvatar}
+                    src="https://i.postimg.cc/4dMvVfNp/user.png"
                     alt="Profile Picture"
                     width={72}
                     height={72}

@@ -1,6 +1,6 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import HeroImg from "@/assets/images/heroImg.jpg";
+// import HeroImg from "@/assets/images/heroImg.jpg";
 import Link from "next/link";
 
 const stats = [
@@ -69,7 +69,7 @@ export function Hero() {
         <div className="flex items-center">
           <div className="imageContainer">
             <Image
-              src={HeroImg}
+              src='https://i.postimg.cc/1413pwZD/heroImg.jpg'
               alt="Inventory Management and Invoicing solution Image"
               width={800}
               height={800}

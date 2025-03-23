@@ -1,5 +1,5 @@
 import Link from "next/link";
-import logo from "@/assets/images/logo.png";
+// import logo from "@/assets/images/logo.png";
 import Image from "next/image";
 import poppins from "@/fonts/font";
 import AuthButton from "./AuthButton";
@@ -16,7 +16,7 @@ export function Navbar() {
     <header className="navbar">
       <div className={`navbar__container container ${poppins.className}`}>
         <Link href="/" className="navbar__logo">
-          <Image src={logo} height={120} width={160} alt="StockPlus" />
+          <Image src="https://i.postimg.cc/Hk4tR1BC/logo.png" height={120} width={160} alt="StockPlus" />
         </Link>
         <input type="checkbox" id="navbar-toggle" className="navbar__toggle" />
         <label htmlFor="navbar-toggle" className="navbar__toggle-label">

@@ -7,7 +7,7 @@ import {
   LogOut,
   Sparkles,
 } from "lucide-react";
-import userAvatar from "@/assets/images/user.png";
+// import userAvatar from "@/assets/images/user.png";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -48,7 +48,7 @@ export function NavUser({ user }: { user: UserShape }) {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground min-w-10 min-h-10"
             >
               <Avatar className="h-10 w-10 rounded-lg">
-                <Image src={userAvatar} alt={user?.name || "user"} />
+                <Image src="https://i.postimg.cc/4dMvVfNp/user.png" alt={user?.name || "user"} />
                 <AvatarFallback className="rounded-lg">SP</AvatarFallback>
               </Avatar>
               <div className="grid flex-1 text-left  leading-tight">
@@ -67,7 +67,7 @@ export function NavUser({ user }: { user: UserShape }) {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <Image src={userAvatar} alt={user?.name || "user"} />
+                  <Image src="https://i.postimg.cc/4dMvVfNp/user.png" alt={user?.name || "user"} />
                   <AvatarFallback className="rounded-lg">SP</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left  leading-tight">
