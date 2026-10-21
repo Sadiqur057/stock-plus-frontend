@@ -129,7 +129,7 @@ export default function RegisterForm() {
             {loading ? <ButtonLoader /> : "Register"}
           </button>
 
-          <div className="relative">
+          {/* <div className="relative">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-gray-200"></div>
             </div>
@@ -184,7 +184,7 @@ export default function RegisterForm() {
                 />
               </svg>
             </button>
-          </div>
+          </div> */}
 
           <div className="text-center text-sm text-gray-600">
             Already have an account?{" "}
