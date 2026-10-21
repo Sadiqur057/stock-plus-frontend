@@ -107,11 +107,15 @@ export function Specialties() {
                           src="https://i.postimg.cc/KYG5ypH3/stat-card-1.png"
                           alt="Statistical card showing inventory insights about invoices and incomes"
                           className="rounded-md"
+                          width={500}
+                          height={300}
                         />
                         <Image
                           src="https://i.postimg.cc/9MztDRVW/stat-card-2.png"
                           alt="Statistical card showing inventory insights about due payments and number of customers"
                           className="rounded-md"
+                          width={500}
+                          height={300}
                         />
                       </div>
                       <div className="flex gap-4">
@@ -119,12 +123,16 @@ export function Specialties() {
                           <Image
                             src="https://i.postimg.cc/9MSMQs88/bar-chart-2.png"
                             alt="Bar chart visualizing business sales"
+                            width={500}
+                            height={300}
                           />
                         </div>
                         <div className="flex-1">
                           <Image
                             alt="Line chart displaying due and paid amount over time"
                             src="https://i.postimg.cc/KvTf7MTj/line-chart-2.png"
+                            width={500}
+                            height={300}
                           />
                         </div>
                       </div>
